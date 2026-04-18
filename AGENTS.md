@@ -43,4 +43,13 @@ These rules apply to all code written for this project. Follow them unconditiona
 - Create a clearly named ScriptableObject type per data category: `UnitDataSO`, `CardDataSO`, `EraConfigSO`, `AudioProfileSO`, etc.
 - ScriptableObject-based **event channels** (`GameEventSO`, `GameEventSO<T>`) are the preferred cross-system communication mechanism (see Rule 2).
 - Never put balancing numbers (damage values, costs, durations) directly in a MonoBehaviour field. If a designer needs to tune it, it belongs in a ScriptableObject.
-- ScriptableObjects must be stored under `Assets/Data/` with a clear folder structure (e.g., `Assets/Data/Units/WW2/`, `Assets/Data/Cards/`, `Assets/Data/Events/`).
+- ScriptableObjects must be stored under `Assets/Data/` with a clear folder structure (e.g., `Assets/Data/Units/`, `Assets/Data/Cards/`, `Assets/Data/Events/`).
+
+---
+
+## 5. Game Design Document
+
+- The GDD is located at `Spec/GDD.md`. **Read it before writing any gameplay code.**
+- All unit stats, card definitions, era configurations, damage formulas, and win conditions are defined there. Do not invent values — always source them from the GDD.
+- If a gameplay decision is not covered by the GDD, ask before proceeding. Do not make assumptions about game design intent.
+- The GDD is the authoritative source of truth for what the game is and how it works.

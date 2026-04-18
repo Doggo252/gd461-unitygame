@@ -1,13 +1,16 @@
-# Game Design Document: Project Iron Front
+# Game Design Document: Tank Royale
 
 ## 1. Game Overview
 
 **Project Name:** Tank Royale
-**Genre:** Real-Time Strategy (RTS) / Card Battler
-**Platforms:** PC (Desktop) and Mobile, local multiplayer support
-**Target Audience:** Casual and mid-core players who enjoy fast-paced PvP strategy with historical military flavor.
 
-**Core Concept:** Players assemble a deck of cards drawn from a chosen historical era — Late WW2, Cold War, or Modern. During a fast-paced 3-minute match, players spend a regenerating resource ("Command Points") to deploy infantry squads, armored vehicles, and powerful (but costly) aircraft onto a dual-front battlefield. Units act autonomously, advancing toward the enemy's Forward Operating Bases (FOBs) and ultimately their Command HQ. The game ends with the destruction of an enemy HQ or by holding more FOBs when the timer runs out — no fantasy towers, no magic spells. Just combined-arms warfare.
+**Genre:** Real-Time Strategy (RTS) / Card Battler
+
+**Platforms:** PC (Desktop) and Mobile, local multiplayer support
+
+**Target Audience:** Casual and mid-core players who enjoy fast-paced PvP strategy with stylized combined-arms gameplay.
+
+**Core Concept:** Players assemble an 8-card deck from a single shared card pool of tanks, infantry, aircraft, and support cards. During a fast-paced 3-minute match, players spend a regenerating resource ("Command Points") to deploy units onto a dual-front battlefield. Units act autonomously, advancing toward the enemy's Forward Operating Bases (FOBs) and ultimately their Command HQ. The game ends with the destruction of an enemy HQ or by holding more FOBs when the timer runs out.
 
 ---
 
@@ -32,16 +35,6 @@
 - **Surge Phase:** In the final 60 seconds, CP generation doubles, forcing decisive action.
 - **Capacity:** CP bar caps at 10. When full, generation pauses — spend CP to keep the pressure on.
 - **Usage:** Deploying a card costs its listed CP value (ranging from 2 to 9).
-
-### Eras
-
-Players select one of three historical eras before a match. Your entire deck must be drawn from the same era's card pool. Era determines the visual style of the battlefield and the units available.
-
-| Era          | Period       | Flavor                                                    |
-| ------------ | ------------ | --------------------------------------------------------- |
-| **Late WW2** | 1943–1945    | Diesel-era heavy armor, massed infantry, prop aircraft    |
-| **Cold War** | 1950–1985    | Early jet CAS, MBT doctrine, helicopter gunships          |
-| **Modern**   | 2000–present | Composite armor, precision munitions, multi-role aircraft |
 
 ### AI and Pathfinding
 
@@ -128,10 +121,10 @@ Else:
 Effective_Damage = max(ATK × 0.1, ATK × clamp(Pen_Ratio, 0.1, 1.0))
 ```
 
-> Example: Tiger I (ATK 350, PEN 80) vs M26 Pershing (ARM 65).
+> Example: Warden (ATK 350, PEN 80) vs Enforcer (ARM 65).
 > Pen_Ratio = 80/65 = 1.23 → Full penetration → Effective_Damage = 350.
 
-> Example: Type 97 Chi-Ha (ATK 120, PEN 30) vs Tiger I (ARM 80).
+> Example: Scout (ATK 120, PEN 30) vs Warden (ARM 80).
 > Pen_Ratio = 30/80 = 0.375 → Partial → Effective_Damage = 120 × 0.375 = 45.
 
 ---
@@ -177,7 +170,7 @@ Falloff_Damage = Effective_HE × max(0.4, 1 − (Distance / Radius) × 0.6)
 Aircraft fire on targets along their flight path. They carry HE bombs and/or autocannon bursts.
 
 - **Bombs:** Use §5.4 HE formula with a large Falloff radius.
-- **Autocannon (e.g., A-10 GAU-8):** Uses §5.1 with a high dedicated PEN value that simulates depleted uranium rounds.
+- **Autocannon (e.g., Heavy Gunship autocannon):** Uses §5.1 with a high dedicated PEN value that simulates armor-piercing rounds.
 
 ```
 -- Autocannon (depleted uranium / HEAT rounds)
@@ -233,7 +226,7 @@ Burn ignores ARM entirely (thermal damage).
 
 ---
 
-### 5.9 Strafing Ramp (A-10 / Su-25 Autocannon)
+### 5.9 Strafing Ramp (Heavy Gunship Autocannon)
 
 When an aircraft with the **Strafing** keyword locks onto a column of targets, each additional target hit in the same run receives a stacking damage bonus:
 
@@ -263,9 +256,8 @@ Infantry AT shots fire at a lower SPD than their normal rifle fire. Only one AT 
 
 ```mermaid
 flowchart TD
-    A([Match Start]) --> B[Select Era]
-    B --> C[Build Deck from Era Card Pool]
-    C --> D[Both Players Enter Deployment Phase]
+    A([Match Start]) --> B[Build Deck from Shared Card Pool]
+    B --> D[Both Players Enter Deployment Phase]
     D --> E((CP Regenerates\n+1 per 2.8 s))
     E --> F{Card in Hand?}
     F -->|Yes| G{Card Type?}
@@ -332,7 +324,7 @@ flowchart TD
 
 ## 7. Card Roster
 
-Players build an 8-card deck exclusively from their chosen era's card pool. All stat values are Level 1 baseline.
+Players build an 8-card deck from the single shared card pool below. All stat values are Level 1 baseline.
 
 ### Stat Key
 
@@ -350,129 +342,50 @@ Players build an 8-card deck exclusively from their chosen era's card pool. All 
 
 ---
 
-## Era 1 — Late WW2 (1943–1945)
+## Armor
 
-### Infantry
+Each armor card corresponds to a specific tank model from the asset pack. Stats reflect each model's visual design.
 
-| #   | Name                  | Nation | CP  | HP  | ATK | ARM | PEN | SPD | MOV | RNG | Cnt | Keywords                                         |
-| --- | --------------------- | ------ | --- | --- | --- | --- | --- | --- | --- | --- | --- | ------------------------------------------------ |
-| 1   | **Rifle Squad**       | USA    | 2   | 120 | 55  | 0   | 5   | 1.2 | 2.0 | 3   | 6   | AT (AT_ATK 180, AT_PEN 45)                       |
-| 2   | **Waffen Grenadiers** | GER    | 2   | 110 | 60  | 0   | 5   | 1.3 | 2.0 | 3   | 6   | AT (AT_ATK 200, AT_PEN 50)                       |
-| 3   | **Guards Infantry**   | USSR   | 2   | 130 | 50  | 0   | 5   | 1.1 | 1.8 | 3   | 8   | AT (AT_ATK 160, AT_PEN 40); large squad          |
-| 4   | **British Commandos** | UK     | 3   | 140 | 70  | 0   | 5   | 1.2 | 2.5 | 4   | 4   | Stealth: ignored by FOB until within RNG 2       |
-| 5   | **Imperial Infantry** | JPN    | 2   | 100 | 55  | 0   | 5   | 1.3 | 2.2 | 2   | 8   | Banzai: first engagement ATK × 1.5; no AT weapon |
-
-### Armor
-
-| #   | Name                      | Nation | CP  | HP   | ATK | ARM | PEN | SPD | MOV | RNG | Keywords                                   |
-| --- | ------------------------- | ------ | --- | ---- | --- | --- | --- | --- | --- | --- | ------------------------------------------ |
-| 6   | **M4 Sherman**            | USA    | 4   | 1400 | 220 | 40  | 60  | 0.8 | 1.6 | 5   | —                                          |
-| 7   | **M26 Pershing**          | USA    | 6   | 2000 | 340 | 65  | 90  | 0.7 | 1.3 | 5   | Heavy; counters Tiger I effectively        |
-| 8   | **M18 Hellcat**           | USA    | 4   | 900  | 260 | 20  | 80  | 1.0 | 2.8 | 6   | Fast Flanker: MOV 2.8, high PEN vs low ARM |
-| 9   | **Tiger I**               | GER    | 6   | 2400 | 350 | 80  | 80  | 0.6 | 1.2 | 6   | Heavy; strong frontal ARM                  |
-| 10  | **Tiger II (King Tiger)** | GER    | 8   | 3000 | 400 | 100 | 90  | 0.5 | 1.0 | 6   | Very Heavy; nearly immune to most WW2 AP   |
-| 11  | **Panther Ausf. G**       | GER    | 5   | 1900 | 310 | 70  | 85  | 0.7 | 1.5 | 6   | Balanced; high PEN for era                 |
-| 12  | **Panzer IV Ausf. H**     | GER    | 4   | 1500 | 240 | 45  | 65  | 0.8 | 1.5 | 5   | Workhorse; cost-efficient                  |
-| 13  | **T-34-85**               | USSR   | 4   | 1600 | 280 | 50  | 75  | 0.8 | 1.7 | 5   | Versatile; cheap for stats                 |
-| 14  | **IS-2**                  | USSR   | 6   | 2600 | 440 | 75  | 85  | 0.4 | 1.1 | 6   | Slow fire rate; devastating single shot    |
-| 15  | **KV-1S**                 | USSR   | 5   | 2200 | 260 | 65  | 60  | 0.7 | 1.3 | 5   | Durable brawler; lower PEN                 |
-| 16  | **Churchill Mk VII**      | UK     | 5   | 2600 | 230 | 80  | 55  | 0.7 | 1.0 | 4   | Extreme HP and ARM; slow, low PEN          |
-| 17  | **Cromwell Mk IV**        | UK     | 4   | 1300 | 230 | 38  | 65  | 0.9 | 2.0 | 5   | Fast medium tank                           |
-| 18  | **Type 97 Chi-Ha**        | JPN    | 3   | 900  | 120 | 25  | 30  | 0.9 | 1.6 | 4   | Budget tank; poor penetration              |
-| 19  | **Type 3 Chi-Nu**         | JPN    | 4   | 1200 | 200 | 30  | 55  | 0.8 | 1.5 | 5   | Improved gun vs Allied mediums             |
-| 20  | **Carro Armato P40**      | ITA    | 3   | 1100 | 190 | 35  | 50  | 0.8 | 1.5 | 5   | Budget medium; underdog faction            |
-
-### Aviation
-
-| #   | Name                      | Nation | CP  | HP  | ATK | PEN | RNG | Keywords                                                      |
-| --- | ------------------------- | ------ | --- | --- | --- | --- | --- | ------------------------------------------------------------- |
-| 21  | **P-47D Thunderbolt**     | USA    | 6   | 600 | 280 | 50  | 4   | Strafing (§5.9); Bomb x2 (HE ATK 320, Radius 2.0); AA Capable |
-| 22  | **P-51D Mustang**         | USA    | 5   | 500 | 240 | 40  | 4   | Strafing; fast attack run; weaker bombs than P-47             |
-| 23  | **Fw 190A-8**             | GER    | 5   | 520 | 250 | 45  | 4   | Strafing; Bomb x1 (HE ATK 360, Radius 1.5)                    |
-| 24  | **Ju 87G Stuka**          | GER    | 6   | 400 | 320 | 90  | 4   | Tank Buster: autocannon vs armor; high PEN; slow, lower HP    |
-| 25  | **Il-2 Sturmovik**        | USSR   | 6   | 700 | 300 | 55  | 4   | Strafing; Bomb x2; armored airframe (harder to shoot down)    |
-| 26  | **de Havilland Mosquito** | UK     | 5   | 480 | 220 | 40  | 5   | Rockets x4 (HE ATK 180, Radius 1.5); long RNG                 |
+| #  | Name              | Model File                    | CP | HP   | ATK | ARM | PEN | SPD | MOV | RNG | Keywords                                                                  |
+|----|-------------------|-------------------------------|----|------|-----|-----|-----|-----|-----|-----|---------------------------------------------------------------------------|
+| 1  | **Original**      | Tank_Original_Model.fbx       | 4  | 1500 | 250 | 45  | 70  | 0.8 | 1.6 | 5   | —                                                                         |
+| 2  | **Alternative**   | Tank_Alternative_Model.fbx    | 5  | 1900 | 310 | 65  | 90  | 0.7 | 1.5 | 6   | Balanced; high PEN for cost                                               |
+| 3  | **Light**         | Tank_Light_Model.fbx          | 3  | 900  | 200 | 20  | 80  | 1.0 | 2.8 | 5   | Fast Flanker: highest MOV; high PEN vs low ARM                            |
+| 4  | **Heavy**         | Tank_Heavy_Model.fbx          | 6  | 2500 | 380 | 90  | 85  | 0.6 | 1.1 | 6   | Heavy: strong ARM; slow                                                   |
+| 5  | **Crawler**       | Tank_Crawler_Model.FBX        | 7  | 3000 | 350 | 110 | 80  | 0.5 | 0.8 | 6   | Fortress: ARM counts as +20 while stationary                              |
+| 6  | **Monster**       | Tank_Monster_Model.FBX        | 8  | 3500 | 450 | 100 | 90  | 0.4 | 0.9 | 6   | Devastating: single massive shot; minimum 30% damage floor                |
+| 7  | **Spike**         | Tank_Spike_Model.FBX          | 4  | 1100 | 290 | 25  | 125 | 0.7 | 1.3 | 7   | Armor Piercer: ignores up to 30 ARM on every shot                         |
+| 8  | **Shark**         | Tank_Shark_Model.FBX          | 4  | 1300 | 240 | 35  | 70  | 0.9 | 2.2 | 5   | Aggressive: +15% ATK when attacking a unit already engaged by an ally     |
+| 9  | **Droid**         | Tank_Droid_Model.FBX          | 5  | 1700 | 290 | 55  | 100 | 0.9 | 1.7 | 5   | Self-Repair: regenerates 50 HP every 5 s                                  |
+| 10 | **UTV**           | Tank_UTV_Model.FBX            | 3  | 800  | 160 | 15  | 60  | 1.2 | 3.0 | 4   | Scout: reveals all enemy units within RNG 6 on deploy                     |
+| 11 | **MegaBall**      | Tank_MegaBall_Model.FBX       | 6  | 2800 | 310 | 80  | 75  | 0.7 | 1.4 | 5   | Rollout: on deploy, charges 3 tiles forward dealing 150 HE to first enemy |
+| 12 | **RocketShip**    | Tank_RocketShip_Model.FBX     | 5  | 1400 | 200 | 30  | 50  | 0.6 | 1.4 | 8   | Rocket Artillery: attacks use HE formula; arc-fires over terrain          |
+| 13 | **UFO**           | Tank_UFO_Model.fbx            | 6  | 2000 | 340 | 50  | 110 | 0.8 | 2.0 | 6   | Hover: ignores terrain movement penalties (rubble/craters)                |
 
 ---
 
-## Era 2 — Cold War (1950–1985)
+## Infantry
 
-### Infantry
-
-| #   | Name                             | Nation | CP  | HP  | ATK | ARM | PEN | SPD | MOV | RNG | Cnt | Keywords                                                                   |
-| --- | -------------------------------- | ------ | --- | --- | --- | --- | --- | --- | --- | --- | --- | -------------------------------------------------------------------------- |
-| 27  | **US Airborne**                  | USA    | 3   | 150 | 70  | 0   | 5   | 1.2 | 2.2 | 4   | 5   | AT (AT_ATK 300, AT_PEN 120, RPG); can deploy on enemy half after FOB falls |
-| 28  | **Soviet Motor Rifles**          | USSR   | 2   | 130 | 60  | 0   | 5   | 1.2 | 2.0 | 3   | 7   | AT (AT_ATK 280, AT_PEN 110, RPG)                                           |
-| 29  | **IDF Paratroopers**             | ISR    | 3   | 160 | 75  | 0   | 5   | 1.1 | 2.4 | 4   | 4   | AT (AT_ATK 320, AT_PEN 130, ATGM); highest AT per squad                    |
-| 30  | **West German Panzergrenadiers** | GER    | 3   | 145 | 65  | 0   | 5   | 1.2 | 2.1 | 4   | 5   | AT (AT_ATK 290, AT_PEN 115, Milan ATGM)                                    |
-| 31  | **French Foreign Legion**        | FRA    | 3   | 155 | 72  | 0   | 5   | 1.1 | 2.2 | 4   | 4   | AT (AT_ATK 300, AT_PEN 120); Elite: morale immune to Suppression           |
-
-### Armor
-
-| #   | Name               | Nation | CP  | HP   | ATK | ARM | PEN | SPD | MOV | RNG | Keywords                                           |
-| --- | ------------------ | ------ | --- | ---- | --- | --- | --- | --- | --- | --- | -------------------------------------------------- |
-| 32  | **M48A5 Patton**   | USA    | 4   | 1800 | 280 | 55  | 100 | 0.8 | 1.5 | 6   | —                                                  |
-| 33  | **M60A3 Patton**   | USA    | 5   | 2200 | 340 | 65  | 115 | 0.8 | 1.4 | 6   | Fire control: +10% effective PEN vs moving targets |
-| 34  | **T-54A**          | USSR   | 4   | 1900 | 290 | 60  | 105 | 0.9 | 1.6 | 5   | Low profile: ARM counts as +10 vs RNG > 4 attacks  |
-| 35  | **T-72A**          | USSR   | 5   | 2400 | 360 | 80  | 120 | 0.8 | 1.5 | 6   | ERA Option: first hit reduced by 30% (one-time)    |
-| 36  | **Leopard 1A4**    | GER    | 4   | 1700 | 300 | 50  | 110 | 0.9 | 1.8 | 6   | High mobility; trades ARM for speed                |
-| 37  | **Leopard 2A1**    | GER    | 6   | 2600 | 400 | 90  | 135 | 0.8 | 1.6 | 6   | Top-tier Cold War; balanced across all stats       |
-| 38  | **Merkava Mk I**   | ISR    | 6   | 2800 | 380 | 85  | 125 | 0.7 | 1.3 | 6   | Crew Protect: spawns 2 Infantry on destruction     |
-| 39  | **AMX-30B2**       | FRA    | 4   | 1800 | 295 | 45  | 100 | 0.9 | 1.6 | 5   | HEAT-FS: PEN vs ERA treated as full penetration    |
-| 40  | **Chieftain Mk 5** | UK     | 5   | 2600 | 360 | 85  | 110 | 0.6 | 1.2 | 6   | High ARM; slow; excellent at holding position      |
-| 41  | **Type 59**        | CHN    | 3   | 1600 | 250 | 50  | 90  | 0.9 | 1.5 | 5   | Budget Cold War tank                               |
-| 42  | **Type 61**        | JPN    | 4   | 1800 | 280 | 55  | 100 | 0.8 | 1.5 | 5   | Standard medium; reliable                          |
-
-### Aviation
-
-| #   | Name                     | Nation | CP  | HP  | ATK | PEN | RNG | Keywords                                                                                 |
-| --- | ------------------------ | ------ | --- | --- | --- | --- | --- | ---------------------------------------------------------------------------------------- |
-| 43  | **A-10A Thunderbolt II** | USA    | 7   | 800 | 380 | 160 | 5   | Strafing (§5.9, GAU-8 autocannon); Maverick Missile x2 (HE ATK 500); high HP; AA Capable |
-| 44  | **Su-25K Frogfoot**      | USSR   | 7   | 750 | 360 | 150 | 5   | Strafing; Kh-25 Rocket x4 (HE ATK 320, Radius 2.0); armored                              |
-| 45  | **UH-1 "Huey" Gunship**  | USA    | 5   | 550 | 200 | 60  | 4   | Helicopter: hovers over target, attacks for 4 s before exiting; Rockets + minigun        |
-| 46  | **Mi-24 Hind**           | USSR   | 6   | 700 | 280 | 80  | 5   | Helicopter; can transport 1 Infantry squad (deployed on exit); Rockets                   |
-| 47  | **F-4E Phantom II**      | USA    | 6   | 600 | 300 | 70  | 5   | Bomb x4 (HE ATK 280, Radius 2.5, Falloff); air superiority vs enemy aircraft             |
-| 48  | **MiG-21bis**            | USSR   | 5   | 500 | 260 | 60  | 5   | Fast run; Rocket pods x2 (HE ATK 260, Radius 1.5)                                        |
+| #  | Name               | CP | HP  | ATK | ARM | PEN | SPD | MOV | RNG | Cnt | Keywords                                                |
+|----|--------------------|----|-----|-----|-----|-----|-----|-----|-----|-----|---------------------------------------------------------|
+| 14 | **Rifle Squad**    | 2  | 120 | 55  | 0   | 5   | 1.2 | 2.0 | 3   | 6   | AT (AT_ATK 180, AT_PEN 70)                              |
+| 15 | **Assault Team**   | 2  | 110 | 65  | 0   | 5   | 1.3 | 2.2 | 3   | 6   | AT (AT_ATK 220, AT_PEN 90)                              |
+| 16 | **AT Squad**       | 3  | 130 | 45  | 0   | 5   | 0.9 | 1.8 | 3   | 4   | AT (AT_ATK 340, AT_PEN 130, ATGM); specialist AT unit   |
+| 17 | **Commando Unit**  | 3  | 140 | 70  | 0   | 5   | 1.2 | 2.5 | 4   | 4   | Stealth: ignored by FOB until within RNG 2              |
+| 18 | **Heavy Weapons**  | 4  | 160 | 90  | 5   | 5   | 0.8 | 1.5 | 5   | 3   | AT (AT_ATK 300, AT_PEN 110); Elite: immune to Suppression |
 
 ---
 
-## Era 3 — Modern (2000–Present)
+## Aviation
 
-### Infantry
-
-| #   | Name                               | Nation | CP  | HP  | ATK | ARM | PEN | SPD | MOV | RNG | Cnt | Keywords                                                               |
-| --- | ---------------------------------- | ------ | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---------------------------------------------------------------------- |
-| 49  | **US Army Rangers**                | USA    | 3   | 180 | 80  | 2   | 5   | 1.2 | 2.4 | 5   | 5   | AT (AT_ATK 450, AT_PEN 250, Javelin ATGM); fire-and-forget AT          |
-| 50  | **Russian Spetsnaz**               | RUS    | 4   | 200 | 90  | 2   | 5   | 1.1 | 2.2 | 5   | 4   | AT (AT_ATK 420, AT_PEN 230, RPG-29); Stealth: not targeted until RNG 3 |
-| 51  | **IDF Golani Brigade**             | ISR    | 3   | 175 | 82  | 2   | 5   | 1.2 | 2.3 | 5   | 5   | AT (AT_ATK 460, AT_PEN 260, Spike ATGM); top AT damage                 |
-| 52  | **French Foreign Legion (Modern)** | FRA    | 3   | 170 | 78  | 2   | 5   | 1.2 | 2.3 | 5   | 4   | AT (AT_ATK 400, AT_PEN 220, Milan ER); Elite                           |
-
-### Armor
-
-| #   | Name                   | Nation | CP  | HP   | ATK | ARM | PEN | SPD | MOV | RNG | Keywords                                                                     |
-| --- | ---------------------- | ------ | --- | ---- | --- | --- | --- | --- | --- | --- | ---------------------------------------------------------------------------- |
-| 53  | **M1A2 SEP v3 Abrams** | USA    | 7   | 3600 | 500 | 120 | 160 | 0.8 | 1.5 | 7   | DU Armor: ARM effectively 150 vs kinetic; APS (one ATGM intercept)           |
-| 54  | **T-90M Proryv**       | RUS    | 6   | 3200 | 460 | 110 | 155 | 0.9 | 1.6 | 7   | ERA Tier 3: two AT intercepts; Shtora IR jammer (AT_PEN –20% vs this target) |
-| 55  | **T-14 Armata**        | RUS    | 8   | 4000 | 520 | 130 | 165 | 0.8 | 1.5 | 7   | Unmanned Turret: ARM vs ATK is 10% higher; APS                               |
-| 56  | **Leopard 2A7**        | GER    | 7   | 3400 | 490 | 120 | 160 | 0.8 | 1.5 | 7   | Urban Kit: +ARM 20 within RNG 2; top NATO all-rounder                        |
-| 57  | **Merkava Mk IV**      | ISR    | 7   | 3800 | 480 | 115 | 155 | 0.7 | 1.4 | 7   | Trophy APS: intercepts first 2 ATGM attacks; Crew Protect                    |
-| 58  | **Challenger 2 TES**   | UK     | 7   | 4000 | 460 | 130 | 145 | 0.6 | 1.2 | 7   | Chobham Ultra: highest ARM in era; lower PEN                                 |
-| 59  | **Leclerc XLR**        | FRA    | 6   | 3200 | 470 | 110 | 155 | 0.9 | 1.7 | 7   | Autoloader: SPD 0.9 (highest for Modern MBT)                                 |
-| 60  | **Type 10**            | JPN    | 6   | 3000 | 450 | 105 | 155 | 0.9 | 1.8 | 7   | Lightweight: MOV 1.8 (fastest Modern MBT)                                    |
-| 61  | **K2 Black Panther**   | KOR    | 7   | 3400 | 480 | 115 | 160 | 0.8 | 1.6 | 7   | Auto-target: fires on highest-ARM enemy in range first                       |
-| 62  | **Type 99A**           | CHN    | 6   | 3100 | 460 | 108 | 152 | 0.8 | 1.5 | 7   | Budget top-tier; well-rounded                                                |
-
-### Aviation
-
-| #   | Name                               | Nation | CP  | HP  | ATK | PEN | RNG | Keywords                                                                                                                  |
-| --- | ---------------------------------- | ------ | --- | --- | --- | --- | --- | ------------------------------------------------------------------------------------------------------------------------- |
-| 63  | **A-10C Thunderbolt II "Warthog"** | USA    | 8   | 900 | 500 | 220 | 6   | Strafing (§5.9, GAU-8/A DU rounds); AGM-65 Maverick x2 (HE ATK 700, Radius 2.5); best dedicated ground attack; AA Capable |
-| 64  | **AH-64E Apache Guardian**         | USA    | 7   | 800 | 420 | 180 | 6   | Helicopter; hovers 5 s; Hellfire x4 (HE ATK 580, locks to highest HP target); Strafing (30mm)                             |
-| 65  | **Su-25SM Frogfoot**               | RUS    | 7   | 850 | 440 | 190 | 5   | Strafing; Kh-29 Missile x2 (HE ATK 650, Radius 2.5); armored                                                              |
-| 66  | **Su-57 Felon**                    | RUS    | 9   | 700 | 480 | 200 | 7   | Stealth: FOB AA does not fire until aircraft is within RNG 3; high ATK; can engage other aircraft                         |
-| 67  | **F-35A Lightning II**             | USA    | 9   | 650 | 460 | 190 | 7   | Stealth: same as Su-57; GBU-53 SDB x4 (precision HE ATK 400, Radius 1.5, no Falloff)                                      |
-| 68  | **F-16I Sufa**                     | ISR    | 7   | 700 | 430 | 170 | 6   | Bomb x4 (HE ATK 380, Radius 2.0); Maverick x1; versatile attack package                                                   |
-| 69  | **Eurofighter Typhoon**            | GER/UK | 8   | 720 | 450 | 185 | 7   | Brimstone x6 (autonomous target-seeking; each missile hits the nearest tank for HE ATK 320)                               |
+| #  | Name                    | CP | HP  | ATK | PEN | RNG | Keywords                                                              |
+|----|-------------------------|----|-----|-----|-----|-----|-----------------------------------------------------------------------|
+| 19 | **Fighter-Bomber**      | 6  | 600 | 280 | 50  | 4   | Strafing (§5.9); Bomb x2 (HE ATK 320, Radius 2.0); AA Capable        |
+| 20 | **Ground Attack**       | 5  | 520 | 250 | 45  | 4   | Strafing; Bomb x1 (HE ATK 360, Radius 1.5)                           |
+| 21 | **Tank Buster**         | 6  | 400 | 320 | 110 | 4   | Autocannon vs armor; high PEN; slow, lower HP                         |
+| 22 | **Attack Helicopter**   | 5  | 550 | 200 | 60  | 4   | Helicopter: hovers 4 s, attacks before exiting; Rockets + minigun    |
+| 23 | **Assault Helicopter**  | 6  | 700 | 280 | 80  | 5   | Helicopter; transports 1 Infantry squad (deployed on exit); Rockets  |
+| 24 | **Stealth Jet**         | 8  | 650 | 420 | 160 | 6   | Stealth: FOB AA does not fire until within RNG 3; Bomb x2            |
 
 ---
 
@@ -511,20 +424,15 @@ Support cards are usable in any era. They do not count against the troop/armor/a
   - **CP Bar:** Horizontal fill bar showing current Command Points (0–10).
   - **Current Hand:** 4 cards showing their CP cost, unit type icon, and era/nation flag.
   - **Next Card:** Small preview showing the upcoming card in deck rotation.
-- **Kill Feed:** A scrolling side panel showing recent unit destructions (e.g., "Tiger II destroyed M26 Pershing").
+- **Kill Feed:** A scrolling side panel showing recent unit destructions (e.g., "Overlord destroyed Enforcer").
 
 ---
 
 ## 9. Art & Audio Direction
 
-- **Visual Style:** Stylized but grounded 3D. Realistic silhouettes for vehicles and infantry so players can identify units instantly. Not hyper-realistic — slightly saturated colors for clarity.
-- **Era Visual Language:**
-  - Late WW2: muted greens/browns, muddy terrain, overcast lighting.
-  - Cold War: flat Eastern European plains, forest edges, grey tones.
-  - Modern: desert, urban rubble, high-contrast daytime lighting.
+- **Visual Style:** Stylized top-down 3D. Tank models come from the Unity Tanks asset pack (13 distinct meshes). Infantry uses Kenney asset packs. Aircraft uses the Generic Aircraft Models Free pack. Units are team-colored (red vs blue) to ensure readability.
 - **Camera:** Fixed isometric/top-down perspective.
 - **Audio:**
   - Distinct audio per unit type: tank engine growl on deployment, aircraft engine roar on attack run, infantry boot crunch and shouting.
-  - Era-appropriate sound design (WW2 bolt-actions vs Modern carbines; WWII radial engines vs Modern turbines).
   - Warning sirens when a FOB is below 25% HP.
   - CP-full audio cue (radio burst: "Command Post at capacity").
