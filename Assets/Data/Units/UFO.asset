@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b56c56c5ec684d4994b5993f5635fbe, type: 3}
+  m_Name: UFO
+  m_EditorClassIdentifier: Assembly-CSharp::UnitDataSO
+  tankType: 12
+  cpCost: 6
+  maxHp: 2000
+  atk: 340
+  arm: 50
+  pen: 110
+  spd: 0.8
+  mov: 2
+  rng: 6
+  aggroRange: 60
+  keywords: 512
+  armorPierceIgnore: 0
+  aggressiveAtkBonus: 0
+  selfRepairAmount: 0
+  selfRepairInterval: 0
+  stationaryArmBonus: 0
+  devastatingMinFloor: 0
+  weightDirect: 0.2
+  weightShallowFlank: 0.3
+  weightWideFlank: 0.5
+  detectionAngle: 360

@@ -39,9 +39,75 @@
 ### AI and Pathfinding
 
 - Once deployed, units act autonomously — the player has no direct control.
-- **Pathfinding:** Units calculate the shortest path to the nearest enemy objective (FOB, then HQ) along valid terrain, preferring roads.
-- **Targeting Priority:** Tanks and infantry engage enemy units within their aggro radius. Aircraft fly a fixed attack-run path across the map and cannot be redirected after launch.
+- **Pathfinding:** All ground units use Unity NavMesh for obstacle-aware navigation. Rocks, trees, and compound walls are baked as impassable; tanks are dynamic obstacles handled by NavMesh local avoidance (RVO).
+- **Targeting Priority:** Tanks engage enemy tanks first. Only when all enemy tanks are eliminated do they advance on enemy FOBs (nearest first) and then the Command HQ.
 - **Anti-Air Awareness:** Aircraft can be targeted and shot down by units or FOBs with the **AA Capable** keyword.
+
+#### Four-State AI Loop (implemented)
+
+Each tank runs a four-state state machine every Update frame:
+
+| State | Behaviour |
+|---|---|
+| **Search** | Polls every 0.5 s for the nearest visible enemy tank within detection cone + line-of-sight. If no tanks visible, searches for nearest enemy FOB/HQ (objectives always globally known — no LOS required). Transitions → Priority. |
+| **Priority** | Re-evaluates globally. Rule 1: any visible enemy tank → target it, roll approach style, go to Pathfind. Rule 2: no tanks anywhere → target nearest enemy objective, go to Pathfind. |
+| **Pathfind** | Navigates via NavMesh. For unit targets: uses tactical approach position (Direct / ShallowFlank / WideFlank). For objectives: navigates to the closest NavMesh-reachable point near the structure (handles walled compounds). Transitions → Attack when within weapon RNG, or when the closest accessible point is reached. |
+| **Attack** | Stops, faces target, fires every `1/SPD` seconds. For unit targets: validates detection cone each tick (drop lock if target exits cone AND beyond `RNG × 1.5`). If target backs outside `RNG × 1.2`, returns to Pathfind. If target dies or is destroyed, immediately returns to Search (scan timer reset to 0 for instant response). |
+
+#### Line-of-Sight Detection
+
+Unit-vs-unit detection requires a clear line of sight through cover. A ray is cast from the detecting tank to the target; if it hits any solid collider that is not a tank or objective structure, detection fails. This means:
+
+- **Rocks and trees block detection** — a fast flanker can use cover to approach a heavy tank undetected.
+- **Walls block detection** — tanks inside compounds are invisible to tanks outside until line-of-sight clears.
+- **Objectives are exempt** — FOBs and HQs are always globally visible to all surviving tanks (their positions are fixed and known).
+
+The detection cone (§2.1) is applied first; LOS is only checked for targets already within the forward arc.
+
+### 2.1 AI Tactical Profiles
+
+Each tank type has a **tactical personality** that governs how it approaches an enemy. Whenever a unit acquires a new target, it rolls a randomized **Approach Style** from three options weighted per tank type. The side (left vs right) is also randomized to prevent mirrored, predictable patterns.
+
+#### Approach Styles
+
+| Style | Description |
+|---|---|
+| **Direct** | Charges straight at the target and stops just inside attack range. Front-arc armour exchange. |
+| **Shallow Flank** | Approaches at ~45° off the direct line. Clips the side arc, mixes front and side armour exposure. |
+| **Wide Flank** | Sweeps fully perpendicular (~90°) to circle the target's side or rear. Triggers the rear armour penalty (×0.4 ARM) on the target. |
+
+> **RocketArtillery** (RocketShip) always holds position at maximum range regardless of roll — flanking provides no benefit for indirect fire.
+
+#### Detection Cone
+
+Units with a `detectionAngle` less than 360° can only scan for and track enemies within a forward-facing cone. Enemies that move outside the cone are lost as targets (unless within close-combat range ≤ 1.5× RNG, where contact is maintained regardless).
+
+While engaged, tanks slowly rotate their facing toward the locked target. A fast flanker can outpace a slow-rotating heavy tank and exit its detection cone, causing the heavy to lose the lock and stand idle while the flanker approaches from the side or rear.
+
+| Tank | Detection Angle | Notes |
+|---|---|---|
+| **Heavy** | 110° | Tight forward cone; blind to enemies approaching from the flank/rear |
+| All others | 360° | Full omnidirectional awareness |
+
+#### Per-Tank Approach Weights
+
+Weights are relative probabilities; the engine normalizes them. A weight of 0 means the style never occurs.
+
+| Tank | Direct | Shallow Flank | Wide Flank | Personality |
+|---|---|---|---|---|
+| **Original** | 0.50 | 0.35 | 0.15 | Balanced all-rounder; mostly charges with occasional probing flanks |
+| **Alternative** | 0.50 | 0.35 | 0.15 | Disciplined; high PEN rewards direct engagements |
+| **Light** | 0.10 | 0.45 | 0.45 | Erratic flanker; almost never charges straight due to low ARM |
+| **Heavy** | 0.75 | 0.20 | 0.05 | Front-line brawler; ARM and HP reward trading shots head-on |
+| **Crawler** | 0.90 | 0.10 | 0.00 | Ponderous advance then stops for Fortress bonus; never wide-flanks |
+| **Monster** | 0.80 | 0.15 | 0.05 | Devastating frontal assault; ATK too high to waste on side approaches |
+| **Spike** | 0.15 | 0.50 | 0.35 | Armor Piercer; prefers side/rear arcs where ArmorPierceIgnore stacks even further |
+| **Shark** | 0.70 | 0.25 | 0.05 | Aggressive; charges to join allies already engaging a target for the ATK bonus |
+| **Droid** | 0.50 | 0.35 | 0.15 | Methodical; self-repair means it can absorb hits from any angle |
+| **UTV** | 0.10 | 0.35 | 0.55 | Scout; exploits mobility with wide sweeping routes |
+| **MegaBall** | 0.75 | 0.20 | 0.05 | Rollout charger; designed to breach head-on |
+| **RocketShip** | — | — | — | Always hangs back at max range (RocketArtillery keyword overrides roll) |
+| **UFO** | 0.20 | 0.30 | 0.50 | Hover; exploits terrain-ignoring movement with wide flanking arcs |
 
 ---
 
@@ -99,6 +165,38 @@ All combat values use the following formulae. The core addition over a generic s
 | `SPD` | Attack speed (shots per second)             |
 | `MOV` | Movement speed (tiles per second)           |
 | `RNG` | Attack range (tiles)                        |
+
+---
+
+### 5.0 Directional Armor (Arc System)
+
+All tank damage is modified by which arc the attacker fires from, relative to the **defender's** facing direction.
+
+| Arc | Angle from Defender's Forward | ARM Multiplier | ATK Multiplier |
+|---|---|---|---|
+| **Front** | < 45° | ×1.00 (full armor) | ×1.0 |
+| **Sides** | 45°–135° | ×0.40 (60% stripped) | ×1.5 |
+| **Rear** | > 135° | ×0.15 (85% stripped) | ×2.5 |
+
+Both multipliers apply simultaneously. A rear hit against a Heavy tank (ARM 90):
+
+```
+Effective_ARM = 90 × 0.15 = 13.5
+PEN_Ratio     = Light_PEN(80) / 13.5 = 5.9 → clamped to 1.0
+Base_Damage   = Light_ATK(200) × 1.0 = 200
+Final_Damage  = 200 × 2.5 (rear ATK multiplier) = 500
+```
+
+vs a frontal hit:
+
+```
+Effective_ARM = 90 × 1.0 = 90
+PEN_Ratio     = 80 / 90 = 0.89
+Base_Damage   = 200 × 0.89 = 178
+Final_Damage  = 178 × 1.0 = 178
+```
+
+This makes flanking and the tactical approach styles (GDD §2.1) mechanically meaningful.
 
 ---
 
@@ -416,6 +514,24 @@ Support cards are usable in any era. They do not count against the troop/armor/a
 
 ---
 
+## 7.5 Structures
+
+Each player's three structures are implemented as `ObjectiveTarget` components with `HealthComponent`. They are damageable but have no movement or AI of their own.
+
+| Structure | Team | ARM | HP   | Notes |
+|---|---|---|---|---|
+| **FOB Left** | P1 / P2 | 30 | 5000 | Forward compound; walled, attacked after all enemy tanks are eliminated |
+| **FOB Right** | P1 / P2 | 30 | 5000 | Mirror of FOB Left on opposite front |
+| **Command HQ** | P1 / P2 | 50 | 8000 | Hardened HQ; destroying it wins the match |
+
+Structure damage uses the kinetic formula (§5.1) with no directional arc modifier (structures don't rotate). The tank's full `PEN / ARM` ratio is applied:
+
+```
+Effective_Structural_Dmg = ATK × clamp(PEN / Structure_ARM, 0.1, 1.0)
+```
+
+---
+
 ## 8. User Interface (UI)
 
 - **Top of Screen:** Enemy FOB health bars, enemy HQ health bar, match timer, enemy era/nation banner.
@@ -425,6 +541,16 @@ Support cards are usable in any era. They do not count against the troop/armor/a
   - **Current Hand:** 4 cards showing their CP cost, unit type icon, and era/nation flag.
   - **Next Card:** Small preview showing the upcoming card in deck rotation.
 - **Kill Feed:** A scrolling side panel showing recent unit destructions (e.g., "Overlord destroyed Enforcer").
+
+### 8.1 World-Space Structure Health Bars
+
+Each FOB and Command HQ displays a world-space health bar directly above the structure (implemented as a `Canvas` in World Space render mode). The bar:
+
+- Billboards toward the camera every frame so it is readable from any camera angle.
+- Displays the structure name and current/maximum HP as text.
+- Uses a **team-coloured border** (blue = P1, red = P2) for instant ownership identification.
+- Fill colour transitions green → yellow → red as HP falls.
+- Subscribes to `HealthComponent.OnHealthChanged` (event-driven per AGENTS.md §2) and updates only when damage is dealt.
 
 ---
 

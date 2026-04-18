@@ -1,4 +1,4 @@
-# Agent Rules — Project Iron Front
+# Agent Rules — Tank Royale
 
 These rules apply to all code written for this project. Follow them unconditionally.
 
