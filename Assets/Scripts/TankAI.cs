@@ -3,50 +3,55 @@ using UnityEngine.AI;
 
 // Four-state autonomous AI loop for tank units.
 //
-// SEARCH   — polls for any living enemy (tank or objective) within the detection
-//            cone and with a clear line-of-sight through cover.
+// SEARCH   — polls every 0.5 s for the nearest visible enemy (tank or objective)
+//            within the detection cone and with a clear line-of-sight.
 // PRIORITY — decides the best target: fight enemy tanks first; attack objectives
 //            only once all enemy tanks are eliminated.
-// PATHFIND — navigates toward the chosen target. Wide / shallow flanks are
-//            computed dynamically each frame so the path updates as tanks move.
-// ATTACK   — stops, faces, and fires. Validates detection cone for unit targets.
+// PATHFIND — navigates toward the chosen target using a two-phase approach:
+//            flankers first move to a STAGING position on the target's flank/rear
+//            (using the target's OWN facing so the staging point doesn't drift as
+//            the attacker moves), then close in to attack range.
+// ATTACK   — stops, faces target at per-tank turn speed, fires.
+//            Validates detection cone for unit targets each tick.
 //
-// Transitions:
-//   Search → Priority  (target found)
-//   Priority → Pathfind (target chosen)
-//   Pathfind → Attack   (within RNG or arrived at closest reachable point)
-//   Attack → Search     (target dead / lost)
-//   Attack → Pathfind   (target backed away)
-//   * → Search          (target invalidated at any state)
+// Flanking (GDD §2.1):
+//   WideFlank  — staging at ~135° off target's forward (rear quarter), then attack.
+//   ShallowFlank — staging at ~45° off target's forward (side), then attack.
+//   Direct     — straight charge to attack range.
+//
+// The heavy's slow turnSpeed means fast flankers can out-rotate it and reach the
+// rear arc before the heavy can track them, exploiting the directional ARM system.
 
 [RequireComponent(typeof(UnitMovement))]
 public class TankAI : MonoBehaviour
 {
-    // ── Injected ────────────────────────────────────────────────────────────────
+    // ── Injected ─────────────────────────────────────────────────────────────────
     UnitDataSO   _data;
     int          _team;
     UnitMovement _movement;
     ICombatant   _self;
 
-    // ── State ───────────────────────────────────────────────────────────────────
+    // ── State ────────────────────────────────────────────────────────────────────
     TankAIState     _state = TankAIState.Search;
-    ICombatant      _unitTarget;    // enemy tank
-    ObjectiveTarget _buildTarget;   // enemy FOB / HQ
+    ICombatant      _unitTarget;
+    ObjectiveTarget _buildTarget;
 
-    // ── Tactical approach (unit combat only) ────────────────────────────────────
+    // ── Tactical approach (unit combat) ─────────────────────────────────────────
     ApproachStyle _approach;
-    int           _flankSide;      // +1 = right, -1 = left; fixed per target acquisition
+    int           _flankSide;         // +1 = target's right, -1 = target's left
+    bool          _stagingReached;    // true once the flanker is near the staging point
     ICombatant    _lastRolledTarget;
 
-    // ── Timers ──────────────────────────────────────────────────────────────────
+    // ── Timers ───────────────────────────────────────────────────────────────────
     float _scanTimer;
     float _attackTimer;
 
-    const float SCAN_INTERVAL  = 0.5f;
-    const float CONE_DROP_MULT = 1.5f;  // drop unit target if > rng * mult outside cone
-    const float RANGE_BUFFER   = 1.2f;  // return to Pathfind if > rng * buffer
+    const float SCAN_INTERVAL   = 0.5f;
+    const float CONE_DROP_MULT  = 1.5f;
+    const float RANGE_BUFFER    = 1.2f;
+    const float STAGING_RADIUS  = 1.8f;  // arrive within this distance of staging point
 
-    // ── Public API ──────────────────────────────────────────────────────────────
+    // ── Public API ───────────────────────────────────────────────────────────────
 
     public void Initialize(UnitDataSO data, int team, UnitMovement movement, ICombatant self)
     {
@@ -58,7 +63,7 @@ public class TankAI : MonoBehaviour
 
     public TankAIState CurrentState => _state;
 
-    // ── Update loop ─────────────────────────────────────────────────────────────
+    // ── Update loop ──────────────────────────────────────────────────────────────
 
     void Update()
     {
@@ -73,7 +78,7 @@ public class TankAI : MonoBehaviour
         }
     }
 
-    // ── SEARCH ──────────────────────────────────────────────────────────────────
+    // ── SEARCH ───────────────────────────────────────────────────────────────────
 
     void TickSearch()
     {
@@ -81,16 +86,15 @@ public class TankAI : MonoBehaviour
         if (_scanTimer > 0f) return;
         _scanTimer = SCAN_INTERVAL;
 
-        // Scan for the nearest visible enemy tank (detection cone + line-of-sight).
         ICombatant bestTank     = null;
         float      bestTankDist = float.MaxValue;
 
         foreach (var tc in FindObjectsByType<TankCombatant>(FindObjectsSortMode.None))
         {
             if (tc.Team == _team || tc.IsDead) continue;
-            if (!IsInDetectionCone(tc.transform))   continue;
-            if (!HasLineOfSight(tc.transform))       continue;
             float d = Vector3.Distance(transform.position, tc.Transform.position);
+            if (d > _data.aggroRange) continue;
+            if (!IsInDetectionCone(tc.transform)) continue;
             if (d < bestTankDist) { bestTankDist = d; bestTank = tc; }
         }
 
@@ -102,7 +106,6 @@ public class TankAI : MonoBehaviour
             return;
         }
 
-        // No visible tanks — look for enemy objectives (always globally visible).
         ObjectiveTarget bestObj     = null;
         float           bestObjDist = float.MaxValue;
 
@@ -117,25 +120,24 @@ public class TankAI : MonoBehaviour
         {
             _buildTarget = bestObj;
             _unitTarget  = null;
-            Debug.Log($"[BATTLE] {name}: no enemy tanks detected — advancing on {bestObj.name}");
+            Debug.Log($"[AI] {name}: no enemy tanks — advancing on {bestObj.name}");
             _state = TankAIState.Priority;
         }
     }
 
-    // ── PRIORITY ─────────────────────────────────────────────────────────────────
+    // ── PRIORITY ──────────────────────────────────────────────────────────────────
 
     void TickPriority()
     {
-        // Rule 1: fight any visible enemy tank first.
         ICombatant bestTank     = null;
         float      bestTankDist = float.MaxValue;
 
         foreach (var tc in FindObjectsByType<TankCombatant>(FindObjectsSortMode.None))
         {
             if (tc.Team == _team || tc.IsDead) continue;
-            if (!IsInDetectionCone(tc.transform)) continue;
-            if (!HasLineOfSight(tc.transform))    continue;
             float d = Vector3.Distance(transform.position, tc.Transform.position);
+            if (d > _data.aggroRange) continue;
+            if (!IsInDetectionCone(tc.transform)) continue;
             if (d < bestTankDist) { bestTankDist = d; bestTank = tc; }
         }
 
@@ -147,16 +149,16 @@ public class TankAI : MonoBehaviour
             if (_unitTarget != _lastRolledTarget)
             {
                 _lastRolledTarget = _unitTarget;
+                _stagingReached   = false;
                 RollApproachStyle();
             }
 
             string side = _flankSide > 0 ? "right" : "left";
-            Debug.Log($"[BATTLE] {name}: engaging {bestTank.Transform.name} — {_approach} ({side})");
+            Debug.Log($"[AI] {name}: engaging {bestTank.Transform.name} — {_approach} ({side})");
             _state = TankAIState.Pathfind;
             return;
         }
 
-        // Rule 2: no tanks visible — attack nearest enemy objective.
         ObjectiveTarget bestObj     = null;
         float           bestObjDist = float.MaxValue;
 
@@ -171,7 +173,6 @@ public class TankAI : MonoBehaviour
         {
             _buildTarget = bestObj;
             _unitTarget  = null;
-            Debug.Log($"[BATTLE] {name}: all enemy tanks eliminated — advancing on {bestObj.name}");
             _state = TankAIState.Pathfind;
             return;
         }
@@ -179,7 +180,7 @@ public class TankAI : MonoBehaviour
         _state = TankAIState.Search;
     }
 
-    // ── PATHFIND ─────────────────────────────────────────────────────────────────
+    // ── PATHFIND ──────────────────────────────────────────────────────────────────
 
     void TickPathfind()
     {
@@ -187,37 +188,66 @@ public class TankAI : MonoBehaviour
         {
             if ((_unitTarget as UnityEngine.Object) == null || _unitTarget.IsDead)
             {
-                Debug.Log($"[BATTLE] {name}: target lost — scanning for next");
-                _unitTarget = null; _scanTimer = 0f; _state = TankAIState.Search; return;
+                LoseTarget();
+                return;
             }
 
             float dist = Vector3.Distance(transform.position, _unitTarget.Transform.position);
-            if (dist <= _data.rng) { _attackTimer = 0f; _state = TankAIState.Attack; return; }
 
-            _movement.SetDestination(UnitApproachPosition());
+            // Flanking tanks use a two-phase approach:
+            //   Phase 1 — navigate to the staging position (side/rear of target).
+            //   Phase 2 — once staged, close straight in to attack range.
+            if (!_stagingReached && _approach != ApproachStyle.Direct)
+            {
+                Vector3 staging = StagingPosition();
+                float   stagingDist = Vector3.Distance(transform.position, staging);
+
+                // Staging reached, or close enough to the target anyway — go to phase 2.
+                if (stagingDist <= STAGING_RADIUS || dist <= _data.rng)
+                {
+                    _stagingReached = true;
+                }
+                else
+                {
+                    _movement.SetDestination(staging);
+                    return;
+                }
+            }
+
+            // Phase 2 (or Direct): move to just inside attack range of the target.
+            if (dist <= _data.rng)
+            {
+                _attackTimer = 0f;
+                _state = TankAIState.Attack;
+                return;
+            }
+
+            _movement.SetDestination(DirectApproachPosition());
         }
         else if (_buildTarget != null)
         {
             if (!_buildTarget.IsAlive)
             {
-                Debug.Log($"[BATTLE] {name}: {_buildTarget.name} destroyed — scanning");
-                _buildTarget = null; _scanTimer = 0f; _state = TankAIState.Search; return;
+                _buildTarget = null;
+                _scanTimer   = 0f;
+                _state       = TankAIState.Search;
+                return;
             }
 
-            // Find closest walkable point near the objective; walled compounds may
-            // prevent reaching the centre, so attack from the closest reachable spot.
-            Vector3 objPos = _buildTarget.transform.position;
-            Vector3 dest   = objPos;
+            Vector3 objPos  = _buildTarget.transform.position;
+            float   distToObj = Vector3.Distance(transform.position, objPos);
+
+            if (distToObj <= _data.rng * RANGE_BUFFER)
+            {
+                _attackTimer = 0f;
+                _state = TankAIState.Attack;
+                return;
+            }
+
+            // Navigate to nearest walkable NavMesh point outside the building.
+            Vector3 dest = objPos;
             if (NavMesh.SamplePosition(objPos, out NavMeshHit hit, 30f, NavMesh.AllAreas))
                 dest = hit.position;
-
-            float distToObj  = Vector3.Distance(transform.position, objPos);
-            float distToDest = Vector3.Distance(transform.position, dest);
-
-            bool inRange  = distToObj  <= _data.rng;
-            bool atWall   = distToDest < 1.5f;
-            if (inRange || atWall) { _attackTimer = 0f; _state = TankAIState.Attack; return; }
-
             _movement.SetDestination(dest);
         }
         else
@@ -226,7 +256,7 @@ public class TankAI : MonoBehaviour
         }
     }
 
-    // ── ATTACK ───────────────────────────────────────────────────────────────────
+    // ── ATTACK ────────────────────────────────────────────────────────────────────
 
     void TickAttack()
     {
@@ -234,39 +264,40 @@ public class TankAI : MonoBehaviour
         {
             if ((_unitTarget as UnityEngine.Object) == null || _unitTarget.IsDead)
             {
-                Debug.Log($"[BATTLE] {name}: enemy tank DESTROYED — scanning for next target");
+                Debug.Log($"[AI] {name}: target DESTROYED — scanning");
+                _scanTimer = 0f;
                 _unitTarget = null;
-                _scanTimer  = 0f;
-                _state      = TankAIState.Search;
+                _state = TankAIState.Search;
                 return;
             }
 
             float dist = Vector3.Distance(transform.position, _unitTarget.Transform.position);
 
-            // Heavy detection cone: lose lock if target exits the forward arc at distance.
+            // Lose lock if target exits detection cone AND is well outside weapon range.
             if (!IsInDetectionCone(_unitTarget.Transform) && dist > _data.rng * CONE_DROP_MULT)
             {
-                Debug.Log($"[BATTLE] {name}: {_unitTarget.Transform.name} left detection cone — lost lock");
-                _unitTarget = null;
-                _scanTimer  = 0f;
-                _state      = TankAIState.Search;
+                Debug.Log($"[AI] {name}: {_unitTarget.Transform.name} exited detection cone — lost lock");
+                LoseTarget();
                 return;
             }
 
-            if (dist > _data.rng * RANGE_BUFFER) { _state = TankAIState.Pathfind; return; }
+            if (dist > _data.rng * RANGE_BUFFER)
+            {
+                _state = TankAIState.Pathfind;
+                return;
+            }
 
             _movement.Stop();
-            _movement.FaceToward(_unitTarget.Transform.position);
+            _movement.FaceToward(_unitTarget.Transform.position, _data.turnSpeed);
 
             _attackTimer -= Time.deltaTime;
             if (_attackTimer <= 0f)
             {
-                float dmg = CalcUnitDamage(_unitTarget);
+                float dmg   = CalcUnitDamage(_unitTarget);
                 _unitTarget.Health.TakeDamage(dmg);
-                string arc = HitArc(_unitTarget.Transform);
-                float hp   = _unitTarget.Health.Current;
-                float hpMax = _unitTarget.Health.Max;
-                Debug.Log($"[BATTLE] {name} → {_unitTarget.Transform.name}: {dmg:F0} dmg [{arc}] | HP {hp:F0}/{hpMax:F0}");
+                string arc  = HitArc(_unitTarget.Transform);
+                Debug.Log($"[DMG] {name} → {_unitTarget.Transform.name}: {dmg:F0} [{arc}] | " +
+                          $"HP {_unitTarget.Health.Current:F0}/{_unitTarget.Health.Max:F0}");
                 _attackTimer = 1f / Mathf.Max(0.01f, _data.spd);
             }
         }
@@ -274,7 +305,6 @@ public class TankAI : MonoBehaviour
         {
             if (!_buildTarget.IsAlive)
             {
-                Debug.Log($"[BATTLE] {name}: {_buildTarget.name} DESTROYED — scanning for next target");
                 _buildTarget = null;
                 _scanTimer   = 0f;
                 _state       = TankAIState.Search;
@@ -282,12 +312,10 @@ public class TankAI : MonoBehaviour
             }
 
             float dist = Vector3.Distance(transform.position, _buildTarget.transform.position);
-            // Wide buffer for structures: walls prevent reaching exact rng so only
-            // return to Pathfind if truly far away.
             if (dist > _data.rng * RANGE_BUFFER * 4f) { _state = TankAIState.Pathfind; return; }
 
             _movement.Stop();
-            _movement.FaceToward(_buildTarget.transform.position);
+            _movement.FaceToward(_buildTarget.transform.position, _data.turnSpeed);
 
             _attackTimer -= Time.deltaTime;
             if (_attackTimer <= 0f)
@@ -295,9 +323,8 @@ public class TankAI : MonoBehaviour
                 float pen = _data.pen / Mathf.Max(1f, _buildTarget.Arm);
                 float dmg = _data.atk * Mathf.Clamp(pen, 0.1f, 1.0f);
                 _buildTarget.Health.TakeDamage(dmg);
-                float hp    = _buildTarget.Health.Current;
-                float hpMax = _buildTarget.Health.Max;
-                Debug.Log($"[BATTLE] {name} → {_buildTarget.name}: {dmg:F0} dmg | HP {hp:F0}/{hpMax:F0}");
+                Debug.Log($"[DMG] {name} → {_buildTarget.name}: {dmg:F0} | " +
+                          $"HP {_buildTarget.Health.Current:F0}/{_buildTarget.Health.Max:F0}");
                 _attackTimer = 1f / Mathf.Max(0.01f, _data.spd);
             }
         }
@@ -307,7 +334,7 @@ public class TankAI : MonoBehaviour
         }
     }
 
-    // ── Approach Style ──────────────────────────────────────────────────────────
+    // ── Approach Positions ────────────────────────────────────────────────────────
 
     void RollApproachStyle()
     {
@@ -322,13 +349,42 @@ public class TankAI : MonoBehaviour
         else                                                            _approach = ApproachStyle.WideFlank;
 
         _flankSide = Random.value > 0.5f ? 1 : -1;
-        // No fixed staging point — WideFlank destination is computed dynamically
-        // every frame in UnitApproachPosition so the path tracks target movement.
     }
 
-    // Destination is recomputed every Pathfind tick so flanking paths adjust
-    // continuously as both tanks move.  NavMesh routes around obstacles.
-    Vector3 UnitApproachPosition()
+    // Phase-1 staging position — computed from the TARGET'S OWN facing direction,
+    // not the approach vector.  This keeps the staging point anchored to the
+    // target's rear/side regardless of where the attacker starts.
+    Vector3 StagingPosition()
+    {
+        Transform tgt     = _unitTarget.Transform;
+        Vector3   tgtFwd  = new Vector3(tgt.forward.x, 0f, tgt.forward.z).normalized;
+        if (tgtFwd.sqrMagnitude < 0.001f) tgtFwd = Vector3.forward;
+
+        Vector3 tgtRight  = Vector3.Cross(Vector3.up, tgtFwd).normalized * _flankSide;
+
+        // Staging radius is wider than attack range so the tank circles AROUND the
+        // target before it enters weapon range and transitions to Attack.
+        float stagingRadius = _data.rng * 1.8f;
+
+        switch (_approach)
+        {
+            case ApproachStyle.WideFlank:
+                // Rear quarter: behind and to the side.
+                // -fwd * 0.8 + right * 0.7 → ~131° off forward = solid rear arc.
+                return tgt.position + (-tgtFwd * 0.8f + tgtRight * 0.7f).normalized * stagingRadius;
+
+            case ApproachStyle.ShallowFlank:
+                // Side quarter: 90° off to the flank side.
+                return tgt.position + tgtRight * stagingRadius;
+
+            default:
+                return DirectApproachPosition();
+        }
+    }
+
+    // Phase-2 (and Direct) destination: just inside attack range along the
+    // current self-to-target vector.  Also used by RocketArtillery to hang back.
+    Vector3 DirectApproachPosition()
     {
         if (HasKw(UnitKeyword.RocketArtillery))
         {
@@ -337,62 +393,22 @@ public class TankAI : MonoBehaviour
         }
 
         Vector3 toTarget = (_unitTarget.Transform.position - transform.position).normalized;
-        Vector3 right    = Vector3.Cross(Vector3.up, toTarget).normalized * _flankSide;
-        float   closeIn  = _data.rng * 0.85f;
-
-        switch (_approach)
-        {
-            case ApproachStyle.Direct:
-                // Straight charge to just inside attack range.
-                return _unitTarget.Transform.position - toTarget * closeIn;
-
-            case ApproachStyle.ShallowFlank:
-                // ~45° oblique approach from the chosen side.
-                return _unitTarget.Transform.position - (toTarget + right).normalized * closeIn;
-
-            case ApproachStyle.WideFlank:
-                // Target a position 90° off the current line-of-sight at attack range.
-                // Continuously updated each frame — NavMesh handles obstacle routing.
-                return _unitTarget.Transform.position + right * closeIn;
-
-            default:
-                return _unitTarget.Transform.position - toTarget * closeIn;
-        }
+        return _unitTarget.Transform.position - toTarget * (_data.rng * 0.85f);
     }
 
-    // ── Detection Cone ──────────────────────────────────────────────────────────
+    // ── Detection Cone ────────────────────────────────────────────────────────────
 
     bool IsInDetectionCone(Transform t)
     {
         if (_data.detectionAngle >= 360f) return true;
-        float angle = Vector3.Angle(transform.forward, (t.position - transform.position).normalized);
+        Vector3 dir   = (t.position - transform.position);
+        dir.y = 0f;
+        if (dir.sqrMagnitude < 0.001f) return true;
+        float angle = Vector3.Angle(new Vector3(transform.forward.x, 0f, transform.forward.z), dir.normalized);
         return angle <= _data.detectionAngle * 0.5f;
     }
 
-    // ── Line-of-Sight ───────────────────────────────────────────────────────────
-
-    // Returns false if a rock, tree, or wall blocks the view to the target.
-    bool HasLineOfSight(Transform target)
-    {
-        Vector3 origin    = transform.position + Vector3.up * 0.5f;
-        Vector3 targetPos = target.position    + Vector3.up * 0.5f;
-        Vector3 dir       = targetPos - origin;
-        float   dist      = dir.magnitude;
-
-        if (Physics.Raycast(origin, dir.normalized, out RaycastHit hit, dist))
-        {
-            Transform hitRoot = hit.transform.root;
-            // Not blocked by the target itself or by any tank/objective
-            if (hitRoot == target.root)                                          return true;
-            if (hitRoot.GetComponentInChildren<TankCombatant>()  != null)        return true;
-            if (hitRoot.GetComponentInChildren<ObjectiveTarget>() != null)        return true;
-            // Hit solid cover (rock, tree, wall)
-            return false;
-        }
-        return true;
-    }
-
-    // ── Damage ──────────────────────────────────────────────────────────────────
+    // ── Damage ────────────────────────────────────────────────────────────────────
 
     float CalcUnitDamage(ICombatant target)
     {
@@ -410,29 +426,33 @@ public class TankAI : MonoBehaviour
         {
             float heFactor = arm * 0.35f;
             float heRatio  = _data.pen / Mathf.Max(1f, heFactor);
-            damage = atk * Mathf.Clamp(heRatio, 0.3f, 1.0f);
-            damage = Mathf.Max(atk * 0.3f, damage);
+            damage = Mathf.Max(atk * 0.3f, atk * Mathf.Clamp(heRatio, 0.3f, 1.0f));
         }
         else
         {
             float penRatio = _data.pen / Mathf.Max(1f, arm);
-            damage = atk * Mathf.Clamp(penRatio, 0.1f, 1.0f);
-            damage = Mathf.Max(atk * 0.1f, damage);
+            damage = Mathf.Max(atk * 0.1f, atk * Mathf.Clamp(penRatio, 0.1f, 1.0f));
             if (HasKw(UnitKeyword.Devastating))
                 damage = Mathf.Max(atk * _data.devastatingMinFloor, damage);
         }
 
         damage *= target.DirectionalDamageMult(transform.position);
-
         return damage;
     }
 
-    // ── Helpers ─────────────────────────────────────────────────────────────────
+    // ── Helpers ───────────────────────────────────────────────────────────────────
+
+    void LoseTarget()
+    {
+        _unitTarget     = null;
+        _stagingReached = false;
+        _scanTimer      = 0f;
+        _state          = TankAIState.Search;
+    }
 
     string HitArc(Transform target)
     {
-        float angle = Vector3.Angle(target.forward,
-                                    transform.position - target.position);
+        float angle = Vector3.Angle(target.forward, transform.position - target.position);
         if      (angle < 45f)  return "Front";
         else if (angle < 135f) return "Side";
         else                   return "Rear";

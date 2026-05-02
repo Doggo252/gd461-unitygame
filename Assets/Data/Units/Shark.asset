@@ -19,7 +19,7 @@ MonoBehaviour:
   arm: 35
   pen: 70
   spd: 0.9
-  mov: 2.2
+  mov: 6.6000004
   rng: 5
   aggroRange: 60
   keywords: 16
@@ -33,3 +33,4 @@ MonoBehaviour:
   weightShallowFlank: 0.25
   weightWideFlank: 0.05
   detectionAngle: 360
+  turnSpeed: 3.5

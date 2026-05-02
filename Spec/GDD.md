@@ -18,12 +18,15 @@
 
 ### The Battlefield
 
-- **Layout:** A symmetrical top-down war map split into two halves (Friendly Half / Enemy Half) separated by a contested no-man's-land.
+- **Orientation:** Landscape. **Player 1 (blue)** deploys from the **left (−X) side**; **Player 2 / AI (red)** deploys from the **right (+X) side**. The two lanes run along the **Z axis** (north and south).
+- **Layout:** A symmetrical top-down war map split into two halves (Friendly Half / Enemy Half) separated by a contested no-man's-land at X = 0.
 - **Terrain:** Roads (faster movement), open ground (standard), rubble/craters (reduced speed). Terrain is fixed per map.
-- **Fronts:** Two "fronts" (left and right) cross no-man's-land, creating two distinct avenues of attack — equivalent to lanes.
+- **River:** A river channel runs down the **centre line (X = 0)** from map edge to map edge. It is **impassable except at the two bridges** (one per lane at Z = ±12). The bridges are the only crossing points and create natural chokepoints.
+- **Bridges:** Two wooden bridges crossing the river, each 5 units wide — wide enough for one tank at a time. Tactically significant: a single heavy tank can hold a bridge against multiple light tanks.
+- **Fronts:** Two "fronts" (north lane Z ≈ +12, south lane Z ≈ −12) cross no-man's-land via the bridges, creating two distinct avenues of attack.
 - **Structures:** Each player commands 3 structures:
   - **2 Forward Operating Bases (FOBs):** One per front. They have auto-firing defensive weapons (crew-served guns, AA batteries). These are military positions, not fantasy towers.
-  - **1 Command HQ:** Placed behind the FOBs. It is hardened and fully activates its perimeter defenses only after a FOB falls or takes direct fire.
+  - **1 Command HQ:** Placed behind the FOBs at ±25 X. It is hardened and fully activates its perimeter defenses only after a FOB falls or takes direct fire.
 - **Win Conditions:**
   - Destroying the enemy Command HQ: immediate victory.
   - Timer expiry: the player who controls (has destroyed) more enemy FOBs wins.
@@ -51,7 +54,7 @@ Each tank runs a four-state state machine every Update frame:
 |---|---|
 | **Search** | Polls every 0.5 s for the nearest visible enemy tank within detection cone + line-of-sight. If no tanks visible, searches for nearest enemy FOB/HQ (objectives always globally known — no LOS required). Transitions → Priority. |
 | **Priority** | Re-evaluates globally. Rule 1: any visible enemy tank → target it, roll approach style, go to Pathfind. Rule 2: no tanks anywhere → target nearest enemy objective, go to Pathfind. |
-| **Pathfind** | Navigates via NavMesh. For unit targets: uses tactical approach position (Direct / ShallowFlank / WideFlank). For objectives: navigates to the closest NavMesh-reachable point near the structure (handles walled compounds). Transitions → Attack when within weapon RNG, or when the closest accessible point is reached. |
+| **Pathfind** | Two-phase navigation for unit targets. **Phase 1 (Staging):** navigates to a staging position anchored to the *target's own facing direction* — WideFlank stages at ~131° off the target's forward (rear quarter); ShallowFlank stages at 90° (side); Direct skips staging. **Phase 2:** once at the staging position, closes straight in to attack range. For objectives: navigates to the closest NavMesh-reachable point near the structure. Transitions → Attack when within weapon RNG. |
 | **Attack** | Stops, faces target, fires every `1/SPD` seconds. For unit targets: validates detection cone each tick (drop lock if target exits cone AND beyond `RNG × 1.5`). If target backs outside `RNG × 1.2`, returns to Pathfind. If target dies or is destroyed, immediately returns to Search (scan timer reset to 0 for instant response). |
 
 #### Line-of-Sight Detection
@@ -72,9 +75,9 @@ Each tank type has a **tactical personality** that governs how it approaches an 
 
 | Style | Description |
 |---|---|
-| **Direct** | Charges straight at the target and stops just inside attack range. Front-arc armour exchange. |
-| **Shallow Flank** | Approaches at ~45° off the direct line. Clips the side arc, mixes front and side armour exposure. |
-| **Wide Flank** | Sweeps fully perpendicular (~90°) to circle the target's side or rear. Triggers the rear armour penalty (×0.4 ARM) on the target. |
+| **Direct** | Charges straight to just inside attack range. Front-arc armour exchange. |
+| **Shallow Flank** | Stages at 90° off the *target's own* right or left, then closes in. Attacks from the side arc (ARM ×0.40, ATK ×1.5). |
+| **Wide Flank** | Stages at ~131° off the *target's own* forward (rear quarter), routing around the target via NavMesh. Attacks from rear arc (ARM ×0.15, ATK ×2.5). The staging position is computed from the **target's facing**, not the attacker's approach vector, so it stays anchored to the target's rear regardless of relative movement. |
 
 > **RocketArtillery** (RocketShip) always holds position at maximum range regardless of roll — flanking provides no benefit for indirect fire.
 
@@ -84,10 +87,23 @@ Units with a `detectionAngle` less than 360° can only scan for and track enemie
 
 While engaged, tanks slowly rotate their facing toward the locked target. A fast flanker can outpace a slow-rotating heavy tank and exit its detection cone, causing the heavy to lose the lock and stand idle while the flanker approaches from the side or rear.
 
-| Tank | Detection Angle | Notes |
-|---|---|---|
-| **Heavy** | 110° | Tight forward cone; blind to enemies approaching from the flank/rear |
-| All others | 360° | Full omnidirectional awareness |
+| Tank | Detection Angle | Turn Speed | Notes |
+|---|---|---|---|
+| **Heavy** | 110° | 0.9 | Tight cone + very slow rotation — light flankers can out-rotate it |
+| **Crawler** | 360° | 0.8 | Slowest rotation; Fortress bonus rewards stopping anyway |
+| **Monster** | 360° | 1.0 | Ponderous |
+| **MegaBall** | 360° | 1.2 | Heavy charger |
+| **Original** | 360° | 3.0 | Baseline |
+| **Alternative** | 360° | 2.8 | — |
+| **Droid** | 360° | 3.0 | — |
+| **Shark** | 360° | 3.5 | — |
+| **Spike** | 360° | 3.2 | — |
+| **RocketShip** | 360° | 2.5 | — |
+| **UFO** | 360° | 4.0 | — |
+| **Light** | 360° | 5.0 | Fast flanker; out-rotates heavy tracking |
+| **UTV** | 360° | 5.5 | Scout; quickest rotation |
+
+Turn Speed is a slerp factor (degrees/frame-weighted). Higher = faster rotation toward a locked target during Attack state.
 
 #### Per-Tank Approach Weights
 
@@ -557,8 +573,49 @@ Each FOB and Command HQ displays a world-space health bar directly above the str
 ## 9. Art & Audio Direction
 
 - **Visual Style:** Stylized top-down 3D. Tank models come from the Unity Tanks asset pack (13 distinct meshes). Infantry uses Kenney asset packs. Aircraft uses the Generic Aircraft Models Free pack. Units are team-colored (red vs blue) to ensure readability.
-- **Camera:** Fixed isometric/top-down perspective.
+- **Camera:** Orthographic, fixed top-down with a slight 80° pitch for depth cue. `orthographicSize = 19` covers the full 56-unit map width at 16:9 with margin. Far clip plane = 200. No perspective distortion — standard for this genre.
 - **Audio:**
   - Distinct audio per unit type: tank engine growl on deployment, aircraft engine roar on attack run, infantry boot crunch and shouting.
   - Warning sirens when a FOB is below 25% HP.
   - CP-full audio cue (radio burst: "Command Post at capacity").
+
+---
+
+## 10. Implementation State (as of session 2)
+
+### Implemented and working
+- Full damage formula (§5.0–5.1): directional ARM reduction + ATK multiplier applied per shot
+- Four-state AI loop (§2) with two-phase flanking (§2.1)
+- Per-tank turn speed (§2.1 detection table) enforcing heavy-vs-light skill dynamics
+- NavMesh pathfinding with LOS raycasts and detection cone enforcement
+- World-space objective health bars (`ObjectiveHealthBar`) on all 6 structures
+- Orthographic camera (§9)
+- Landscape battlefield: P1 left, P2 right, river at X=0, two bridges at Z=±12
+- All 13 tank prefabs in `Assets/Prefabs/` — drag into scene, set **Team** (0=blue/P1, 1=red/P2)
+
+### Prefabs (`Assets/Prefabs/`)
+| Prefab | Tank Type | Key Keyword |
+|---|---|---|
+| `Tank_Original.prefab` | Original | — |
+| `Tank_Alternative.prefab` | Alternative | — |
+| `Tank_Light.prefab` | Light | FastFlanker |
+| `Tank_Heavy.prefab` | Heavy | — |
+| `Tank_Crawler.prefab` | Crawler | Fortress |
+| `Tank_Monster.prefab` | Monster | Devastating |
+| `Tank_Spike.prefab` | Spike | ArmorPiercer |
+| `Tank_Shark.prefab` | Shark | Aggressive |
+| `Tank_Droid.prefab` | Droid | SelfRepair |
+| `Tank_UTV.prefab` | UTV | Scout |
+| `Tank_MegaBall.prefab` | MegaBall | Rollout |
+| `Tank_RocketShip.prefab` | RocketShip | RocketArtillery |
+| `Tank_UFO.prefab` | UFO | Hover |
+
+### Not yet implemented
+- Card system (hand, deck rotation, CP cost, deployment zones)
+- CP regeneration and Surge Phase
+- FOB/HQ auto-fire defensive weapons
+- Infantry and Aviation card types
+- Support cards (artillery strikes, emplacements)
+- Win condition evaluation (timer, FOB count)
+- Audio
+- Match flow / game state machine

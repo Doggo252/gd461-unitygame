@@ -1,16 +1,16 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-// World-space health bar above an ObjectiveTarget.
-// Billboards toward the camera every LateUpdate so it is always readable
-// from any camera angle.  Subscribes/unsubscribes per AGENTS.md Rule 2.
+// World-space health bar anchored above an ObjectiveTarget structure.
+// Billboards toward the camera every LateUpdate.
+// Subscribes to HealthComponent.OnHealthChanged per AGENTS.md Rule 2.
 [RequireComponent(typeof(ObjectiveTarget))]
 public class ObjectiveHealthBar : MonoBehaviour
 {
     [Header("Layout")]
-    [SerializeField] float _yOffset   = 4f;   // height above structure pivot
-    [SerializeField] float _barWidth  = 7f;
-    [SerializeField] float _barHeight = 1.2f;
+    [SerializeField] float _yOffset   = 10f;  // world units above the structure pivot
+    [SerializeField] float _barWidth  = 200f;
+    [SerializeField] float _barHeight = 30f;
 
     [Header("Colours")]
     [SerializeField] Color _fullColor = new Color(0.10f, 0.90f, 0.10f);
@@ -30,6 +30,13 @@ public class ObjectiveHealthBar : MonoBehaviour
         BuildBar();
     }
 
+    void Start()
+    {
+        // Force an initial refresh so the bar shows full HP from frame one.
+        if (_health != null)
+            Refresh(_health.Current, _health.Max);
+    }
+
     void OnEnable()
     {
         if (_health != null) _health.OnHealthChanged += Refresh;
@@ -38,14 +45,6 @@ public class ObjectiveHealthBar : MonoBehaviour
     void OnDisable()
     {
         if (_health != null) _health.OnHealthChanged -= Refresh;
-    }
-
-    void LateUpdate()
-    {
-        // Canvas front face is in -localZ.  Setting rotation = camera.rotation
-        // makes -localZ point back toward the camera — correct billboarding.
-        if (_barRoot != null && Camera.main != null)
-            _barRoot.rotation = Camera.main.transform.rotation;
     }
 
     void Refresh(float current, float max)
@@ -66,48 +65,53 @@ public class ObjectiveHealthBar : MonoBehaviour
         var root = new GameObject("HealthBar");
         root.transform.SetParent(transform, false);
         root.transform.localPosition = new Vector3(0f, _yOffset, 0f);
+        root.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
         _barRoot = root.transform;
 
-        var canvas          = root.AddComponent<Canvas>();
-        canvas.renderMode   = RenderMode.WorldSpace;
-        canvas.sortingOrder = 25;
+        var canvas        = root.AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.WorldSpace;
+        // High sorting order ensures the bar renders on top of world geometry.
+        canvas.sortingOrder = 100;
 
-        var rt        = root.GetComponent<RectTransform>();
-        float totalH  = _barHeight + 1.6f;   // bar + label strip
-        rt.sizeDelta  = new Vector2(_barWidth, totalH);
+        var rt       = root.GetComponent<RectTransform>();
+        float totalH = _barHeight + 20f;  // bar + label strip
+        rt.sizeDelta = new Vector2(_barWidth, totalH);
+        // Scale canvas pixels → world units. With sizeDelta=200×32 and scale=0.05,
+        // the bar is 10×1.6 world units — clearly visible at orthographic size 19.
+        root.transform.localScale = Vector3.one * 0.05f;
 
         var scaler = root.AddComponent<CanvasScaler>();
-        scaler.dynamicPixelsPerUnit = 50f;  // lower = larger text/elements on screen
+        scaler.dynamicPixelsPerUnit = 1f;
 
-        // ── Team-coloured border ─────────────────────────────────────────────
+        // Team-coloured border
         Color teamColor = _target.Team == 0
-            ? new Color(0.20f, 0.45f, 1.00f, 1f)
+            ? new Color(0.20f, 0.55f, 1.00f, 1f)
             : new Color(1.00f, 0.25f, 0.25f, 1f);
         AddRect(root, "Border", Vector2.zero, Vector2.one,
                 Vector2.zero, Vector2.zero, teamColor);
 
-        // ── Dark background ──────────────────────────────────────────────────
+        // Dark background
         float barFrac = _barHeight / totalH;
         AddRect(root, "BG",
                 new Vector2(0f, 0f), new Vector2(1f, barFrac),
-                new Vector2(4f, 4f), new Vector2(-4f, -4f),
-                new Color(0.06f, 0.06f, 0.06f, 0.95f));
+                new Vector2(3f, 3f), new Vector2(-3f, -3f),
+                new Color(0.05f, 0.05f, 0.05f, 0.95f));
 
-        // ── Fill ─────────────────────────────────────────────────────────────
+        // Fill bar
         var fillGo       = new GameObject("Fill");
         fillGo.transform.SetParent(root.transform, false);
         var fillRt       = fillGo.AddComponent<RectTransform>();
         fillRt.anchorMin = new Vector2(0f, 0f);
         fillRt.anchorMax = new Vector2(1f, barFrac);
-        fillRt.offsetMin = new Vector2(7f,  7f);
-        fillRt.offsetMax = new Vector2(-7f, -7f);
+        fillRt.offsetMin = new Vector2(6f, 6f);
+        fillRt.offsetMax = new Vector2(-6f, -6f);
         _fill            = fillGo.AddComponent<Image>();
         _fill.type       = Image.Type.Filled;
         _fill.fillMethod = Image.FillMethod.Horizontal;
         _fill.fillAmount = 1f;
         _fill.color      = _fullColor;
 
-        // ── Label ────────────────────────────────────────────────────────────
+        // Label
         var labelGo       = new GameObject("Label");
         labelGo.transform.SetParent(root.transform, false);
         var labelRt       = labelGo.AddComponent<RectTransform>();
@@ -117,7 +121,7 @@ public class ObjectiveHealthBar : MonoBehaviour
         labelRt.offsetMax = new Vector2(-4f, -2f);
         _label            = labelGo.AddComponent<Text>();
         _label.font       = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-        _label.fontSize   = 22;
+        _label.fontSize   = 24;
         _label.fontStyle  = FontStyle.Bold;
         _label.alignment  = TextAnchor.MiddleCenter;
         _label.color      = Color.white;

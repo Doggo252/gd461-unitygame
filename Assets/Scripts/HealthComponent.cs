@@ -6,6 +6,7 @@ using UnityEngine;
 public class HealthComponent : MonoBehaviour
 {
     public event Action<float, float> OnHealthChanged; // (current, max)
+    public event Action              OnDamaged;
     public event Action              OnDeath;
 
     float _current;
@@ -21,12 +22,14 @@ public class HealthComponent : MonoBehaviour
         _max     = maxHp;
         _current = maxHp;
         _dead    = false;
+        OnHealthChanged?.Invoke(_current, _max); // prime any subscribers (e.g. health bars)
     }
 
     public void TakeDamage(float amount)
     {
         if (_dead || amount <= 0f) return;
         _current = Mathf.Max(0f, _current - amount);
+        OnDamaged?.Invoke();
         OnHealthChanged?.Invoke(_current, _max);
         if (_current <= 0f && !_dead)
         {

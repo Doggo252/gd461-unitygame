@@ -77,4 +77,7 @@ public class UnitDataSO : ScriptableObject
     public float weightWideFlank;
     [Tooltip("Full detection cone angle in degrees. 360 = omnidirectional. Enemies outside the forward arc are not scanned or tracked.")]
     public float detectionAngle = 360f;
+    [Tooltip("Turret/hull rotation speed (slerp factor) while tracking a locked target. " +
+             "Lower = slower rotation. Heavy = ~1.0, Medium = 3.0, Light/fast = 5.0.")]
+    public float turnSpeed = 3f;
 }
