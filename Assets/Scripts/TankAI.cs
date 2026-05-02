@@ -26,10 +26,11 @@ using UnityEngine.AI;
 public class TankAI : MonoBehaviour
 {
     // ── Injected ─────────────────────────────────────────────────────────────────
-    UnitDataSO   _data;
-    int          _team;
-    UnitMovement _movement;
-    ICombatant   _self;
+    UnitDataSO     _data;
+    int            _team;
+    UnitMovement   _movement;
+    ICombatant     _self;
+    UnitRegistrySO _registry;
 
     // ── State ────────────────────────────────────────────────────────────────────
     TankAIState     _state = TankAIState.Search;
@@ -53,15 +54,17 @@ public class TankAI : MonoBehaviour
 
     // ── Public API ───────────────────────────────────────────────────────────────
 
-    public void Initialize(UnitDataSO data, int team, UnitMovement movement, ICombatant self)
+    public void Initialize(UnitDataSO data, int team, UnitMovement movement, ICombatant self, UnitRegistrySO registry)
     {
         _data     = data;
         _team     = team;
         _movement = movement;
         _self     = self;
+        _registry = registry;
     }
 
-    public TankAIState CurrentState => _state;
+    public TankAIState CurrentState    => _state;
+    public ICombatant  CurrentUnitTarget => _unitTarget;
 
     // ── Update loop ──────────────────────────────────────────────────────────────
 
@@ -89,13 +92,13 @@ public class TankAI : MonoBehaviour
         ICombatant bestTank     = null;
         float      bestTankDist = float.MaxValue;
 
-        foreach (var tc in FindObjectsByType<TankCombatant>(FindObjectsSortMode.None))
+        foreach (var combatant in _registry.Combatants)
         {
-            if (tc.Team == _team || tc.IsDead) continue;
-            float d = Vector3.Distance(transform.position, tc.Transform.position);
+            if (combatant.Team == _team || combatant.IsDead) continue;
+            float d = Vector3.Distance(transform.position, combatant.Transform.position);
             if (d > _data.aggroRange) continue;
-            if (!IsInDetectionCone(tc.transform)) continue;
-            if (d < bestTankDist) { bestTankDist = d; bestTank = tc; }
+            if (!IsInDetectionCone(combatant.Transform)) continue;
+            if (d < bestTankDist) { bestTankDist = d; bestTank = combatant; }
         }
 
         if (bestTank != null)
@@ -109,7 +112,7 @@ public class TankAI : MonoBehaviour
         ObjectiveTarget bestObj     = null;
         float           bestObjDist = float.MaxValue;
 
-        foreach (var o in FindObjectsByType<ObjectiveTarget>(FindObjectsSortMode.None))
+        foreach (var o in _registry.Objectives)
         {
             if (o.Team == _team || !o.IsAlive) continue;
             float d = Vector3.Distance(transform.position, o.transform.position);
@@ -132,13 +135,13 @@ public class TankAI : MonoBehaviour
         ICombatant bestTank     = null;
         float      bestTankDist = float.MaxValue;
 
-        foreach (var tc in FindObjectsByType<TankCombatant>(FindObjectsSortMode.None))
+        foreach (var combatant in _registry.Combatants)
         {
-            if (tc.Team == _team || tc.IsDead) continue;
-            float d = Vector3.Distance(transform.position, tc.Transform.position);
+            if (combatant.Team == _team || combatant.IsDead) continue;
+            float d = Vector3.Distance(transform.position, combatant.Transform.position);
             if (d > _data.aggroRange) continue;
-            if (!IsInDetectionCone(tc.transform)) continue;
-            if (d < bestTankDist) { bestTankDist = d; bestTank = tc; }
+            if (!IsInDetectionCone(combatant.Transform)) continue;
+            if (d < bestTankDist) { bestTankDist = d; bestTank = combatant; }
         }
 
         if (bestTank != null)
@@ -162,7 +165,7 @@ public class TankAI : MonoBehaviour
         ObjectiveTarget bestObj     = null;
         float           bestObjDist = float.MaxValue;
 
-        foreach (var o in FindObjectsByType<ObjectiveTarget>(FindObjectsSortMode.None))
+        foreach (var o in _registry.Objectives)
         {
             if (o.Team == _team || !o.IsAlive) continue;
             float d = Vector3.Distance(transform.position, o.transform.position);
@@ -462,7 +465,7 @@ public class TankAI : MonoBehaviour
 
     bool AllyAlsoTargeting(ICombatant target)
     {
-        foreach (var ai in FindObjectsByType<TankAI>(FindObjectsSortMode.None))
+        foreach (var ai in _registry.TankAIs)
         {
             if (ai == this || ai._team != _team) continue;
             if (ai._unitTarget == target) return true;

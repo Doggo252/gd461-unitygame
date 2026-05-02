@@ -13,11 +13,14 @@ using UnityEditor;
 [RequireComponent(typeof(HealthComponent))]
 [RequireComponent(typeof(UnitMovement))]
 [RequireComponent(typeof(TankAI))]
+[RequireComponent(typeof(FloatingHealthBar))]
 public class TankCombatant : MonoBehaviour, ICombatant
 {
     [Header("Tank Configuration")]
-    [SerializeField] private TankType   _tankType = TankType.Original;
-    [SerializeField] private int        _team;       // 0 = Player 1 (blue), 1 = Player 2 (red)
+    [SerializeField] private TankType       _tankType = TankType.Original;
+    [SerializeField] private int            _team;
+    [SerializeField] private UnitRegistrySO _registry;
+    [SerializeField] private KillEventSO    _killEvent;
 
     [Header("Data (auto-populated from TankType)")]
     [SerializeField] private UnitDataSO _data;
@@ -92,11 +95,21 @@ public class TankCombatant : MonoBehaviour, ICombatant
     void OnEnable()
     {
         if (_health != null) _health.OnDeath += HandleDeath;
+        if (_registry != null)
+        {
+            _registry.Register((ICombatant)this);
+            if (_ai != null) _registry.Register(_ai);
+        }
     }
 
     void OnDisable()
     {
         if (_health != null) _health.OnDeath -= HandleDeath;
+        if (_registry != null)
+        {
+            _registry.Unregister((ICombatant)this);
+            if (_ai != null) _registry.Unregister(_ai);
+        }
     }
 
     void Start()
@@ -110,7 +123,11 @@ public class TankCombatant : MonoBehaviour, ICombatant
 
         _health.Initialize(_data.maxHp);
         _movement.Initialize(_data.mov);
-        _ai.Initialize(_data, _team, _movement, this);
+        _ai.Initialize(_data, _team, _movement, this, _registry);
+
+        GetComponent<FloatingHealthBar>().SetBorderColor(_team == 0
+            ? new Color(0.20f, 0.45f, 0.95f)
+            : new Color(0.95f, 0.20f, 0.20f));
 
         ApplyTeamColor();
 
@@ -134,6 +151,12 @@ public class TankCombatant : MonoBehaviour, ICombatant
 
     void HandleDeath()
     {
+        if (_killEvent != null)
+            _killEvent.Raise(new KillInfo
+            {
+                unitName = _data != null ? _data.tankType.ToString() : name,
+                team     = _team
+            });
         Destroy(gameObject);
     }
 

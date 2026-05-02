@@ -47,7 +47,16 @@ These rules apply to all code written for this project. Follow them unconditiona
 
 ---
 
-## 5. Game Design Document
+## 5. No Procedural UI Construction
+
+- All Canvas hierarchies and UI structure (Image, Text, Slider, LayoutGroup, RectTransform, CanvasScaler, etc.) **must be created and configured in the Unity Editor** — either directly in the scene or as Prefab assets under `Assets/Prefabs/`.
+- MonoBehaviour scripts must only hold `[SerializeField]` references to **pre-existing** UI components. They update values (fill amounts, text strings, colors) but never call `new GameObject()`, `AddComponent()`, or manually parent UI nodes at runtime.
+- **Exception:** transient data-driven entries (e.g., individual kill-feed rows, damage numbers, notification items) may be instantiated and destroyed at runtime because they represent live game data, not structural UI.
+- If a UI element needs to be reused across multiple scene objects, create a **Prefab** for it under `Assets/Prefabs/UI/` and instantiate that prefab — do not reconstruct the hierarchy in code.
+
+---
+
+## 6. Game Design Document
 
 - The GDD is located at `Spec/GDD.md`. **Read it before writing any gameplay code.**
 - All unit stats, card definitions, era configurations, damage formulas, and win conditions are defined there. Do not invent values — always source them from the GDD.

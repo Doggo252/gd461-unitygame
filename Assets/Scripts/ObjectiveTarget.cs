@@ -7,9 +7,10 @@ using UnityEngine;
 public class ObjectiveTarget : MonoBehaviour
 {
     [Header("Structure")]
-    public int   Team;
-    public float Arm   = 30f;    // armour rating for kinetic damage calc
-    public float MaxHp = 5000f;  // FOBs: 5000, Command HQ: 8000
+    public int            Team;
+    public float          Arm      = 30f;    // armour rating for kinetic damage calc
+    public float          MaxHp    = 5000f;  // FOBs: 5000, Command HQ: 8000
+    [SerializeField] UnitRegistrySO _registry;
 
     HealthComponent _health;
     public HealthComponent Health  => _health;
@@ -17,4 +18,7 @@ public class ObjectiveTarget : MonoBehaviour
 
     void Awake() => _health = GetComponent<HealthComponent>();
     void Start()  => _health.Initialize(MaxHp);
+
+    void OnEnable()  { if (_registry != null) _registry.Register(this); }
+    void OnDisable() { if (_registry != null) _registry.Unregister(this); }
 }
