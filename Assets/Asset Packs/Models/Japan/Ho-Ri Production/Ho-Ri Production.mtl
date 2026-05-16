@@ -1,0 +1,92 @@
+newmtl adf9cd00-da8d-4b4e-83a2-270cdfb718ad
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/type_5_ho_ri_production_body_c_jp_camo_olive.jpg
+map_Ks textures/type_5_ho_ri_production_body_n_s.jpg
+map_normal textures/type_5_ho_ri_production_body_n.jpg
+map_ao textures/type_5_ho_ri_production_body_ao.jpg
+
+newmtl 869ee20d-963c-4d8e-92cd-c9b1d754ab8f
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/type_5_ho_ri_production_body_c_jp_camo_olive.jpg
+map_Ks textures/type_5_ho_ri_production_body_n_s.jpg
+map_normal textures/type_5_ho_ri_production_body_n.jpg
+map_ao textures/type_5_ho_ri_production_body_ao.jpg
+
+newmtl 5cac38c0-b9d0-428e-95b7-170630c8fe8d
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/net_f_c.jpg
+map_Ks textures/net_f_n_s.jpg
+map_normal textures/net_f_n.jpg
+map_ao textures/net_f_ao.jpg
+map_d textures/net_f_c_a.png
+
+newmtl 6f575e9d-92b8-4766-8950-e73760fe0001
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/headlight_glass_c.jpg
+map_Ks textures/headlight_glass_n_s.jpg
+map_normal textures/headlight_glass_n.jpg
+
+newmtl aabf1733-aff6-41bf-a3f7-107ebec08b5f
+Kd 0.000 0.000 0.000
+Ks 1.000 1.000 1.000
+Ns 255
+Ke 0.000 0.000 0.000
+d 0.1
+map_Kd textures/headlight_glass_c.jpg
+map_Ks textures/headlight_glass_n_s.jpg
+map_normal textures/headlight_glass_n.jpg
+map_d textures/headlight_glass_c_a.png
+
+newmtl 139234bf-fd5c-4445-96e0-54722dc85216
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/type_5_ho_ri_production_gun_c_jp_camo_olive.jpg
+map_Ks textures/type_5_ho_ri_production_gun_n_s.jpg
+map_normal textures/type_5_ho_ri_production_gun_n.jpg
+map_ao textures/type_5_ho_ri_production_gun_ao.jpg
+
+newmtl 5beaf61b-6f3d-4bc0-8738-5040186f9a73
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/rifled_barrel_c_c.jpg
+map_Ks textures/rifled_barrel_c_n_s.jpg
+map_normal textures/rifled_barrel_c_n.jpg
+
+newmtl f6eb22e3-a1cb-4182-9d32-5735308b6d0a
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/jp_type_5_chi_ri_track_c.jpg
+map_Ks textures/jp_type_5_chi_ri_track_n_s.jpg
+map_normal textures/jp_type_5_chi_ri_track_n.jpg
+map_ao textures/jp_type_5_chi_ri_track_ao.jpg
+map_d textures/jp_type_5_chi_ri_track_c_a.png
+
+newmtl 180629f2-b3a7-4f4f-8d1b-ee1658b4687c
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/jp_type_5_chi_ri_track_c.jpg
+map_Ks textures/jp_type_5_chi_ri_track_n_s.jpg
+map_normal textures/jp_type_5_chi_ri_track_n.jpg
+map_ao textures/jp_type_5_chi_ri_track_ao.jpg
+map_d textures/jp_type_5_chi_ri_track_c_a.png
+

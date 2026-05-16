@@ -1,0 +1,95 @@
+newmtl 4f2191c0-e245-4069-b173-3f507e189106
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/ger_panzerjager_hetzer_track_c.jpg
+map_Ks textures/ger_panzerjager_hetzer_track_n_s.jpg
+map_normal textures/ger_panzerjager_hetzer_track_n_n.jpg
+map_ao textures/ger_panzerjager_hetzer_track_ao_ao.jpg
+map_d textures/ger_panzerjager_hetzer_track_c_a.png
+
+newmtl 2dd264b7-e5a8-48bd-89f9-83ae2c79f485
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/panzerjager_hetzer_body_c_ger_camo_dunkelgelb.jpg
+map_Ks textures/panzerjager_hetzer_body_n_s.jpg
+map_normal textures/panzerjager_hetzer_body_n_n.jpg
+map_ao textures/panzerjager_hetzer_body_ao_ao.jpg
+
+newmtl 640e576f-6a4b-4b3f-b835-a7acc5cdcb71
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/ger_panzerjager_hetzer_track_c.jpg
+map_Ks textures/ger_panzerjager_hetzer_track_n_s.jpg
+map_normal textures/ger_panzerjager_hetzer_track_n_n.jpg
+map_ao textures/ger_panzerjager_hetzer_track_ao_ao.jpg
+map_d textures/ger_panzerjager_hetzer_track_c_a.png
+
+newmtl 0c7b1b96-f55c-4dba-a44b-b0beb27ac15d
+Kd 1.000 1.000 1.000
+Ks 0.753 0.753 0.753
+Ns 100
+Ke 0.000 0.000 0.000
+map_Kd textures/panzerjager_hetzer_body_c.jpg
+map_Ks textures/panzerjager_hetzer_body_n_s.jpg
+map_normal textures/panzerjager_hetzer_body_n_n.jpg
+map_ao textures/panzerjager_hetzer_body_ao_ao.jpg
+map_Ke textures/panzerjager_hetzer_body_c.jpg
+
+newmtl 4704d9d0-96b3-4420-b1b1-514911202961
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/net_c_c.jpg
+map_Ks textures/net_c_n_s.jpg
+map_normal textures/net_c_n_n.jpg
+map_ao textures/net_c_ao_ao.jpg
+map_d textures/net_c_c_a.png
+
+newmtl 93a8ba94-c5b4-4386-af38-2a456cd33875
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/panzerjager_hetzer_body_c_ger_camo_dunkelgelb.jpg
+map_Ks textures/panzerjager_hetzer_body_n_s.jpg
+map_normal textures/panzerjager_hetzer_body_n_n.jpg
+map_ao textures/panzerjager_hetzer_body_ao_ao.jpg
+
+newmtl 51758bea-1393-424a-a112-6b911d1cc3d4
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/mg_34_c.jpg
+map_Ks textures/mg_34_n_s.jpg
+map_normal textures/mg_34_n_n.jpg
+map_ao textures/mg_34_ao_ao.jpg
+map_d textures/mg_34_c_a.png
+
+newmtl ba8d5f6f-d1f9-4108-a4ad-54f50826f6f9
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/panzerjager_hetzer_gun_c_ger_camo_dunkelgelb.jpg
+map_Ks textures/panzerjager_hetzer_gun_n_s.jpg
+map_normal textures/panzerjager_hetzer_gun_n_n.jpg
+map_ao textures/panzerjager_hetzer_gun_ao_ao.jpg
+
+newmtl 9a645f8e-a084-4962-bed2-58d307e33d32
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/rifled_barrel_b_c.jpg
+map_Ks textures/rifled_barrel_b_n_s.jpg
+map_normal textures/rifled_barrel_b_n_n.jpg
+map_ao textures/rifled_barrel_b_n_ao.jpg
+

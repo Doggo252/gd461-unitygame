@@ -1,0 +1,158 @@
+newmtl 61314480-a36a-4479-82cb-b9781b56b90c
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/us_t29_track_c.jpg
+map_Ks textures/us_t29_track_n_s.jpg
+map_normal textures/us_t29_track_n_n.jpg
+map_ao textures/us_t29_track_ao_ao.jpg
+map_d textures/us_t29_track_c_a.png
+
+newmtl 3039aec6-b0d8-46e8-a5b7-cbddfd39d2ca
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/t34_body_c_us_camo_olive.jpg
+map_Ks textures/t34_body_n_s.jpg
+map_normal textures/t34_body_n_n.jpg
+map_ao textures/t34_body_ao_ao.jpg
+
+newmtl 93b398ff-fcb1-433c-8352-7482a64d586d
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/t34_turret_c_us_camo_olive.jpg
+map_Ks textures/t34_turret_n_s.jpg
+map_normal textures/t34_turret_n_n.jpg
+map_ao textures/t34_turret_ao_ao.jpg
+
+newmtl 5dded6a7-20c1-4f53-8d1a-54f3d6d38a4b
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/t34_gun_c_us_camo_olive.jpg
+map_Ks textures/t34_gun_n_s.jpg
+map_normal textures/t34_gun_n_n.jpg
+map_ao textures/t34_gun_ao_ao.jpg
+
+newmtl 57a3d536-3954-41d8-805d-f02e33420cef
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/mg_browning_m2hb_c.jpg
+map_Ks textures/mg_browning_m2hb_n_s.jpg
+map_normal textures/mg_browning_m2hb_n_n.jpg
+map_ao textures/mg_browning_m2hb_ao_ao.jpg
+map_d textures/mg_browning_m2hb_c_a.png
+
+newmtl d5cce972-9cfc-4596-8f95-1863a7daf7a6
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/rifled_barrel_c_c.jpg
+map_Ks textures/rifled_barrel_c_n_s.jpg
+map_normal textures/rifled_barrel_c_n_n.jpg
+map_ao textures/rifled_barrel_c_n_ao.jpg
+
+newmtl b8fd7a54-f9f9-4afb-8d07-8f69ecb077e4
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/mg_browning_m2hb_mount_c_us_camo_olive.jpg
+map_Ks textures/mg_browning_m2hb_mount_n_s.jpg
+map_normal textures/mg_browning_m2hb_mount_n_n.jpg
+map_ao textures/mg_browning_m2hb_mount_ao_ao.jpg
+
+newmtl c77df815-a44d-4a2f-8ed8-7a5dfa8af20f
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/mg_browning_m2hb_ammo_c.jpg
+map_Ks textures/mg_browning_m2hb_ammo_n_s.jpg
+map_normal textures/mg_browning_m2hb_ammo_n_n.jpg
+map_ao textures/mg_browning_m2hb_ammo_ao_ao.jpg
+map_d textures/mg_browning_m2hb_ammo_c_a.png
+
+newmtl 48a3548e-47f7-40c7-86f5-36cade1198e2
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/mg_browning_m2hb_mount_c.jpg
+map_Ks textures/mg_browning_m2hb_mount_n_s.jpg
+map_normal textures/mg_browning_m2hb_mount_n_n.jpg
+map_ao textures/mg_browning_m2hb_mount_ao_ao.jpg
+map_d textures/mg_browning_m2hb_mount_c_a.png
+
+newmtl 70b772d8-5cb2-4d09-9cb7-ae7fc17a7c16
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/us_t29_track_c.jpg
+map_Ks textures/us_t29_track_n_s.jpg
+map_normal textures/us_t29_track_n_n.jpg
+map_ao textures/us_t29_track_ao_ao.jpg
+map_d textures/us_t29_track_c_a.png
+
+newmtl 0d74ee38-b166-4fe7-8fd0-03d781042370
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/headlight_glass_c.jpg
+map_Ks textures/headlight_glass_n_s.jpg
+map_normal textures/headlight_glass_n_n.jpg
+map_ao textures/headlight_glass_n_ao.jpg
+
+newmtl a0fe7c6b-35a9-428d-81d8-12e739d32df7
+Kd 0.000 0.000 0.000
+Ks 1.000 1.000 1.000
+Ns 255
+Ke 0.000 0.000 0.000
+d 0.15
+map_Kd textures/headlight_glass_c.jpg
+map_Ks textures/headlight_glass_n_s.jpg
+map_normal textures/headlight_glass_n_n.jpg
+map_d textures/headlight_glass_c_a.png
+
+newmtl 6b1dbb81-5b5c-4d62-8ea8-6ec41bc43ca8
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/net_d_c.jpg
+map_Ks textures/net_d_n_s.jpg
+map_normal textures/net_d_n_n.jpg
+map_ao textures/net_d_ao_ao.jpg
+map_d textures/net_d_c_a.png
+
+newmtl be783994-474d-4980-9517-b59fbf434eff
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/t34_turret_c_us_camo_olive.jpg
+map_Ks textures/t34_turret_n_s.jpg
+map_normal textures/t34_turret_n_n.jpg
+map_ao textures/t34_turret_ao_ao.jpg
+
+newmtl 227c7ee9-9303-4160-bfce-ea96f236008f
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/mg_browning_m1919a4_c.jpg
+map_Ks textures/mg_browning_m1919a4_n_s.jpg
+map_normal textures/mg_browning_m1919a4_n_n.jpg
+map_ao textures/mg_browning_m1919a4_ao_ao.jpg
+map_d textures/mg_browning_m1919a4_c_a.png
+

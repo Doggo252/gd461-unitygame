@@ -1,0 +1,114 @@
+newmtl 00e25d3a-0c9f-4748-b5a2-8b492017de91
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/panhard_ebr_body_c_fr_camo_vert_olive_arme.jpg
+map_Ks textures/panhard_ebr_body_n_s.jpg
+map_normal textures/panhard_ebr_body_n_n.jpg
+map_ao textures/panhard_ebr_body_ao_ao.jpg
+
+newmtl 96e59340-070d-4b3d-9773-1ef1eabf8b39
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/headlight_glass_c.jpg
+map_Ks textures/headlight_glass_n_s.jpg
+map_normal textures/headlight_glass_n_n.jpg
+map_ao textures/headlight_glass_n_ao.jpg
+
+newmtl a81d127e-dfd6-45ba-9f39-d72bdf74c3e1
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/net_f_c.jpg
+map_Ks textures/net_f_n_s.jpg
+map_normal textures/net_f_n_n.jpg
+map_ao textures/net_f_ao_ao.jpg
+map_d textures/net_f_c_a.png
+
+newmtl 2686e5c5-4931-42f4-8133-7b91f4b3829f
+Kd 0.000 0.000 0.000
+Ks 1.000 1.000 1.000
+Ns 255
+Ke 0.000 0.000 0.000
+d 0.15
+map_Kd textures/headlight_glass_c.jpg
+map_Ks textures/headlight_glass_n_s.jpg
+map_normal textures/headlight_glass_n_n.jpg
+map_d textures/headlight_glass_c_a.png
+
+newmtl 81efe94d-2e2f-46ce-8a44-18e69f96fc67
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/mg_mac_31_c.jpg
+map_Ks textures/mg_mac_31_n_s.jpg
+map_normal textures/mg_mac_31_n_n.jpg
+map_ao textures/mg_mac_31_ao_ao.jpg
+map_d textures/mg_mac_31_c_a.png
+
+newmtl d1cf0ab8-4df1-4f11-b135-e431b28f4af9
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/amx_13_fl_11_turret_c_fr_camo_vert_olive_arme.jpg
+map_Ks textures/amx_13_fl_11_turret_n_s.jpg
+map_normal textures/amx_13_fl_11_turret_n_n.jpg
+map_ao textures/amx_13_fl_11_turret_ao_ao.jpg
+
+newmtl 2774953b-adec-4d9d-9fe7-3b490fef595c
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/mg_mac_31_c.jpg
+map_Ks textures/mg_mac_31_n_s.jpg
+map_normal textures/mg_mac_31_n_n.jpg
+map_ao textures/mg_mac_31_ao_ao.jpg
+map_d textures/mg_mac_31_c_a.png
+
+newmtl b18740cc-9c9c-47de-a008-cc62d8b30a50
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/amx_13_fl_11_gun_c_fr_camo_vert_olive_arme.jpg
+map_Ks textures/amx_13_fl_11_gun_n_s.jpg
+map_normal textures/amx_13_fl_11_gun_n_n.jpg
+map_ao textures/amx_13_fl_11_gun_ao_ao.jpg
+
+newmtl 5b54b32f-8e9f-4061-a217-0cdf794bf602
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/rifled_barrel_c_c.jpg
+map_Ks textures/rifled_barrel_c_n_s.jpg
+map_normal textures/rifled_barrel_c_n_n.jpg
+map_ao textures/rifled_barrel_c_n_ao.jpg
+
+newmtl dfb303eb-d827-47cd-b17d-5ebf82587033
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/panhard_ebr_body_c_fr_camo_vert_olive_arme.jpg
+map_Ks textures/panhard_ebr_body_n_s.jpg
+map_normal textures/panhard_ebr_body_n_n.jpg
+map_ao textures/panhard_ebr_body_ao_ao.jpg
+
+newmtl 2903b418-1986-4a27-ba1d-32822034c7b5
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/amx_13_fl_11_turret_c_fr_camo_vert_olive_arme.jpg
+map_Ks textures/amx_13_fl_11_turret_n_s.jpg
+map_normal textures/amx_13_fl_11_turret_n_n.jpg
+map_ao textures/amx_13_fl_11_turret_ao_ao.jpg
+

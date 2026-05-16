@@ -1,0 +1,125 @@
+newmtl bc1b55d0-5a6b-4c9b-adec-4e1d83014247
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/pzkpfw_v_ausf_a_panther_body_c_ger_camo_dunkelgelb.jpg
+map_Ks textures/pzkpfw_v_ausf_a_panther_body_n_s.jpg
+map_normal textures/pzkpfw_v_ausf_a_panther_body_n_n.jpg
+map_ao textures/pzkpfw_v_ausf_a_panther_body_ao_ao.jpg
+
+newmtl f51a7938-f441-4f5c-b0c8-6e7c1f2e182f
+Kd 1.000 1.000 1.000
+Ks 0.753 0.753 0.753
+Ns 100
+Ke 0.000 0.000 0.000
+map_Kd textures/pzkpfw_v_ausf_a_panther_body_c.jpg
+map_Ks textures/pzkpfw_v_ausf_a_panther_body_n_s.jpg
+map_normal textures/pzkpfw_v_ausf_a_panther_body_n_n.jpg
+map_ao textures/pzkpfw_v_ausf_a_panther_body_ao_ao.jpg
+map_Ke textures/pzkpfw_v_ausf_a_panther_body_c.jpg
+
+newmtl 37fe750d-0b5f-42c2-a3d5-2b7dad8244e8
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/ger_pzkpfw_v_ausf_d_panther_track_c.jpg
+map_Ks textures/ger_pzkpfw_v_ausf_d_panther_track_n_s.jpg
+map_normal textures/ger_pzkpfw_v_ausf_d_panther_track_n_n.jpg
+map_ao textures/ger_pzkpfw_v_ausf_d_panther_track_ao_ao.jpg
+map_d textures/ger_pzkpfw_v_ausf_d_panther_track_c_a.png
+
+newmtl d2c9a5af-b404-4dd9-bfd1-00d60c2c8d09
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/ger_pzkpfw_v_ausf_d_panther_track_c.jpg
+map_Ks textures/ger_pzkpfw_v_ausf_d_panther_track_n_s.jpg
+map_normal textures/ger_pzkpfw_v_ausf_d_panther_track_n_n.jpg
+map_ao textures/ger_pzkpfw_v_ausf_d_panther_track_ao_ao.jpg
+map_d textures/ger_pzkpfw_v_ausf_d_panther_track_c_a.png
+
+newmtl 38cc6dc3-1f41-4445-94d6-b18ca6e3eb1a
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/pzkpfw_v_ausf_a_panther_body_c_ger_camo_dunkelgelb.jpg
+map_Ks textures/pzkpfw_v_ausf_a_panther_body_n_s.jpg
+map_normal textures/pzkpfw_v_ausf_a_panther_body_n_n.jpg
+map_ao textures/pzkpfw_v_ausf_a_panther_body_ao_ao.jpg
+
+newmtl f106b23e-a515-4dd8-8d80-86e17b9fab87
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/net_f_c.jpg
+map_Ks textures/net_f_n_s.jpg
+map_normal textures/net_f_n_n.jpg
+map_ao textures/net_f_ao_ao.jpg
+map_d textures/net_f_c_a.png
+
+newmtl 8de106d0-e2a3-48bc-bda1-bbf3c84ffeab
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/pzkpfw_v_ausf_a_panther_turret_c_ger_camo_dunkelgelb.jpg
+map_Ks textures/pzkpfw_v_ausf_a_panther_turret_n_s.jpg
+map_normal textures/pzkpfw_v_ausf_a_panther_turret_n_n.jpg
+map_ao textures/pzkpfw_v_ausf_a_panther_turret_ao_ao.jpg
+
+newmtl f0423bbb-c618-40df-a7e6-1d174fdf106f
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/attch_panther_track_c_attch_panther_track_c.jpg
+map_Ks textures/attch_panther_track_n_s.jpg
+map_normal textures/attch_panther_track_n_n.jpg
+map_ao textures/attch_panther_track_ao_ao.jpg
+
+newmtl 32254045-e590-4c6c-8080-9769acf65753
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/pzkpfw_v_ausf_a_panther_gun_c_ger_camo_dunkelgelb.jpg
+map_Ks textures/pzkpfw_v_ausf_a_panther_gun_n_s.jpg
+map_normal textures/pzkpfw_v_ausf_a_panther_gun_n_n.jpg
+map_ao textures/pzkpfw_v_ausf_a_panther_gun_ao_ao.jpg
+
+newmtl 78078894-d15a-4426-a13a-8ec3e1068a94
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/mg_34_c.jpg
+map_Ks textures/mg_34_n_s.jpg
+map_normal textures/mg_34_n_n.jpg
+map_ao textures/mg_34_ao_ao.jpg
+map_d textures/mg_34_c_a.png
+
+newmtl c8d0d447-ee19-49a3-bc23-9a5a2418f1eb
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/fliegerbeschussgerat_41_c_ger_camo_dunkelgelb.jpg
+map_Ks textures/fliegerbeschussgerat_41_n_s.jpg
+map_normal textures/fliegerbeschussgerat_41_n_n.jpg
+map_ao textures/fliegerbeschussgerat_41_ao_ao.jpg
+
+newmtl 8c6c96d0-8d2d-4f0c-b114-8da4ad6e54ff
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/mg_browning_m2hb_ammo_c.jpg
+map_Ks textures/mg_browning_m2hb_ammo_n_s.jpg
+map_normal textures/mg_browning_m2hb_ammo_n_n.jpg
+map_ao textures/mg_browning_m2hb_ammo_ao_ao.jpg
+

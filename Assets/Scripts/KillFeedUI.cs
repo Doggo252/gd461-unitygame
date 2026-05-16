@@ -26,14 +26,22 @@ public class KillFeedUI : MonoBehaviour
 
     void OnKill(KillInfo info)
     {
-        AddEntry(info.unitName, info.team == 0 ? BlueTeam : RedTeam);
+        string kc    = TeamHex(info.killerTeam);
+        string vc    = TeamHex(info.team);
+        string kName = string.IsNullOrEmpty(info.killerName) ? "Unknown" : info.killerName;
+        AddEntry($"<color={kc}>{kName}</color> <color=#FFFFFF>►</color> <color={vc}>{info.unitName}</color>");
     }
+
+    static string TeamHex(int team) =>
+        team == 0 ? "#66B2FF" :
+        team == 1 ? "#FF6666" :
+                    "#AAAAAA";
 
     // ── Entry management ──────────────────────────────────────────────────────
     // Individual kill entries are transient data — created and destroyed at
     // runtime. The static panel structure lives in the scene.
 
-    void AddEntry(string label, Color color)
+    void AddEntry(string label)
     {
         if (_panel == null) return;
 
@@ -46,7 +54,7 @@ public class KillFeedUI : MonoBehaviour
         entry.AddComponent<RectTransform>().sizeDelta = new Vector2(0f, 32f);
 
         var bg            = entry.AddComponent<Image>();
-        bg.color          = new Color(0f, 0f, 0f, 0.50f);
+        bg.color          = new Color(0f, 0f, 0f, 0.55f);
 
         var labelGo       = new GameObject("Label");
         labelGo.transform.SetParent(entry.transform, false);
@@ -58,11 +66,12 @@ public class KillFeedUI : MonoBehaviour
 
         var text          = labelGo.AddComponent<Text>();
         text.font         = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-        text.fontSize     = 20;
+        text.fontSize     = 18;
         text.fontStyle    = FontStyle.Bold;
         text.alignment    = TextAnchor.MiddleRight;
-        text.color        = color;
-        text.text         = label;
+        text.color          = Color.white;
+        text.supportRichText = true;
+        text.text           = label;
 
         StartCoroutine(FadeEntry(entry, bg, text));
     }

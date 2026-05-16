@@ -1,0 +1,116 @@
+newmtl 5d8f2231-3b0f-4bf4-8a9b-be4df151db62
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/a34_comet_body_c_uk_camo_very_dark_drab.jpg
+map_Ks textures/a34_comet_body_n_s.jpg
+map_normal textures/a34_comet_body_n.jpg
+map_ao textures/a34_comet_body_ao.jpg
+
+newmtl 3a021aaf-1303-410b-8444-771e2635cac8
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+d 1
+map_Kd textures/mg_besa_mkii_c.jpg
+map_Ks textures/mg_besa_mkii_n_s.jpg
+map_normal textures/mg_besa_mkii_n.jpg
+map_ao textures/mg_besa_mkii_ao.jpg
+map_d textures/mg_besa_mkii_c_a.png
+
+newmtl 0f177f45-af9a-4f65-9193-296764177d0f
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/net_f_c.jpg
+map_Ks textures/net_f_n_s.jpg
+map_normal textures/net_f_n.jpg
+map_ao textures/net_f_ao.jpg
+map_d textures/net_f_c_a.png
+
+newmtl c3c74594-127b-4102-8bc2-5531f6af492a
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/uk_a34_comet_track_c.jpg
+map_Ks textures/uk_a34_comet_track_n_s.jpg
+map_normal textures/uk_a34_comet_track_n.jpg
+map_ao textures/uk_a34_comet_track_ao.jpg
+map_d textures/uk_a34_comet_track_c_a.png
+
+newmtl c959cece-b50a-4ea1-85c1-8751a68f82bf
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/uk_a34_comet_track_c.jpg
+map_Ks textures/uk_a34_comet_track_n_s.jpg
+map_normal textures/uk_a34_comet_track_n.jpg
+map_ao textures/uk_a34_comet_track_ao.jpg
+map_d textures/uk_a34_comet_track_c_a.png
+
+newmtl b3eb82af-e754-4686-9b38-de8c7535db5d
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 1.000 1.000 1.000
+map_Kd textures/a34_comet_body_c.jpg
+map_Ks textures/a34_comet_body_n_s.jpg
+map_normal textures/a34_comet_body_n.jpg
+map_ao textures/a34_comet_body_ao.jpg
+map_Ke textures/a34_comet_body_c.jpg
+
+newmtl d3982dc9-8067-4876-a223-47df67ad2bb5
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/headlight_glass_c.jpg
+map_Ks textures/headlight_glass_n_s.jpg
+map_normal textures/headlight_glass_n.jpg
+
+newmtl c92d285f-2db2-450f-9a7b-ec9de390ca20
+Kd 0.000 0.000 0.000
+Ks 1.000 1.000 1.000
+Ns 255
+Ke 0.000 0.000 0.000
+d 0.1
+map_Kd textures/headlight_glass_c.jpg
+map_Ks textures/headlight_glass_n_s.jpg
+map_normal textures/headlight_glass_n.jpg
+map_d textures/headlight_glass_c_a.png
+
+newmtl 0947715c-c0fb-4a2c-b02b-bc5754b47a51
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/a34_comet_turret_c_uk_camo_very_dark_drab.jpg
+map_Ks textures/a34_comet_turret_n_s.jpg
+map_normal textures/a34_comet_turret_n.jpg
+map_ao textures/a34_comet_turret_ao.jpg
+
+newmtl 36c21b08-0e67-41ff-b2b9-3b3fa906196b
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/a34_comet_gun_c_uk_camo_very_dark_drab.jpg
+map_Ks textures/a34_comet_gun_n_s.jpg
+map_normal textures/a34_comet_gun_n.jpg
+map_ao textures/a34_comet_gun_ao.jpg
+
+newmtl 56696449-ec3a-4704-ab5d-291dcfe15530
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/a34_comet_turret_c_uk_camo_very_dark_drab.jpg
+map_Ks textures/a34_comet_turret_n_s.jpg
+map_normal textures/a34_comet_turret_n.jpg
+map_ao textures/a34_comet_turret_ao.jpg
+

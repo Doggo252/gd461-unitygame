@@ -37,6 +37,9 @@ public class TankAI : MonoBehaviour
     ICombatant      _unitTarget;
     ObjectiveTarget _buildTarget;
 
+    // The FOB/HQ we are currently registered with for defense return-fire.
+    ObjectiveTarget _registeredDefense;
+
     // ── Tactical approach (unit combat) ─────────────────────────────────────────
     ApproachStyle _approach;
     int           _flankSide;         // +1 = target's right, -1 = target's left
@@ -89,18 +92,7 @@ public class TankAI : MonoBehaviour
         if (_scanTimer > 0f) return;
         _scanTimer = SCAN_INTERVAL;
 
-        ICombatant bestTank     = null;
-        float      bestTankDist = float.MaxValue;
-
-        foreach (var combatant in _registry.Combatants)
-        {
-            if (combatant.Team == _team || combatant.IsDead) continue;
-            float d = Vector3.Distance(transform.position, combatant.Transform.position);
-            if (d > _data.aggroRange) continue;
-            if (!IsInDetectionCone(combatant.Transform)) continue;
-            if (d < bestTankDist) { bestTankDist = d; bestTank = combatant; }
-        }
-
+        var bestTank = FindBestUnitTarget();
         if (bestTank != null)
         {
             _unitTarget  = bestTank;
@@ -109,16 +101,7 @@ public class TankAI : MonoBehaviour
             return;
         }
 
-        ObjectiveTarget bestObj     = null;
-        float           bestObjDist = float.MaxValue;
-
-        foreach (var o in _registry.Objectives)
-        {
-            if (o.Team == _team || !o.IsAlive) continue;
-            float d = Vector3.Distance(transform.position, o.transform.position);
-            if (d < bestObjDist) { bestObjDist = d; bestObj = o; }
-        }
-
+        var bestObj = FindBestObjectiveTarget();
         if (bestObj != null)
         {
             _buildTarget = bestObj;
@@ -132,22 +115,12 @@ public class TankAI : MonoBehaviour
 
     void TickPriority()
     {
-        ICombatant bestTank     = null;
-        float      bestTankDist = float.MaxValue;
-
-        foreach (var combatant in _registry.Combatants)
-        {
-            if (combatant.Team == _team || combatant.IsDead) continue;
-            float d = Vector3.Distance(transform.position, combatant.Transform.position);
-            if (d > _data.aggroRange) continue;
-            if (!IsInDetectionCone(combatant.Transform)) continue;
-            if (d < bestTankDist) { bestTankDist = d; bestTank = combatant; }
-        }
-
+        var bestTank = FindBestUnitTarget();
         if (bestTank != null)
         {
             _unitTarget  = bestTank;
             _buildTarget = null;
+            UnregisterDefense(); // switching to unit combat
 
             if (_unitTarget != _lastRolledTarget)
             {
@@ -162,16 +135,7 @@ public class TankAI : MonoBehaviour
             return;
         }
 
-        ObjectiveTarget bestObj     = null;
-        float           bestObjDist = float.MaxValue;
-
-        foreach (var o in _registry.Objectives)
-        {
-            if (o.Team == _team || !o.IsAlive) continue;
-            float d = Vector3.Distance(transform.position, o.transform.position);
-            if (d < bestObjDist) { bestObjDist = d; bestObj = o; }
-        }
-
+        var bestObj = FindBestObjectiveTarget();
         if (bestObj != null)
         {
             _buildTarget = bestObj;
@@ -181,6 +145,35 @@ public class TankAI : MonoBehaviour
         }
 
         _state = TankAIState.Search;
+    }
+
+    // ── Target scanning helpers ───────────────────────────────────────────────────
+
+    ICombatant FindBestUnitTarget()
+    {
+        ICombatant best     = null;
+        float      bestDist = float.MaxValue;
+        foreach (var c in _registry.Combatants)
+        {
+            if (c.Team == _team || c.IsDead) continue;
+            float d = Vector3.Distance(transform.position, c.Transform.position);
+            if (d > _data.aggroRange || !IsInDetectionCone(c.Transform)) continue;
+            if (d < bestDist) { bestDist = d; best = c; }
+        }
+        return best;
+    }
+
+    ObjectiveTarget FindBestObjectiveTarget()
+    {
+        ObjectiveTarget best     = null;
+        float           bestDist = float.MaxValue;
+        foreach (var o in _registry.Objectives)
+        {
+            if (o.Team == _team || !o.IsAlive) continue;
+            float d = Vector3.Distance(transform.position, o.transform.position);
+            if (d < bestDist) { bestDist = d; best = o; }
+        }
+        return best;
     }
 
     // ── PATHFIND ──────────────────────────────────────────────────────────────────
@@ -231,6 +224,7 @@ public class TankAI : MonoBehaviour
         {
             if (!_buildTarget.IsAlive)
             {
+                UnregisterDefense();
                 _buildTarget = null;
                 _scanTimer   = 0f;
                 _state       = TankAIState.Search;
@@ -296,7 +290,15 @@ public class TankAI : MonoBehaviour
             _attackTimer -= Time.deltaTime;
             if (_attackTimer <= 0f)
             {
-                float dmg   = CalcUnitDamage(_unitTarget);
+                // Record attacker BEFORE TakeDamage so OnDeath sees the correct name
+                // if this shot is the killing blow.
+                string attackerDisplayName = _data != null
+                    ? (!string.IsNullOrEmpty(_data.tankName)
+                        ? _data.tankName
+                        : _data.tankType.ToString().Replace('_', ' '))
+                    : name;
+                _unitTarget.RecordLastAttacker(attackerDisplayName, _team);
+                float dmg = CalcUnitDamage(_unitTarget);
                 _unitTarget.Health.TakeDamage(dmg);
                 string arc  = HitArc(_unitTarget.Transform);
                 Debug.Log($"[DMG] {name} → {_unitTarget.Transform.name}: {dmg:F0} [{arc}] | " +
@@ -308,6 +310,7 @@ public class TankAI : MonoBehaviour
         {
             if (!_buildTarget.IsAlive)
             {
+                UnregisterDefense();
                 _buildTarget = null;
                 _scanTimer   = 0f;
                 _state       = TankAIState.Search;
@@ -317,6 +320,7 @@ public class TankAI : MonoBehaviour
             float dist = Vector3.Distance(transform.position, _buildTarget.transform.position);
             if (dist > _data.rng * RANGE_BUFFER * 4f) { _state = TankAIState.Pathfind; return; }
 
+            RegisterDefense(_buildTarget); // idempotent — safe every frame while attacking
             _movement.Stop();
             _movement.FaceToward(_buildTarget.transform.position, _data.turnSpeed);
 
@@ -452,6 +456,26 @@ public class TankAI : MonoBehaviour
         _scanTimer      = 0f;
         _state          = TankAIState.Search;
     }
+
+    // ── Defense registration ──────────────────────────────────────────────────
+
+    // Call when we start attacking a FOB/HQ. Idempotent — no-op if already registered.
+    void RegisterDefense(ObjectiveTarget t)
+    {
+        if (_registeredDefense == t) return;
+        _registeredDefense?.UnregisterAttacker(_self);
+        _registeredDefense = t;
+        t?.RegisterAttacker(_self);
+    }
+
+    // Call whenever we stop attacking objectives (unit target found, self destroyed, etc.)
+    void UnregisterDefense()
+    {
+        _registeredDefense?.UnregisterAttacker(_self);
+        _registeredDefense = null;
+    }
+
+    void OnDisable() => UnregisterDefense();
 
     string HitArc(Transform target)
     {

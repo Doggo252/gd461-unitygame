@@ -56,7 +56,31 @@ These rules apply to all code written for this project. Follow them unconditiona
 
 ---
 
-## 6. Game Design Document
+## 6. Unity MCP Skill Required
+
+- Any task that touches the Unity Editor — scene changes, prefab edits, GameObject wiring, asset creation, play mode, inspector values — **requires the `/unity-assistant-mcp` skill to be active**.
+- Before starting any Unity Editor work, check whether the `mcp__unity-mcp__Unity_RunCommand` tool (and related `Unity.*` tools) are available in your tool list.
+- If those tools are **not available**, stop immediately and tell the user:
+  > "The Unity MCP skill is not active. Please type `/unity-assistant-mcp` to activate it before I can make Unity Editor changes."
+- Do not attempt to work around the missing skill by editing files directly or guessing scene state — the MCP connection to the live Editor is required for all scene/prefab/asset work.
+
+---
+
+## 7. Verify Changes After Completion
+
+After finishing any Unity Editor change, **use the MCP to verify the result before reporting it as done**. Do not rely solely on the fact that a RunCommand succeeded — confirm the actual state matches what the user asked for.
+
+Verification checklist (use whichever apply):
+- **Script changes**: call `Unity.ReadConsole { "Types": "Error" }` to confirm zero compile errors, then call `Unity.ValidateScript` on the changed file.
+- **Prefab/Inspector wiring**: run a `Unity.RunCommand` that reads the serialized fields back and logs them — confirm the expected values appear in the output.
+- **Scene changes**: call `Unity.ManageScene { "Action": "GetHierarchy" }` or a targeted `Unity.ManageGameObject` query to confirm the object/component state is correct.
+- **Behaviour changes**: if the change affects runtime behaviour, enter play mode (`Unity.ManageEditor { "Action": "Play", "WaitForCompletion": true }`), inspect the result via console logs or a screenshot, then stop play mode.
+
+If the verification reveals the result does **not** match the user's request, fix it before summarising the work as complete. Never declare a task done without confirming through the MCP that it actually worked.
+
+---
+
+## 8. Game Design Document
 
 - The GDD is located at `Spec/GDD.md`. **Read it before writing any gameplay code.**
 - All unit stats, card definitions, era configurations, damage formulas, and win conditions are defined there. Do not invent values — always source them from the GDD.

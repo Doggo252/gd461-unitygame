@@ -1,0 +1,167 @@
+newmtl e10117e8-98d4-4e7d-9dcf-c23b02faef47
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/sta_3_body_c_jp_camo_prototype_green.jpg
+map_Ks textures/sta_3_body_n_s.jpg
+map_normal textures/sta_3_body_n_n.jpg
+map_ao textures/sta_3_body_ao_ao.jpg
+
+newmtl 30eadc06-408a-4d73-b33c-990c6d9ebe49
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/net_d_c.jpg
+map_Ks textures/net_d_n_s.jpg
+map_normal textures/net_d_n_n.jpg
+map_ao textures/net_d_ao_ao.jpg
+map_d textures/net_d_c_a.png
+
+newmtl 99b6e436-cae0-4ef0-bcfe-cdf81c366006
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/chain_a_c.jpg
+map_Ks textures/chain_a_n_s.jpg
+map_normal textures/chain_a_n_n.jpg
+map_ao textures/_white_ao_ao.jpg
+map_d textures/chain_a_c_a.png
+
+newmtl 931b46a0-5657-49d6-a5f3-06e5e9cca147
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/headlight_glass_c.jpg
+map_Ks textures/headlight_glass_n_s.jpg
+map_normal textures/headlight_glass_n_n.jpg
+map_ao textures/headlight_glass_n_ao.jpg
+
+newmtl d0191428-27ee-48b6-b492-0284e6add2c1
+Kd 0.000 0.000 0.000
+Ks 1.000 1.000 1.000
+Ns 255
+Ke 0.000 0.000 0.000
+d 0.15
+map_Kd textures/headlight_glass_c.jpg
+map_Ks textures/headlight_glass_n_s.jpg
+map_normal textures/headlight_glass_n_n.jpg
+map_d textures/headlight_glass_c_a.png
+
+newmtl 78772cc2-8b53-49f3-b9fa-996cb7c4cac4
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/sta_3_turret_c_jp_camo_prototype_green.jpg
+map_Ks textures/sta_3_turret_n_s.jpg
+map_normal textures/sta_3_turret_n_n.jpg
+map_ao textures/sta_3_turret_ao_ao.jpg
+
+newmtl b4a25300-d7cd-4af9-8bdb-961f086495e2
+Kd 0.000 0.000 0.000
+Ks 1.000 1.000 1.000
+Ns 255
+Ke 0.000 0.000 0.000
+d 0.15
+map_Kd textures/us_turret_glass_c.jpg
+map_d textures/us_turret_glass_c_a.png
+
+newmtl de1fea37-9e55-4202-9db8-4d7bcb06d51c
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/type_61_gun_c_jp_camo_prototype_green.jpg
+map_Ks textures/type_61_gun_n_s.jpg
+map_normal textures/type_61_gun_n_n.jpg
+map_ao textures/type_61_gun_ao_ao.jpg
+
+newmtl f713a949-0690-49e2-909b-4143e37c71d3
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/rifled_barrel_a_c.jpg
+map_Ks textures/rifled_barrel_a_n_s.jpg
+map_normal textures/rifled_barrel_a_n_n.jpg
+map_ao textures/rifled_barrel_a_n_ao.jpg
+
+newmtl 0f8968bf-5392-467d-887a-2fc65854dd97
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/mg_browning_m1919a4_c.jpg
+map_Ks textures/mg_browning_m1919a4_n_s.jpg
+map_normal textures/mg_browning_m1919a4_n_n.jpg
+map_ao textures/mg_browning_m1919a4_ao_ao.jpg
+map_d textures/mg_browning_m1919a4_c_a.png
+
+newmtl c83bedd9-b6a7-443b-a242-d2932a9031bd
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/jp_mg_mount_sta_3_c_jp_camo_prototype_green.jpg
+map_Ks textures/jp_mg_mount_sta_3_n_s.jpg
+map_normal textures/jp_mg_mount_sta_3_n_n.jpg
+map_ao textures/jp_mg_mount_sta_3_ao_ao.jpg
+
+newmtl 1d00f516-81ce-46f7-9555-164b6a607a89
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/mg_browning_m2hb_ammo_c.jpg
+map_Ks textures/mg_browning_m2hb_ammo_n_s.jpg
+map_normal textures/mg_browning_m2hb_ammo_n_n.jpg
+map_ao textures/mg_browning_m2hb_ammo_ao_ao.jpg
+map_d textures/mg_browning_m2hb_ammo_c_a.png
+
+newmtl ddf97ea0-4ba0-4733-a2c1-5c424c988957
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/mg_browning_m2hb_c.jpg
+map_Ks textures/mg_browning_m2hb_n_s.jpg
+map_normal textures/mg_browning_m2hb_n_n.jpg
+map_ao textures/mg_browning_m2hb_ao_ao.jpg
+map_d textures/mg_browning_m2hb_c_a.png
+
+newmtl bec2071f-445b-4187-9863-0b7493892839
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/jp_sta_3_track_c.jpg
+map_Ks textures/jp_sta_3_track_n_s.jpg
+map_normal textures/jp_sta_3_track_n_n.jpg
+map_ao textures/jp_sta_3_track_ao_ao.jpg
+map_d textures/jp_sta_3_track_c_a.png
+
+newmtl 8a704c2a-8d37-4367-8a98-46288ca45509
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/jp_sta_3_track_c.jpg
+map_Ks textures/jp_sta_3_track_n_s.jpg
+map_normal textures/jp_sta_3_track_n_n.jpg
+map_ao textures/jp_sta_3_track_ao_ao.jpg
+map_d textures/jp_sta_3_track_c_a.png
+
+newmtl b242a831-55d5-490c-8f04-697a981e4e3a
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/type_61_gun_c_jp_camo_prototype_green.jpg
+map_Ks textures/type_61_gun_n_s.jpg
+map_normal textures/type_61_gun_n_n.jpg
+map_ao textures/type_61_gun_ao_ao.jpg
+

@@ -1,0 +1,83 @@
+newmtl 63c6a252-4a32-4deb-bf33-d4b9c15a4832
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/zsu_57_2_body_c_ussr_camo_green.jpg
+map_Ks textures/zsu_57_2_body_n_s.jpg
+map_normal textures/zsu_57_2_body_n_n.jpg
+map_ao textures/zsu_57_2_body_ao_ao.jpg
+
+newmtl d9fdb214-f5c3-4706-8a29-67b784de89f3
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/zsu_57_2_body_at_c.jpg
+map_Ks textures/zsu_57_2_body_at_n_s.jpg
+map_normal textures/zsu_57_2_body_at_n_n.jpg
+map_ao textures/zsu_57_2_body_at_ao_ao.jpg
+map_d textures/zsu_57_2_body_at_c_a.png
+
+newmtl c414fcd9-3928-4fb9-ab01-4996bbf62c72
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/ussr_t_62_track_c.jpg
+map_Ks textures/ussr_t_62_track_n_s.jpg
+map_normal textures/ussr_t_62_track_n_n.jpg
+map_ao textures/ussr_t_62_track_ao_ao.jpg
+map_d textures/ussr_t_62_track_c_a.png
+
+newmtl b63d34fc-005a-494a-af86-83a17a502dd6
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/ussr_t_62_track_c.jpg
+map_Ks textures/ussr_t_62_track_n_s.jpg
+map_normal textures/ussr_t_62_track_n_n.jpg
+map_ao textures/ussr_t_62_track_ao_ao.jpg
+map_d textures/ussr_t_62_track_c_a.png
+
+newmtl 8f0bb777-76df-4a5d-b617-19b1dd0db302
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/zsu_57_2_turret_c_ger_camo_inside_elfebein.jpg
+map_Ks textures/zsu_57_2_turret_n_s.jpg
+map_normal textures/zsu_57_2_turret_n_n.jpg
+map_ao textures/zsu_57_2_turret_ao_ao.jpg
+
+newmtl b3ac0b62-edd6-46a5-8612-45e472854ef8
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/zsu_57_2_turret_c_ussr_camo_green.jpg
+map_Ks textures/zsu_57_2_turret_n_s.jpg
+map_normal textures/zsu_57_2_turret_n_n.jpg
+map_ao textures/zsu_57_2_turret_ao_ao.jpg
+
+newmtl 4bdd74fc-52fd-4f30-bcc8-f2d2a7481bb1
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/zsu_57_2_body_c_ger_camo_inside_elfebein.jpg
+map_Ks textures/zsu_57_2_body_n_s.jpg
+map_normal textures/zsu_57_2_body_n_n.jpg
+map_ao textures/zsu_57_2_body_ao_ao.jpg
+
+newmtl 266937e4-7c2a-4b0c-8c09-4a6ec071ce82
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/zsu_57_2_turret_c_ussr_camo_green.jpg
+map_Ks textures/zsu_57_2_turret_n_s.jpg
+map_normal textures/zsu_57_2_turret_n_n.jpg
+map_ao textures/zsu_57_2_turret_ao_ao.jpg
+

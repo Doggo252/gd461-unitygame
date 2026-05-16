@@ -30,7 +30,34 @@ public struct KillInfo
 {
     public string unitName;
     public int    team;      // 0 = P1 blue, 1 = P2 red
+    public string killerName;
+    public int    killerTeam; // -1 = unknown
 }
 
 [CreateAssetMenu(fileName = "KillEvent", menuName = "Tank Royale/Events/Kill Event")]
 public class KillEventSO : GameEventSO<KillInfo> { }
+
+// ── CP System ─────────────────────────────────────────────────────────────────
+
+public struct CpChangedInfo
+{
+    public int   team;
+    public int   currentCp;
+    public float progress;  // 0..1 fractional accumulator toward next CP
+}
+
+// CpChangedEventSO — defined in CpChangedEventSO.cs (own file for MonoScript lookup)
+
+// ── Timer ─────────────────────────────────────────────────────────────────────
+
+// SurgePhaseEventSO — defined in SurgePhaseEventSO.cs
+
+// ── Match Result ──────────────────────────────────────────────────────────────
+
+public struct MatchEndInfo
+{
+    public int    winnerTeam; // 0, 1, or -1 for draw
+    public string reason;     // "HQDestroyed" | "Timer" | "Draw"
+}
+
+// MatchEndEventSO — defined in MatchEndEventSO.cs

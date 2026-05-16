@@ -1,0 +1,83 @@
+newmtl d2c2b616-28c1-479b-8de8-ffea63d193c3
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/fv4005_body_c_uk_camo_very_dark_drab.jpg
+map_Ks textures/fv4005_body_n_s.jpg
+map_normal textures/fv4005_body_n_n.jpg
+map_ao textures/fv4005_body_ao_ao.jpg
+
+newmtl d9e3052e-cf17-4668-b85a-2e3a049a1350
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/fv4005_turret_c_uk_camo_very_dark_drab.jpg
+map_Ks textures/fv4005_turret_n_s.jpg
+map_normal textures/fv4005_turret_n_n.jpg
+map_ao textures/fv4005_turret_ao_ao.jpg
+
+newmtl 62457915-a664-4f95-8410-70c2ed3b26a1
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/fv4005_gun_c_uk_camo_very_dark_drab.jpg
+map_Ks textures/fv4005_gun_n_s.jpg
+map_normal textures/fv4005_gun_n_n.jpg
+map_ao textures/fv4005_gun_ao_ao.jpg
+
+newmtl ee449839-9996-4c56-9e73-bce0aaa34763
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/rifled_barrel_c_c.jpg
+map_Ks textures/rifled_barrel_c_n_s.jpg
+map_normal textures/rifled_barrel_c_n_n.jpg
+map_ao textures/rifled_barrel_c_n_ao.jpg
+
+newmtl eacef8e5-c644-4db2-8cc4-5c719b0f540e
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/mg_browning_m1919a4_c.jpg
+map_Ks textures/mg_browning_m1919a4_n_s.jpg
+map_normal textures/mg_browning_m1919a4_n_n.jpg
+map_ao textures/mg_browning_m1919a4_ao_ao.jpg
+map_d textures/mg_browning_m1919a4_c_a.png
+
+newmtl 3d71b246-c754-444e-a675-5efb78316609
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/uk_mk_iii_centurion_1948_track_c.jpg
+map_Ks textures/uk_mk_iii_centurion_1948_track_n_s.jpg
+map_normal textures/uk_mk_iii_centurion_1948_track_n_n.jpg
+map_ao textures/uk_mk_iii_centurion_1948_track_ao_ao.jpg
+map_d textures/uk_mk_iii_centurion_1948_track_c_a.png
+
+newmtl 332faa30-4145-4508-97a6-c233998eeb77
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/uk_mk_iii_centurion_1948_track_c.jpg
+map_Ks textures/uk_mk_iii_centurion_1948_track_n_s.jpg
+map_normal textures/uk_mk_iii_centurion_1948_track_n_n.jpg
+map_ao textures/uk_mk_iii_centurion_1948_track_ao_ao.jpg
+map_d textures/uk_mk_iii_centurion_1948_track_c_a.png
+
+newmtl 2a59473c-26df-43d0-9e37-136325cae6a1
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/fv4005_body_c_uk_camo_very_dark_drab.jpg
+map_Ks textures/fv4005_body_n_s.jpg
+map_normal textures/fv4005_body_n_n.jpg
+map_ao textures/fv4005_body_ao_ao.jpg
+

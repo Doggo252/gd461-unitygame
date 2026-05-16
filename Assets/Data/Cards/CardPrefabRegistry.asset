@@ -1,0 +1,91 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d551e25fa9cb46c492c1d8af11db057, type: 3}
+  m_Name: CardPrefabRegistry
+  m_EditorClassIdentifier: Assembly-CSharp::CardPrefabRegistrySO
+  _entries:
+  - tankType: 0
+    prefab: {fileID: 4685865547370889414, guid: d05066dd31ad54abf8bec3a6de5f60af, type: 3}
+  - tankType: 1
+    prefab: {fileID: 503532471598828833, guid: 021a54884f2714d2c8dc4a079e6abccc, type: 3}
+  - tankType: 2
+    prefab: {fileID: 8699656825995346180, guid: 26d52184295604f79ae853afef7b95fa, type: 3}
+  - tankType: 3
+    prefab: {fileID: 5703457743301407208, guid: a13de107d5e5441c3b36c2bbdf28759d, type: 3}
+  - tankType: 4
+    prefab: {fileID: 3157888295892851691, guid: 204c1b0ac9c444f72ba4026984a404b6, type: 3}
+  - tankType: 5
+    prefab: {fileID: 818774151411584475, guid: 32dc4848acf094019b80ac4ff80aecc6, type: 3}
+  - tankType: 6
+    prefab: {fileID: 8657058545863447025, guid: 461fa8fd697c248b4974c5f670b574b2, type: 3}
+  - tankType: 7
+    prefab: {fileID: 3436718890391747425, guid: ad3cbc065aeee4382b4815942fa17882, type: 3}
+  - tankType: 8
+    prefab: {fileID: 4079203857225169861, guid: df476ae3e63ff472586f92977c1d32e4, type: 3}
+  - tankType: 9
+    prefab: {fileID: 2831562956872440804, guid: a21df7033efe84cf28fa01d43dcd31dd, type: 3}
+  - tankType: 10
+    prefab: {fileID: 3048460808477716098, guid: 413b6dd28489f4ca08a2940511a8cc5c, type: 3}
+  - tankType: 11
+    prefab: {fileID: 8407304650357561112, guid: fbeae28ceac91454c93b19f9f0153c04, type: 3}
+  - tankType: 12
+    prefab: {fileID: 5804773417296287394, guid: 0c9101b6d7cd04b8596b8d4476bb904e, type: 3}
+  - tankType: 13
+    prefab: {fileID: 6693029320525376067, guid: 62c4a1e01f0374f04a142a4106f52107, type: 3}
+  - tankType: 14
+    prefab: {fileID: 3933414490536966251, guid: ea0888a26197049c4a29b46b5be80187, type: 3}
+  - tankType: 15
+    prefab: {fileID: 3664812707745056083, guid: 42a3e579b79c8401d8aefb65f87fd253, type: 3}
+  - tankType: 16
+    prefab: {fileID: 646391338574536212, guid: 4bb6f8bf53d8b4b8b87291dcab8c4afd, type: 3}
+  - tankType: 17
+    prefab: {fileID: 8594702084173191431, guid: ee09e3e11045349f9af0bb2818f7928c, type: 3}
+  - tankType: 18
+    prefab: {fileID: 1553132577827805002, guid: 3d58b85bff4974e6695df05071fdbc19, type: 3}
+  - tankType: 19
+    prefab: {fileID: 2602244317694380593, guid: a6b57daf85c344363aa3ee342edbbc85, type: 3}
+  - tankType: 20
+    prefab: {fileID: 1006446070283979487, guid: f99b356b08db742b2af6151b6da84362, type: 3}
+  - tankType: 21
+    prefab: {fileID: 6141675317662009249, guid: 26ca7619c2bd840bda549fc7785cfdb1, type: 3}
+  - tankType: 22
+    prefab: {fileID: 4723683209537981170, guid: 141c8fae9a0c44feba1e7b7abd2648d0, type: 3}
+  - tankType: 23
+    prefab: {fileID: 1711370915156836981, guid: ecf9661891e2d46e5815826de3a801b9, type: 3}
+  - tankType: 24
+    prefab: {fileID: 4216711809763413993, guid: 7014110ec62244ceba34e99c1f8481bd, type: 3}
+  - tankType: 25
+    prefab: {fileID: 6983597578007867009, guid: 79321eb7d41d447468fa983d03dc75f2, type: 3}
+  - tankType: 26
+    prefab: {fileID: 5428700380782600507, guid: 8aa3cb4770a43490bbd2114bf8346d76, type: 3}
+  - tankType: 27
+    prefab: {fileID: 7911359892458352787, guid: 045dfe34e7d034ec782fdb18e714affb, type: 3}
+  - tankType: 28
+    prefab: {fileID: 2558736048458578707, guid: 27fde48c8e334488599bbf83bd03a650, type: 3}
+  - tankType: 29
+    prefab: {fileID: 8130736388180776439, guid: 26902a3fb76d24747822a658205069ba, type: 3}
+  - tankType: 30
+    prefab: {fileID: 509935068505823776, guid: e7a3695f3c22944eaa467f4931aa3c86, type: 3}
+  - tankType: 31
+    prefab: {fileID: 7189141457976322587, guid: 3a6a9f3add4f7492e9625e25cc1a8a1a, type: 3}
+  - tankType: 32
+    prefab: {fileID: 4425121776696052912, guid: 13841d6e78c0e4850bc7c8769bdeb9eb, type: 3}
+  - tankType: 33
+    prefab: {fileID: 270701504458134739, guid: da3074989f8cc4580851f9c11ade0bbf, type: 3}
+  - tankType: 34
+    prefab: {fileID: 4349355140621466864, guid: f0014a7f78a3c483a851d0d28a589aa2, type: 3}
+  - tankType: 35
+    prefab: {fileID: 5060867127372855892, guid: d543e4e7521404a72aca1402dece42ee, type: 3}
+  - tankType: 36
+    prefab: {fileID: 6472539225564391503, guid: dd3e8674a68fd4535951c93e5d61bf53, type: 3}
+  - tankType: 37
+    prefab: {fileID: 1237193705865472423, guid: 273e22a0a716943de92c6dd57eccd6d1, type: 3}

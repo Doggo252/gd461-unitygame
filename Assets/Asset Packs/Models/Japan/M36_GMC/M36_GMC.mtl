@@ -1,0 +1,125 @@
+newmtl a4517ff7-28d8-4b07-93d7-353ab3b49364
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/m36_slugger_turret_c_us_camo_olive.jpg
+map_Ks textures/m36_slugger_turret_n_s.jpg
+map_normal textures/m36_slugger_turret_n_n.jpg
+map_ao textures/m36_slugger_turret_ao_ao.jpg
+
+newmtl ba612974-49d9-4b07-8ac5-d5b6925bd478
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/m36_slugger_gun_c_us_camo_olive.jpg
+map_Ks textures/m36_slugger_gun_n_s.jpg
+map_normal textures/m36_slugger_gun_n_n.jpg
+map_ao textures/m36_slugger_gun_ao_ao.jpg
+
+newmtl 112f4600-3f5d-461b-834e-2a5ac15fc1a0
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/rifled_barrel_b_c.jpg
+map_Ks textures/rifled_barrel_b_n_s.jpg
+map_normal textures/rifled_barrel_b_n_n.jpg
+map_ao textures/rifled_barrel_b_n_ao.jpg
+
+newmtl fda8ae31-44eb-490f-b4c3-8ae47ae1f856
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/mg_browning_m2hb_mount_c_us_camo_olive.jpg
+map_Ks textures/mg_browning_m2hb_mount_n_s.jpg
+map_normal textures/mg_browning_m2hb_mount_n_n.jpg
+map_ao textures/mg_browning_m2hb_mount_ao_ao.jpg
+
+newmtl e58edd86-23b7-413e-bd37-a906b5e6e962
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/mg_browning_m2hb_ammo_c.jpg
+map_Ks textures/mg_browning_m2hb_ammo_n_s.jpg
+map_normal textures/mg_browning_m2hb_ammo_n_n.jpg
+map_ao textures/mg_browning_m2hb_ammo_ao_ao.jpg
+map_d textures/mg_browning_m2hb_ammo_c_a.png
+
+newmtl 2cab6e38-0aaf-48ed-8126-47f440eab739
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/mg_browning_m2hb_c.jpg
+map_Ks textures/mg_browning_m2hb_n_s.jpg
+map_normal textures/mg_browning_m2hb_n_n.jpg
+map_ao textures/mg_browning_m2hb_ao_ao.jpg
+map_d textures/mg_browning_m2hb_c_a.png
+
+newmtl eb15b226-96a9-41fd-8699-0078b8799f59
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/us_m2_medium_track_c.jpg
+map_Ks textures/us_m2_medium_track_n_s.jpg
+map_normal textures/us_m2_medium_track_n_n.jpg
+map_ao textures/us_m2_medium_track_ao_ao.jpg
+map_d textures/us_m2_medium_track_c_a.png
+
+newmtl 82d98db6-70a6-4f52-bd14-f2fb3efbdc36
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/us_m2_medium_track_c.jpg
+map_Ks textures/us_m2_medium_track_n_s.jpg
+map_normal textures/us_m2_medium_track_n_n.jpg
+map_ao textures/us_m2_medium_track_ao_ao.jpg
+map_d textures/us_m2_medium_track_c_a.png
+
+newmtl bca3ce58-45f0-4209-b256-e168151b7eea
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/m36_slugger_body_c_us_camo_olive.jpg
+map_Ks textures/m36_slugger_body_n_s.jpg
+map_normal textures/m36_slugger_body_n_n.jpg
+map_ao textures/m36_slugger_body_ao_ao.jpg
+
+newmtl 40b49eed-53ad-4372-bdf1-cb217e03d5ec
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/m36_slugger_body_c_us_camo_olive.jpg
+map_Ks textures/m36_slugger_body_n_s.jpg
+map_normal textures/m36_slugger_body_n_n.jpg
+map_ao textures/m36_slugger_body_ao_ao.jpg
+
+newmtl 89db4e5a-d1a0-456e-bbee-d16a21a7b294
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/headlight_glass_c.jpg
+map_Ks textures/headlight_glass_n_s.jpg
+map_normal textures/headlight_glass_n_n.jpg
+map_ao textures/headlight_glass_n_ao.jpg
+
+newmtl 061c3162-9173-4bcb-9183-78210d50a9ed
+Kd 0.000 0.000 0.000
+Ks 1.000 1.000 1.000
+Ns 255
+Ke 0.000 0.000 0.000
+d 0.15
+map_Kd textures/headlight_glass_c.jpg
+map_Ks textures/headlight_glass_n_s.jpg
+map_normal textures/headlight_glass_n_n.jpg
+map_d textures/headlight_glass_c_a.png
+

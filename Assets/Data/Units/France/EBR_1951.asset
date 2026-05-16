@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b56c56c5ec684d4994b5993f5635fbe, type: 3}
+  m_Name: EBR_1951
+  m_EditorClassIdentifier: Assembly-CSharp::UnitDataSO
+  tankType: 34
+  tankName: E.B.R. (1951)
+  nation: 6
+  faction: 0
+  flagSprite: {fileID: 21300000, guid: 3476336e4fdf548cdbe8f59f13076909, type: 3}
+  cpCost: 4
+  maxHp: 480
+  atk: 260
+  arm: 14
+  pen: 150
+  spd: 0.9
+  mov: 3.5
+  rng: 5
+  aggroRange: 10
+  damageType: 0
+  keywords: 65
+  armorPierceIgnore: 0
+  aggressiveAtkBonus: 0
+  selfRepairAmount: 0
+  selfRepairInterval: 0
+  devastatingMinFloor: 0
+  weightDirect: 0.1
+  weightShallowFlank: 0.45
+  weightWideFlank: 0.45
+  detectionAngle: 360
+  turnSpeed: 5

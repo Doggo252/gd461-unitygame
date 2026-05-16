@@ -17,6 +17,14 @@ public class UnitMovement : MonoBehaviour
     float _stationaryTimer;
     const float STATIONARY_SECONDS = 0.6f;
 
+    // Last destination we forwarded to the NavMeshAgent. Used to dedupe per-frame
+    // SetDestination calls — NavMeshAgent.SetDestination unconditionally restarts
+    // path computation, so calling it every Update with the same target leaves
+    // pathPending = true forever and the agent never starts moving (especially
+    // for partial / partially-unreachable destinations like a FOB origin).
+    Vector3 _lastRequestedDest = new Vector3(float.NaN, float.NaN, float.NaN);
+    const float DEST_DEDUPE_SQR = 0.04f; // 0.2 world-unit threshold on X/Z
+
     public bool IsStationary { get; private set; }
 
     void Awake()
@@ -28,6 +36,7 @@ public class UnitMovement : MonoBehaviour
         _agent.updateRotation   = true;
         _agent.updatePosition   = true;
         _agent.autoBraking      = true;
+        _agent.areaMask         = 1 << 0; // Walkable area only — excludes river (carved by NavMeshObstacle)
     }
 
     public void Initialize(float speed)
@@ -40,7 +49,13 @@ public class UnitMovement : MonoBehaviour
         if (!_agent.isOnNavMesh) return;
         _agent.isStopped      = false;
         _agent.updateRotation = true;
+
+        float dx = worldPos.x - _lastRequestedDest.x;
+        float dz = worldPos.z - _lastRequestedDest.z;
+        if (dx * dx + dz * dz < DEST_DEDUPE_SQR) return;
+
         _agent.SetDestination(new Vector3(worldPos.x, transform.position.y, worldPos.z));
+        _lastRequestedDest = worldPos;
     }
 
     public void Stop()
@@ -48,6 +63,8 @@ public class UnitMovement : MonoBehaviour
         if (!_agent.isOnNavMesh) return;
         _agent.isStopped = true;
         _agent.velocity  = Vector3.zero;
+        // Re-arm dedupe so the next SetDestination is forwarded even with the same target.
+        _lastRequestedDest = new Vector3(float.NaN, float.NaN, float.NaN);
     }
 
     // Queue a facing rotation; TankAI calls this each Update frame while attacking.

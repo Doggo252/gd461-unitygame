@@ -1,0 +1,171 @@
+newmtl 621c0a7b-ac90-4e16-8dc9-36ca2c61a54a
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/m109a1_body_c_ger_camo_bronzegruen.jpg
+map_Ks textures/m109a1_body_n_s.jpg
+map_normal textures/m109a1_body_n_n.jpg
+map_ao textures/m109a1_body_ao_ao.jpg
+
+newmtl 77655d2d-1a9a-485a-92a8-f15e80641d44
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/m109a1_turret_c_ger_camo_bronzegruen.jpg
+map_Ks textures/m109a1_turret_n_s.jpg
+map_normal textures/m109a1_turret_n_n.jpg
+map_ao textures/m109a1_turret_ao_ao.jpg
+
+newmtl 9d2a4770-40d7-42d3-83bd-7922b3512d28
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/m109g_add_c_ger_camo_bronzegruen.jpg
+map_Ks textures/m109g_add_n_s.jpg
+map_normal textures/m109g_add_n_n.jpg
+map_ao textures/m109g_add_ao_ao.jpg
+
+newmtl 73c1aa8c-d71b-477a-83f8-5594518c6ac6
+Kd 0.000 0.000 0.000
+Ks 1.000 1.000 1.000
+Ns 255
+Ke 0.000 0.000 0.000
+d 0.15
+map_Kd textures/optic_glass_c.jpg
+map_d textures/optic_glass_c_a.png
+
+newmtl a4ef2fc2-77fd-4ef8-820f-76db23ee4232
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/ger_m109g_phys_track_c.jpg
+map_Ks textures/ger_m109g_phys_track_n_s.jpg
+map_normal textures/ger_m109g_phys_track_n_n.jpg
+map_ao textures/ger_m109g_phys_track_ao_ao.jpg
+
+newmtl b68e401a-0f1b-4dc7-a15c-f6ad236c767b
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/mg_mg_34_c.jpg
+map_Ks textures/mg_mg_34_n_s.jpg
+map_normal textures/mg_mg_34_n_n.jpg
+map_ao textures/mg_mg_34_n_ao.jpg
+
+newmtl 75f42a76-5706-4baa-b714-23e06b0b01fc
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/mg_mg_42_c.jpg
+map_Ks textures/mg_mg_42_n_s.jpg
+map_normal textures/mg_mg_42_n_n.jpg
+map_ao textures/mg_mg_42_ao_ao.jpg
+map_d textures/mg_mg_42_c_a.png
+
+newmtl 764c4932-6cca-4036-81a1-a9c5b65abaa8
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/m109g_gun_c_ger_camo_bronzegruen.jpg
+map_Ks textures/m109g_gun_n_s.jpg
+map_normal textures/m109g_gun_n_n.jpg
+map_ao textures/m109g_gun_ao_ao.jpg
+
+newmtl 6a90d0e0-ade5-4d75-be41-1c2a83da5c1e
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/rifled_barrel_b_c.jpg
+map_Ks textures/rifled_barrel_b_n_s.jpg
+map_normal textures/rifled_barrel_b_n_n.jpg
+map_ao textures/rifled_barrel_b_n_ao.jpg
+
+newmtl 1127ccaa-b659-41f3-b59b-b8c2281acb25
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/headlight_glass_c.jpg
+map_Ks textures/headlight_glass_n_s.jpg
+map_normal textures/headlight_glass_n_n.jpg
+map_ao textures/headlight_glass_n_ao.jpg
+
+newmtl 45d32b4d-32d0-48f5-b198-4bc1d64a525f
+Kd 0.000 0.000 0.000
+Ks 1.000 1.000 1.000
+Ns 255
+Ke 0.000 0.000 0.000
+d 0.15
+map_Kd textures/headlight_glass_c.jpg
+map_Ks textures/headlight_glass_n_s.jpg
+map_normal textures/headlight_glass_n_n.jpg
+map_d textures/headlight_glass_c_a.png
+
+newmtl 49d42d70-b955-4724-91fa-5c3c374e3303
+Kd 0.000 0.000 0.000
+Ks 0.000 0.000 0.000
+Ns 255
+Ke 0.000 0.000 0.000
+d 1
+
+newmtl 9e0279eb-5b3d-4ffd-8cb8-0e70bf622aed
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/net_f_c.jpg
+map_Ks textures/net_f_n_s.jpg
+map_normal textures/net_f_n_n.jpg
+map_ao textures/net_f_ao_ao.jpg
+map_d textures/net_f_c_a.png
+
+newmtl a8f1e62f-1439-488c-a359-61129e1ed6d1
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/ger_m109g_track_c.jpg
+map_Ks textures/ger_m109g_track_n_s.jpg
+map_normal textures/ger_m109g_track_n_n.jpg
+map_ao textures/ger_m109g_track_ao_ao.jpg
+map_d textures/ger_m109g_track_c_a.png
+
+newmtl 5c02f0da-a611-4c8d-8145-94b750076792
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/ger_m109g_track_c.jpg
+map_Ks textures/ger_m109g_track_n_s.jpg
+map_normal textures/ger_m109g_track_n_n.jpg
+map_ao textures/ger_m109g_track_ao_ao.jpg
+map_d textures/ger_m109g_track_c_a.png
+
+newmtl 7c0d45c4-98bf-4673-8af7-6772e21756f0
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/m109g_gun_c_ger_camo_bronzegruen.jpg
+map_Ks textures/m109g_gun_n_s.jpg
+map_normal textures/m109g_gun_n_n.jpg
+map_ao textures/m109g_gun_ao_ao.jpg
+
+newmtl 07b1d101-9bae-42bf-981a-7ed28700b929
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/m109g_add_c_ger_camo_bronzegruen.jpg
+map_Ks textures/m109g_add_n_s.jpg
+map_normal textures/m109g_add_n_n.jpg
+map_ao textures/m109g_add_ao_ao.jpg
+

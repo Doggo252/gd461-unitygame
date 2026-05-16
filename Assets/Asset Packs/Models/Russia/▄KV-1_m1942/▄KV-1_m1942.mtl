@@ -1,0 +1,143 @@
+newmtl 0b13a2e5-bf4f-4630-bb18-76eb322ba842
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/ussr_kv_wide_phys_track_c.jpg
+map_Ks textures/ussr_kv_wide_phys_track_n_s.jpg
+map_normal textures/ussr_kv_wide_phys_track_n_n.jpg
+map_ao textures/ussr_kv_wide_phys_track_ao_ao.jpg
+
+newmtl 1b55a1d4-2afb-46f7-be74-153c73ff0272
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/kv_1_1942_fin_body_c_ger_camo_captured_kv_e.jpg
+map_Ks textures/kv_1_1942_fin_body_n_s.jpg
+map_normal textures/kv_1_1942_fin_body_n_n.jpg
+map_ao textures/kv_1_1942_fin_body_ao_ao.jpg
+
+newmtl 2b5775c6-35be-4114-a60a-1cc1d563333f
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/headlight_glass_c.jpg
+map_Ks textures/headlight_glass_n_s.jpg
+map_normal textures/headlight_glass_n_n.jpg
+map_ao textures/headlight_glass_n_ao.jpg
+
+newmtl d78e3428-ff9a-413e-93ef-cafcd257702b
+Kd 0.000 0.000 0.000
+Ks 1.000 1.000 1.000
+Ns 255
+Ke 0.000 0.000 0.000
+d 0.15
+map_Kd textures/headlight_glass_c.jpg
+map_Ks textures/headlight_glass_n_s.jpg
+map_normal textures/headlight_glass_n_n.jpg
+map_d textures/headlight_glass_c_a.png
+
+newmtl 64633808-be7c-42fd-b8a9-16693d5b830a
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/kv_1_1942_fin_body_c_ger_camo_captured_kv_e.jpg
+map_Ks textures/kv_1_1942_fin_body_n_s.jpg
+map_normal textures/kv_1_1942_fin_body_n_n.jpg
+map_ao textures/kv_1_1942_fin_body_ao_ao.jpg
+
+newmtl 4c22551e-736e-4187-8f06-69f18a8c2333
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/ussr_kv_1_1939_track_c.jpg
+map_Ks textures/ussr_kv_1_1939_track_n_s.jpg
+map_normal textures/ussr_kv_1_1939_track_n_n.jpg
+map_ao textures/ussr_kv_1_1939_track_ao_ao.jpg
+map_d textures/ussr_kv_1_1939_track_c_a.png
+
+newmtl 59255fab-d2b5-4107-9256-e6a552dd260b
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/ussr_kv_1_1939_track_c.jpg
+map_Ks textures/ussr_kv_1_1939_track_n_s.jpg
+map_normal textures/ussr_kv_1_1939_track_n_n.jpg
+map_ao textures/ussr_kv_1_1939_track_ao_ao.jpg
+map_d textures/ussr_kv_1_1939_track_c_a.png
+
+newmtl 60b0569e-6059-4425-ba5b-a4061aa5d8ae
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/kv_1_1942_fin_turret_c_g.jpg
+map_Ks textures/kv_1_1942_fin_turret_n_s.jpg
+map_normal textures/kv_1_1942_fin_turret_n_n.jpg
+map_ao textures/kv_1_1942_fin_turret_ao_ao.jpg
+
+newmtl e27a9bd9-dff6-4c18-a8d6-90d5d5ada227
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/kv_1_1942_fin_body_c_ger_camo_captured_kv_e.jpg
+map_Ks textures/kv_1_1942_fin_body_n_s.jpg
+map_normal textures/kv_1_1942_fin_body_n_n.jpg
+map_ao textures/kv_1_1942_fin_body_ao_ao.jpg
+
+newmtl 11b5afd0-7401-40a9-a116-d569e24b0831
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/kv_1_1942_fin_turret_c_g.jpg
+map_Ks textures/kv_1_1942_fin_turret_n_s.jpg
+map_normal textures/kv_1_1942_fin_turret_n_n.jpg
+map_ao textures/kv_1_1942_fin_turret_ao_ao.jpg
+
+newmtl db680e0a-b070-4f97-b108-aea46522da01
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/ussr_mg_dt_c_ger_camo_captured_kv_e.jpg
+map_Ks textures/ussr_mg_dt_n_s.jpg
+map_normal textures/ussr_mg_dt_n_n.jpg
+map_ao textures/ussr_mg_dt_ao_ao.jpg
+
+newmtl 9c1f6fb8-e588-4a24-b70d-9f27049ecf01
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/kv_1_1942_fin_gun_c_ger_camo_captured_kv_e.jpg
+map_Ks textures/kv_1_1942_fin_gun_n_s.jpg
+map_normal textures/kv_1_1942_fin_gun_n_n.jpg
+map_ao textures/kv_1_1942_fin_gun_ao_ao.jpg
+
+newmtl 85e86ea1-21a6-49b6-87a5-4c93456ef407
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/rifled_barrel_b_c.jpg
+map_Ks textures/rifled_barrel_b_n_s.jpg
+map_normal textures/rifled_barrel_b_n_n.jpg
+map_ao textures/rifled_barrel_b_n_ao.jpg
+
+newmtl ae74c172-a7e6-4d2b-ac2d-688fcb99bf42
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/kv_1_1942_mount_c_ger_camo_captured_kv_e.jpg
+map_Ks textures/kv_1_1942_mount_n_s.jpg
+map_normal textures/kv_1_1942_mount_n_n.jpg
+map_ao textures/kv_1_1942_mount_ao_ao.jpg
+

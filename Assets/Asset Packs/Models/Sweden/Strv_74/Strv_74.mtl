@@ -1,0 +1,153 @@
+newmtl 6b72a087-a109-48f7-b419-caaa733d06e7
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/strv_74_body_c_se_camo_green.jpg
+map_Ks textures/strv_74_body_n_s.jpg
+map_normal textures/strv_74_body_n_n.jpg
+map_ao textures/strv_74_body_ao_ao.jpg
+
+newmtl 7793ec26-e26c-43a2-ba09-307995232c11
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/headlight_glass_c.jpg
+map_Ks textures/headlight_glass_n_s.jpg
+map_normal textures/headlight_glass_n_n.jpg
+map_ao textures/headlight_glass_n_ao.jpg
+
+newmtl 692c60fa-79a8-423d-a037-5a17aef1d4fd
+Kd 0.000 0.000 0.000
+Ks 1.000 1.000 1.000
+Ns 255
+Ke 0.000 0.000 0.000
+d 0.15
+map_Kd textures/headlight_glass_c.jpg
+map_Ks textures/headlight_glass_n_s.jpg
+map_normal textures/headlight_glass_n_n.jpg
+map_d textures/headlight_glass_c_a.png
+
+newmtl 1ae64e41-8706-42de-a697-634c36d3b809
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/se_strv_74_track_c.jpg
+map_Ks textures/se_strv_74_track_n_s.jpg
+map_normal textures/se_strv_74_track_n_n.jpg
+map_ao textures/se_strv_74_track_ao_ao.jpg
+map_d textures/se_strv_74_track_c_a.png
+
+newmtl c66aa53e-891c-4db4-a1fc-70fb9b217182
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/se_strv_74_track_c.jpg
+map_Ks textures/se_strv_74_track_n_s.jpg
+map_normal textures/se_strv_74_track_n_n.jpg
+map_ao textures/se_strv_74_track_ao_ao.jpg
+map_d textures/se_strv_74_track_c_a.png
+
+newmtl 7ed2a2f2-7005-41fa-a181-31d9aa66d076
+Kd 0.000 0.000 0.000
+Ks 1.000 1.000 1.000
+Ns 255
+Ke 0.000 0.000 0.000
+d 0.15
+map_Kd textures/us_turret_glass_c.jpg
+map_d textures/us_turret_glass_c_a.png
+
+newmtl 497b667e-d7ca-452a-b57b-e58fc990cfc1
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/mg_mount_strv_74_c_se_camo_green.jpg
+map_Ks textures/mg_mount_strv_74_n_s.jpg
+map_normal textures/mg_mount_strv_74_n_n.jpg
+map_ao textures/mg_mount_strv_74_ao_ao.jpg
+
+newmtl c56a0ee1-f80c-4b69-ba8a-59b5e10f9d2c
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/strv_74_turret_c_se_camo_green.jpg
+map_Ks textures/strv_74_turret_n_s.jpg
+map_normal textures/strv_74_turret_n_n.jpg
+map_ao textures/strv_74_turret_ao_ao.jpg
+
+newmtl 79961c61-6afb-4d78-9e80-fd5665aaff1c
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/strv_74_gun_c_se_camo_green.jpg
+map_Ks textures/strv_74_gun_n_s.jpg
+map_normal textures/strv_74_gun_n_n.jpg
+map_ao textures/strv_74_gun_ao_ao.jpg
+
+newmtl 2cc992d6-77e8-43d2-b6f7-28ff678cc61e
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/rifled_barrel_a_c.jpg
+map_Ks textures/rifled_barrel_a_n_s.jpg
+map_normal textures/rifled_barrel_a_n_n.jpg
+map_ao textures/rifled_barrel_a_n_ao.jpg
+
+newmtl 21170054-36a1-4748-a169-008d536241ef
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/mg_ksp_m36_c.jpg
+map_Ks textures/mg_ksp_m36_n_s.jpg
+map_normal textures/mg_ksp_m36_n_n.jpg
+map_ao textures/mg_ksp_m36_ao_ao.jpg
+
+newmtl 713f5687-0d5e-402e-9782-6682c4d9d44e
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/mg_browning_m1919a4_c.jpg
+map_Ks textures/mg_browning_m1919a4_n_s.jpg
+map_normal textures/mg_browning_m1919a4_n_n.jpg
+map_ao textures/mg_browning_m1919a4_ao_ao.jpg
+
+newmtl 3f5af166-3ec0-49fb-b6ac-81a6436df1ff
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/strv_74_gun_c_se_camo_green.jpg
+map_Ks textures/strv_74_gun_n_s.jpg
+map_normal textures/strv_74_gun_n_n.jpg
+map_ao textures/strv_74_gun_ao_ao.jpg
+
+newmtl 2b3ab24c-9086-49fb-9b84-6999c5c43800
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/strv_74_turret_c_se_camo_green.jpg
+map_Ks textures/strv_74_turret_n_s.jpg
+map_normal textures/strv_74_turret_n_n.jpg
+map_ao textures/strv_74_turret_ao_ao.jpg
+
+newmtl d48c87f3-094b-4076-8f24-05ad3f532b44
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/mg_browning_m1919a4_ammo_c.jpg
+map_Ks textures/mg_browning_m1919a4_ammo_n_s.jpg
+map_normal textures/mg_browning_m1919a4_ammo_n_n.jpg
+map_ao textures/mg_browning_m1919a4_ammo_ao_ao.jpg
+map_d textures/mg_browning_m1919a4_ammo_c_a.png
+

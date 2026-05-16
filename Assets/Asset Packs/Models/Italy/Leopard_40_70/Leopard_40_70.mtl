@@ -1,0 +1,104 @@
+newmtl 16f5283f-e528-4103-9677-c3971682be9f
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/leopard_bofors_turret_c_it_camo_green.jpg
+map_Ks textures/leopard_bofors_turret_n_s.jpg
+map_normal textures/leopard_bofors_turret_n_n.jpg
+map_ao textures/leopard_bofors_turret_ao_ao.jpg
+
+newmtl 87df3793-01ca-452e-9750-10f1b1e8d787
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/leopard_bofors_gun_c_it_camo_green.jpg
+map_Ks textures/leopard_bofors_gun_n_s.jpg
+map_normal textures/leopard_bofors_gun_n_n.jpg
+map_ao textures/leopard_bofors_gun_ao_ao.jpg
+
+newmtl 15f99c47-7efc-4315-9dc8-345c4c73a5ef
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/rifled_barrel_b_c.jpg
+map_Ks textures/rifled_barrel_b_n_s.jpg
+map_normal textures/rifled_barrel_b_n_n.jpg
+map_ao textures/rifled_barrel_b_n_ao.jpg
+
+newmtl 86cb2e9c-ff22-4006-9a37-49377e89f18e
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/leopard_bofors_body_c_it_camo_green.jpg
+map_Ks textures/leopard_bofors_body_n_s.jpg
+map_normal textures/leopard_bofors_body_n_n.jpg
+map_ao textures/leopard_bofors_body_ao_ao.jpg
+
+newmtl f0f3e522-c419-41b9-abbf-466e82366196
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/net_f_c.jpg
+map_Ks textures/net_f_n_s.jpg
+map_normal textures/net_f_n_n.jpg
+map_ao textures/net_f_ao_ao.jpg
+map_d textures/net_f_c_a.png
+
+newmtl 845667c8-3798-4357-b227-0b06496708f4
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/headlight_glass_c.jpg
+map_Ks textures/headlight_glass_n_s.jpg
+map_normal textures/headlight_glass_n_n.jpg
+map_ao textures/headlight_glass_n_ao.jpg
+
+newmtl bd7221b9-1293-4bf3-a636-5c7955148ba1
+Kd 0.000 0.000 0.000
+Ks 1.000 1.000 1.000
+Ns 255
+Ke 0.000 0.000 0.000
+d 0.15
+map_Kd textures/headlight_glass_c.jpg
+map_Ks textures/headlight_glass_n_s.jpg
+map_normal textures/headlight_glass_n_n.jpg
+map_d textures/headlight_glass_c_a.png
+
+newmtl b9c06158-0788-4909-bd9e-8d4ebf169e18
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/ger_diehl_640a_phys_track_c_it_camo_green.jpg
+map_Ks textures/ger_diehl_640a_phys_track_n_s.jpg
+map_normal textures/ger_diehl_640a_phys_track_n_n.jpg
+map_ao textures/ger_diehl_640a_phys_track_ao_ao.jpg
+
+newmtl fffa3337-d2a3-4b5f-b9fe-51550bc5f68f
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/ger_flakpz_i_gepard_track_c.jpg
+map_Ks textures/ger_flakpz_i_gepard_track_n_s.jpg
+map_normal textures/ger_flakpz_i_gepard_track_n_n.jpg
+map_ao textures/ger_flakpz_i_gepard_track_ao_ao.jpg
+map_d textures/ger_flakpz_i_gepard_track_c_a.png
+
+newmtl fb59d41c-b583-4354-9bf1-d98644e800f0
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/ger_flakpz_i_gepard_track_c.jpg
+map_Ks textures/ger_flakpz_i_gepard_track_n_s.jpg
+map_normal textures/ger_flakpz_i_gepard_track_n_n.jpg
+map_ao textures/ger_flakpz_i_gepard_track_ao_ao.jpg
+map_d textures/ger_flakpz_i_gepard_track_c_a.png
+

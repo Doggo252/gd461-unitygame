@@ -1,0 +1,115 @@
+newmtl 1a8a2f74-2227-46da-80cf-c34ec84efdf0
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/fr_amx_13_75_ss11_track_c.jpg
+map_Ks textures/fr_amx_13_75_ss11_track_n_s.jpg
+map_normal textures/fr_amx_13_75_ss11_track_n_n.jpg
+map_ao textures/fr_amx_13_75_ss11_track_ao_ao.jpg
+map_d textures/fr_amx_13_75_ss11_track_c_a.png
+
+newmtl 4d59f435-d838-4b07-a42c-9b008caaa241
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/amx_13_75_turret_c_fr_camo_vert_olive_arme.jpg
+map_Ks textures/amx_13_75_turret_n_s.jpg
+map_normal textures/amx_13_75_turret_n_n.jpg
+map_ao textures/amx_13_75_turret_ao_ao.jpg
+
+newmtl 239d0902-5dba-43ea-a2ee-f0b96101d0e2
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/fr_amx_13_75_ss11_track_c.jpg
+map_Ks textures/fr_amx_13_75_ss11_track_n_s.jpg
+map_normal textures/fr_amx_13_75_ss11_track_n_n.jpg
+map_ao textures/fr_amx_13_75_ss11_track_ao_ao.jpg
+map_d textures/fr_amx_13_75_ss11_track_c_a.png
+
+newmtl 19b5edbc-1286-426c-a7d0-a5e4929d3241
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/amx_13_75_ss11_body_c_fr_camo_vert_olive_arme.jpg
+map_Ks textures/amx_13_75_ss11_body_n_s.jpg
+map_normal textures/amx_13_75_ss11_body_n_n.jpg
+map_ao textures/amx_13_75_ss11_body_ao_ao.jpg
+
+newmtl b2becc65-d2b4-4d79-94b1-b996624bfe5e
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/net_f_c.jpg
+map_Ks textures/net_f_n_s.jpg
+map_normal textures/net_f_n_n.jpg
+map_ao textures/net_f_ao_ao.jpg
+map_d textures/net_f_c_a.png
+
+newmtl 41a2387d-160c-4cf7-a56c-7d9903286d6c
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/amx_13_75_turret_c_fr_camo_vert_olive_arme.jpg
+map_Ks textures/amx_13_75_turret_n_s.jpg
+map_normal textures/amx_13_75_turret_n_n.jpg
+map_ao textures/amx_13_75_turret_ao_ao.jpg
+
+newmtl 63c2ae9b-caf6-48df-9d1d-48eb4791ff90
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/amx_13_75_ss11_gun_c_fr_camo_vert_olive_arme.jpg
+map_Ks textures/amx_13_75_ss11_gun_n_s.jpg
+map_normal textures/amx_13_75_ss11_gun_n_n.jpg
+map_ao textures/amx_13_75_ss11_gun_ao_ao.jpg
+
+newmtl c87a324f-c3c3-43dd-a00d-8a42f3f5c666
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/rifled_barrel_c_c.jpg
+map_Ks textures/rifled_barrel_c_n_s.jpg
+map_normal textures/rifled_barrel_c_n_n.jpg
+map_ao textures/rifled_barrel_c_n_ao.jpg
+
+newmtl 6c25cd4c-c7c9-468e-848f-5c40db757223
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/mg_mac_31_c.jpg
+map_Ks textures/mg_mac_31_n_s.jpg
+map_normal textures/mg_mac_31_n_n.jpg
+map_ao textures/mg_mac_31_ao_ao.jpg
+map_d textures/mg_mac_31_c_a.png
+
+newmtl e7b6c29f-20e3-49f8-8542-c22562c2beec
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/headlight_glass_c.jpg
+map_Ks textures/headlight_glass_n_s.jpg
+map_normal textures/headlight_glass_n_n.jpg
+map_ao textures/headlight_glass_n_ao.jpg
+
+newmtl 3e63704a-699c-4f2f-b541-06be0c8b6f17
+Kd 0.000 0.000 0.000
+Ks 1.000 1.000 1.000
+Ns 255
+Ke 0.000 0.000 0.000
+d 0.15
+map_Kd textures/headlight_glass_c.jpg
+map_Ks textures/headlight_glass_n_s.jpg
+map_normal textures/headlight_glass_n_n.jpg
+map_d textures/headlight_glass_c_a.png
+

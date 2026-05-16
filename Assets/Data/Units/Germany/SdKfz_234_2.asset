@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b56c56c5ec684d4994b5993f5635fbe, type: 3}
+  m_Name: SdKfz_234_2
+  m_EditorClassIdentifier: Assembly-CSharp::UnitDataSO
+  tankType: 11
+  tankName: Sd.Kfz.234/2
+  nation: 1
+  faction: 1
+  flagSprite: {fileID: 21300000, guid: 9c8c3e0f510954d5f8ceab8b661611e4, type: 3}
+  cpCost: 3
+  maxHp: 480
+  atk: 210
+  arm: 28
+  pen: 85
+  spd: 1
+  mov: 2.8
+  rng: 5
+  aggroRange: 10
+  damageType: 0
+  keywords: 65
+  armorPierceIgnore: 0
+  aggressiveAtkBonus: 0
+  selfRepairAmount: 0
+  selfRepairInterval: 0
+  devastatingMinFloor: 0
+  weightDirect: 0.1
+  weightShallowFlank: 0.45
+  weightWideFlank: 0.45
+  detectionAngle: 360
+  turnSpeed: 5

@@ -1,0 +1,147 @@
+newmtl 58e569ec-953d-4952-adbe-79e958229d97
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/ussr_pt_76b_track_c.jpg
+map_Ks textures/ussr_pt_76b_track_n_s.jpg
+map_normal textures/ussr_pt_76b_track_n_n.jpg
+map_ao textures/ussr_pt_76b_track_ao_ao.jpg
+map_d textures/ussr_pt_76b_track_c_a.png
+
+newmtl 4ad34c5d-f10c-43a8-9d5a-93da6c60f144
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/ussr_pt_76b_track_c.jpg
+map_Ks textures/ussr_pt_76b_track_n_s.jpg
+map_normal textures/ussr_pt_76b_track_n_n.jpg
+map_ao textures/ussr_pt_76b_track_ao_ao.jpg
+map_d textures/ussr_pt_76b_track_c_a.png
+
+newmtl 9869b4a7-ba5b-4241-b4b3-705c80827f5d
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/pt_76b_body_c_ussr_camo_green.jpg
+map_Ks textures/pt_76b_body_n_s.jpg
+map_normal textures/pt_76b_body_n_n.jpg
+map_ao textures/pt_76b_body_ao_ao.jpg
+
+newmtl 198d694e-4d89-4e25-a80c-bd1f90d5a4f2
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/net_c_c.jpg
+map_Ks textures/net_c_n_s.jpg
+map_normal textures/net_c_n_n.jpg
+map_ao textures/net_c_ao_ao.jpg
+map_d textures/net_c_c_a.png
+
+newmtl 36e4a6f0-098a-449e-929b-7287a7a1c9cd
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/net_f_c.jpg
+map_Ks textures/net_f_n_s.jpg
+map_normal textures/net_f_n_n.jpg
+map_ao textures/net_f_ao_ao.jpg
+map_d textures/net_f_c_a.png
+
+newmtl e2db7bb2-ef13-4fb3-9dc0-6e2fca037379
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/pt_76b_turret_c_ussr_camo_green.jpg
+map_Ks textures/pt_76b_turret_n_s.jpg
+map_normal textures/pt_76b_turret_n_n.jpg
+map_ao textures/pt_76b_turret_ao_ao.jpg
+
+newmtl 774dfc7c-861a-487c-acbe-19760102660a
+Kd 1.000 1.000 1.000
+Ks 0.753 0.753 0.753
+Ns 100
+Ke 0.000 0.000 0.000
+map_Kd textures/pt_76b_turret_c.jpg
+map_Ks textures/pt_76b_turret_n_s.jpg
+map_normal textures/pt_76b_turret_n_n.jpg
+map_ao textures/pt_76b_turret_ao_ao.jpg
+map_Ke textures/pt_76b_turret_c.jpg
+
+newmtl a6d7f2c0-d147-4a03-a8ff-17372a6d00a1
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/headlight_glass_c.jpg
+map_Ks textures/headlight_glass_n_s.jpg
+map_normal textures/headlight_glass_n_n.jpg
+map_ao textures/headlight_glass_n_ao.jpg
+
+newmtl 141d51c7-2923-4fc5-9f4d-0692cd80bb31
+Kd 0.000 0.000 0.000
+Ks 1.000 1.000 1.000
+Ns 255
+Ke 0.000 0.000 0.000
+d 0.15
+map_Kd textures/headlight_glass_c.jpg
+map_Ks textures/headlight_glass_n_s.jpg
+map_normal textures/headlight_glass_n_n.jpg
+map_d textures/headlight_glass_c_a.png
+
+newmtl 649cd8b9-60f4-42aa-addc-fb05343d7335
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/pt_76b_gun_c_ussr_camo_green.jpg
+map_Ks textures/pt_76b_gun_n_s.jpg
+map_normal textures/pt_76b_gun_n_n.jpg
+map_ao textures/pt_76b_gun_ao_ao.jpg
+
+newmtl 85a0d085-9523-4997-b1c8-450ae2d99f6c
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/mg_sgmt_c.jpg
+map_Ks textures/mg_sgmt_n_s.jpg
+map_normal textures/mg_sgmt_n_n.jpg
+map_ao textures/mg_sgmt_n_ao.jpg
+
+newmtl 46ca5d10-1b46-4675-8a58-9920b62ba48e
+Kd 1.000 1.000 1.000
+Ks 0.753 0.753 0.753
+Ns 100
+Ke 0.000 0.000 0.000
+map_Kd textures/pt_76b_body_c.jpg
+map_Ks textures/pt_76b_body_n_s.jpg
+map_normal textures/pt_76b_body_n_n.jpg
+map_ao textures/pt_76b_body_ao_ao.jpg
+map_Ke textures/pt_76b_body_c.jpg
+
+newmtl 15add114-4c9c-4776-9fcf-4ed2e4f78b56
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/pt_76b_gun_c_ussr_camo_green.jpg
+map_Ks textures/pt_76b_gun_n_s.jpg
+map_normal textures/pt_76b_gun_n_n.jpg
+map_ao textures/pt_76b_gun_ao_ao.jpg
+
+newmtl 7241be3d-c246-4f0a-9012-c81f71882a2d
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/pt_76b_turret_c_ussr_camo_green.jpg
+map_Ks textures/pt_76b_turret_n_s.jpg
+map_normal textures/pt_76b_turret_n_n.jpg
+map_ao textures/pt_76b_turret_ao_ao.jpg
+

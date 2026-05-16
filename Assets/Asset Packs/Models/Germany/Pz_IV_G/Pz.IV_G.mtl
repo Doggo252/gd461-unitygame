@@ -1,0 +1,137 @@
+newmtl 06aab144-79cb-4c72-a697-268540b1ab57
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/pzkpfw_iv_ausf_g_body_c_ger_camo_dunkelgelb.jpg
+map_Ks textures/pzkpfw_iv_ausf_g_body_n_s.jpg
+map_normal textures/pzkpfw_iv_ausf_g_body_n_n.jpg
+map_ao textures/pzkpfw_iv_ausf_g_body_ao_ao.jpg
+
+newmtl 028ec74d-eecd-477c-8d99-1bb6f0c216b2
+Kd 1.000 1.000 1.000
+Ks 0.753 0.753 0.753
+Ns 100
+Ke 0.000 0.000 0.000
+map_Kd textures/pzkpfw_iv_ausf_g_body_c.jpg
+map_Ks textures/pzkpfw_iv_ausf_g_body_n_s.jpg
+map_normal textures/pzkpfw_iv_ausf_g_body_n_n.jpg
+map_ao textures/pzkpfw_iv_ausf_g_body_ao_ao.jpg
+map_Ke textures/pzkpfw_iv_ausf_g_body_c.jpg
+
+newmtl bca559e6-a8f9-44eb-992c-ae4107af3429
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/ger_pzkpfw_iii_ausf_l_track_c.jpg
+map_Ks textures/ger_pzkpfw_iii_ausf_l_track_n_s.jpg
+map_normal textures/ger_pzkpfw_iii_ausf_l_track_n_n.jpg
+map_ao textures/ger_pzkpfw_iii_ausf_l_track_ao_ao.jpg
+map_d textures/ger_pzkpfw_iii_ausf_l_track_c_a.png
+
+newmtl 5c7c6abc-7e2b-4308-b6c6-a3ef7d2291d8
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/ger_pzkpfw_iii_ausf_l_track_c.jpg
+map_Ks textures/ger_pzkpfw_iii_ausf_l_track_n_s.jpg
+map_normal textures/ger_pzkpfw_iii_ausf_l_track_n_n.jpg
+map_ao textures/ger_pzkpfw_iii_ausf_l_track_ao_ao.jpg
+map_d textures/ger_pzkpfw_iii_ausf_l_track_c_a.png
+
+newmtl c54503e7-594b-48f8-a93f-3caa42c68973
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/pzkpfw_iv_ausf_g_turret_c_ger_camo_dunkelgelb.jpg
+map_Ks textures/pzkpfw_iv_ausf_g_turret_n_s.jpg
+map_normal textures/pzkpfw_iv_ausf_g_turret_n_n.jpg
+map_ao textures/pzkpfw_iv_ausf_g_turret_ao_ao.jpg
+
+newmtl 244e93a7-57be-4c23-8175-772579c3d3bb
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/pzkpfw_iv_ausf_g_gun_c_ger_camo_dunkelgelb.jpg
+map_Ks textures/pzkpfw_iv_ausf_g_gun_n_s.jpg
+map_normal textures/pzkpfw_iv_ausf_g_gun_n_n.jpg
+map_ao textures/pzkpfw_iv_ausf_g_gun_ao_ao.jpg
+
+newmtl c64fd101-e96f-4a32-aa99-53c6f4f6868e
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/mg_34_c.jpg
+map_Ks textures/mg_34_n_s.jpg
+map_normal textures/mg_34_n_n.jpg
+map_ao textures/mg_34_ao_ao.jpg
+map_d textures/mg_34_c_a.png
+
+newmtl 7c356e89-f0f8-4c29-8eac-dfa710b1b506
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/pzkpfw_iv_ausf_g_body_c_ger_camo_dunkelgelb.jpg
+map_Ks textures/pzkpfw_iv_ausf_g_body_n_s.jpg
+map_normal textures/pzkpfw_iv_ausf_g_body_n_n.jpg
+map_ao textures/pzkpfw_iv_ausf_g_body_ao_ao.jpg
+
+newmtl 9de435a4-efe0-42b9-8f32-7a758d0f1a0b
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/attch_pzkpfw_iv_track_c_attch_pzkpfw_iv_track_c.jpg
+map_Ks textures/attch_pzkpfw_iv_track_n_s.jpg
+map_normal textures/attch_pzkpfw_iv_track_n_n.jpg
+map_ao textures/attch_pzkpfw_iv_track_ao_ao.jpg
+
+newmtl 51829889-95b4-42c4-9d43-9ba2d7b0350d
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/ger_sturmpanzer_iv_brummbar_track_c.jpg
+map_Ks textures/ger_sturmpanzer_iv_brummbar_track_n_s.jpg
+map_normal textures/ger_sturmpanzer_iv_brummbar_track_n_n.jpg
+map_ao textures/ger_sturmpanzer_iv_brummbar_track_ao_ao.jpg
+map_d textures/ger_sturmpanzer_iv_brummbar_track_c_a.png
+
+newmtl 1f5cb605-4927-40a0-9a7f-82682831095c
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/ger_sturmpanzer_iv_brummbar_track_c.jpg
+map_Ks textures/ger_sturmpanzer_iv_brummbar_track_n_s.jpg
+map_normal textures/ger_sturmpanzer_iv_brummbar_track_n_n.jpg
+map_ao textures/ger_sturmpanzer_iv_brummbar_track_ao_ao.jpg
+map_d textures/ger_sturmpanzer_iv_brummbar_track_c_a.png
+
+newmtl 5bd64e8e-16e5-40ac-8378-c823ebde98f9
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/pzkpfw_iv_ausf_g_body_c_ger_camo_dunkelgelb.jpg
+map_Ks textures/pzkpfw_iv_ausf_g_body_n_s.jpg
+map_normal textures/pzkpfw_iv_ausf_g_body_n_n.jpg
+map_ao textures/pzkpfw_iv_ausf_g_body_ao_ao.jpg
+
+newmtl b25fcc0b-bdbd-4f82-8bd9-cc0c55198524
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/pzkpfw_iv_ausf_g_body_c.jpg
+map_Ks textures/pzkpfw_iv_ausf_g_body_n_s.jpg
+map_normal textures/pzkpfw_iv_ausf_g_body_n_n.jpg
+map_ao textures/pzkpfw_iv_ausf_g_body_ao_ao.jpg
+map_d textures/pzkpfw_iv_ausf_g_body_c_a.png
+

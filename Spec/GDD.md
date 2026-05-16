@@ -10,7 +10,13 @@
 
 **Target Audience:** Casual and mid-core players who enjoy fast-paced PvP strategy with stylized combined-arms gameplay.
 
-**Core Concept:** Players assemble an 8-card deck from a single shared card pool of tanks, infantry, aircraft, and support cards. During a fast-paced 3-minute match, players spend a regenerating resource ("Command Points") to deploy units onto a dual-front battlefield. Units act autonomously, advancing toward the enemy's Forward Operating Bases (FOBs) and ultimately their Command HQ. The game ends with the destruction of an enemy HQ or by holding more FOBs when the timer runs out.
+**Core Concept:** Players choose a side — **Allies** or **Axis** — and assemble an 8-card deck from historically-inspired WW2/Cold War tanks belonging to their faction. During a fast-paced 3-minute match, players spend a regenerating resource ("Command Points") to deploy units onto a dual-front battlefield. Units act autonomously, advancing toward the enemy's Forward Operating Bases (FOBs) and ultimately their Command HQ. The game ends with the destruction of an enemy HQ or by holding more FOBs when the timer runs out.
+
+**Factions:**
+- **Allies** — USA, USSR, Great Britain, France + Sweden (neutral)
+- **Axis** — Germany, Japan, Italy + Sweden (neutral)
+
+Players choose their faction before deck-building and may only select tanks from that faction. Swedish tanks are a neutral pool available to either side. Players may freely mix nations within their faction (e.g. combine Soviet and American tanks in one Allies deck).
 
 ---
 
@@ -438,43 +444,127 @@ flowchart TD
 
 ## 7. Card Roster
 
-Players build an 8-card deck from the single shared card pool below. All stat values are Level 1 baseline.
+Players choose a faction (Allies or Axis) before deck-building. They then assemble an 8-card deck freely from all tanks belonging to their faction (nations may be mixed). Swedish tanks are neutral and available to either faction.
 
 ### Stat Key
 
-| Column | Meaning                              |
-| ------ | ------------------------------------ |
-| CP     | Command Points to deploy             |
-| HP     | Hit points                           |
-| ATK    | Base damage per shot (kinetic or HE) |
-| ARM    | Armor rating                         |
-| PEN    | Penetration value                    |
-| SPD    | Shots/sec                            |
-| MOV    | Tiles/sec (0 = static)               |
-| RNG    | Attack range in tiles                |
-| Cnt    | Units deployed per card              |
+| Column | Meaning |
+|---|---|
+| CP | Command Points to deploy |
+| HP | Hit points |
+| ATK | Base damage per shot (kinetic or HE) |
+| ARM | Effective frontal armour (mm) |
+| PEN | Gun penetration at 100 m (mm) |
+| SPD | Shots/sec (1 ÷ reload time) |
+| MOV | Movement speed (tiles/sec) |
+| RNG | Attack range (tiles) |
 
 ---
 
-## Armor
+## 7.1 Faction System
 
-Each armor card corresponds to a specific tank model from the asset pack. Stats reflect each model's visual design.
+- **Allies**: USA · USSR · Great Britain · France + Sweden (neutral)
+- **Axis**: Germany · Japan · Italy + Sweden (neutral)
+- **Deck building**: freely mix nations within chosen faction; Sweden available to both.
+- **Card display** (both menu and HUD): national flag · live 3D mini-model · tank name · CP cost · stats.
 
-| #  | Name              | Model File                    | CP | HP   | ATK | ARM | PEN | SPD | MOV | RNG | Keywords                                                                  |
-|----|-------------------|-------------------------------|----|------|-----|-----|-----|-----|-----|-----|---------------------------------------------------------------------------|
-| 1  | **Original**      | Tank_Original_Model.fbx       | 4  | 1500 | 250 | 45  | 70  | 0.8 | 1.6 | 5   | —                                                                         |
-| 2  | **Alternative**   | Tank_Alternative_Model.fbx    | 5  | 1900 | 310 | 65  | 90  | 0.7 | 1.5 | 6   | Balanced; high PEN for cost                                               |
-| 3  | **Light**         | Tank_Light_Model.fbx          | 3  | 900  | 200 | 20  | 80  | 1.0 | 2.8 | 5   | Fast Flanker: highest MOV; high PEN vs low ARM                            |
-| 4  | **Heavy**         | Tank_Heavy_Model.fbx          | 6  | 2500 | 380 | 90  | 85  | 0.6 | 1.1 | 6   | Heavy: strong ARM; slow                                                   |
-| 5  | **Crawler**       | Tank_Crawler_Model.FBX        | 7  | 3000 | 350 | 110 | 80  | 0.5 | 0.8 | 6   | Fortress: ARM counts as +20 while stationary                              |
-| 6  | **Monster**       | Tank_Monster_Model.FBX        | 8  | 3500 | 450 | 100 | 90  | 0.4 | 0.9 | 6   | Devastating: single massive shot; minimum 30% damage floor                |
-| 7  | **Spike**         | Tank_Spike_Model.FBX          | 4  | 1100 | 290 | 25  | 125 | 0.7 | 1.3 | 7   | Armor Piercer: ignores up to 30 ARM on every shot                         |
-| 8  | **Shark**         | Tank_Shark_Model.FBX          | 4  | 1300 | 240 | 35  | 70  | 0.9 | 2.2 | 5   | Aggressive: +15% ATK when attacking a unit already engaged by an ally     |
-| 9  | **Droid**         | Tank_Droid_Model.FBX          | 5  | 1700 | 290 | 55  | 100 | 0.9 | 1.7 | 5   | Self-Repair: regenerates 50 HP every 5 s                                  |
-| 10 | **UTV**           | Tank_UTV_Model.FBX            | 3  | 800  | 160 | 15  | 60  | 1.2 | 3.0 | 4   | Scout: reveals all enemy units within RNG 6 on deploy                     |
-| 11 | **MegaBall**      | Tank_MegaBall_Model.FBX       | 6  | 2800 | 310 | 80  | 75  | 0.7 | 1.4 | 5   | Rollout: on deploy, charges 3 tiles forward dealing 150 HE to first enemy |
-| 12 | **RocketShip**    | Tank_RocketShip_Model.FBX     | 5  | 1400 | 200 | 30  | 50  | 0.6 | 1.4 | 8   | Rocket Artillery: attacks use HE formula; arc-fires over terrain          |
-| 13 | **UFO**           | Tank_UFO_Model.fbx            | 6  | 2000 | 340 | 50  | 110 | 0.8 | 2.0 | 6   | Hover: ignores terrain movement penalties (rubble/craters)                |
+---
+
+## Armor — Allies
+
+### USA 🇺🇸
+*Model path prefix: `Assets/Asset Packs/Models/USA/`*
+
+| Name | CP | HP | ATK | ARM | PEN | SPD | MOV | RNG | Notes |
+|---|---|---|---|---|---|---|---|---|---|
+| **M4A2 Sherman** | 4 | 850 | 230 | 75 | 90 | 0.8 | 1.5 | 5 | Balanced medium |
+| **M4A3E2 Jumbo** | 5 | 1100 | 230 | 145 | 90 | 0.7 | 1.1 | 5 | HeavyArmor keyword |
+| **M4A1(76)W Sherman** | 5 | 850 | 280 | 75 | 130 | 0.8 | 1.5 | 6 | High-velocity 76 mm |
+| **M26 Pershing** | 6 | 1400 | 340 | 100 | 160 | 0.7 | 1.2 | 6 | Heavy balanced |
+| **M18 Hellcat** | 4 | 550 | 280 | 22 | 130 | 1.0 | 2.8 | 5 | FastFlanker |
+| **T34 Heavy Tank** | 7 | 2000 | 380 | 95 | 170 | 0.5 | 0.9 | 7 | Twin 37mm + 75mm HE |
+
+### USSR 🇸🇺
+*Model path prefix: `Assets/Asset Packs/Models/Russia/`*
+
+| Name | CP | HP | ATK | ARM | PEN | SPD | MOV | RNG | Notes |
+|---|---|---|---|---|---|---|---|---|---|
+| **PT-76B** | 3 | 560 | 250 | 35 | 120 | 0.8 | 2.0 | 5 | Amphibious light |
+| **KV-1** | 5 | 1600 | 270 | 110 | 90 | 0.6 | 1.0 | 5 | Heavy, early war |
+| **IS-2** | 7 | 1900 | 520 | 120 | 200 | 0.4 | 0.9 | 6 | Devastating keyword |
+| **T-34-85** | 5 | 1000 | 300 | 90 | 140 | 0.8 | 1.9 | 6 | Balanced medium |
+| **T-34-57** | 4 | 900 | 250 | 75 | 165 | 0.9 | 1.9 | 6 | High-PEN, fast reload |
+
+### Great Britain 🇬🇧
+*Model path prefix: `Assets/Asset Packs/Models/Great Britain/`*
+
+| Name | CP | HP | ATK | ARM | PEN | SPD | MOV | RNG | Notes |
+|---|---|---|---|---|---|---|---|---|---|
+| **Churchill VII** | 6 | 2100 | 250 | 150 | 100 | 0.5 | 0.7 | 5 | Heavy, very slow |
+| **Concept 3** | 4 | 580 | 300 | 18 | 145 | 0.9 | 2.2 | 6 | SA wheeled, 77 mm gun |
+| **FV4005 Stage II** | 6 | 850 | 650 | 38 | 280 | 0.3 | 1.3 | 8 | Devastating sniper |
+| **Comet I** | 5 | 1100 | 310 | 100 | 140 | 0.7 | 1.7 | 6 | Balanced cruiser |
+
+### France 🇫🇷
+*Model path prefix: `Assets/Asset Packs/Models/France/`*
+
+| Name | CP | HP | ATK | ARM | PEN | SPD | MOV | RNG | Notes |
+|---|---|---|---|---|---|---|---|---|---|
+| **AMX-13** | 4 | 600 | 300 | 40 | 150 | 0.8 | 2.5 | 6 | Light, fast, good gun |
+| **ARL-44** | 6 | 1350 | 360 | 120 | 155 | 0.7 | 1.0 | 6 | Heavy French medium |
+| **M4A4 (SA50)** | 5 | 900 | 320 | 75 | 180 | 0.8 | 1.5 | 6 | Sherman w/ 75mm SA50 |
+| **E.B.R. (1951)** | 4 | 480 | 260 | 14 | 150 | 0.9 | 3.5 | 5 | Fastest tank; wheeled scout |
+
+---
+
+## Armor — Axis
+
+### Germany 🇩🇪
+*Model path prefix: `Assets/Asset Packs/Models/Germany/`*
+
+| Name | CP | HP | ATK | ARM | PEN | SPD | MOV | RNG | Notes |
+|---|---|---|---|---|---|---|---|---|---|
+| **Tiger H1** | 7 | 1900 | 400 | 100 | 165 | 0.6 | 1.0 | 7 | Heavy brawler; 110° detect cone |
+| **Panther A** | 7 | 1500 | 380 | 110 | 180 | 0.6 | 1.5 | 7 | High-PEN medium |
+| **Tiger II (H)** | 8 | 2300 | 430 | 150 | 185 | 0.5 | 0.9 | 8 | King Tiger; 110° detect cone |
+| **Tiger II (Nr.1-50)** | 7 | 2300 | 380 | 145 | 150 | 0.5 | 0.9 | 7 | Earlier Porsche turret |
+| **Pz.IV G** | 4 | 750 | 290 | 80 | 130 | 0.7 | 1.5 | 6 | Reliable medium |
+| **Sd.Kfz.234/2** | 3 | 480 | 210 | 28 | 85 | 1.0 | 2.8 | 5 | Scout; FastFlanker |
+| **Hetzer** | 4 | 700 | 310 | 95 | 140 | 0.6 | 1.2 | 6 | Casemate TD; LimitedTraverse |
+| **Maus** | 9 | 3500 | 520 | 200 | 180 | 0.4 | 0.6 | 7 | Superheavy; near-unstoppable |
+
+### Japan 🇯🇵
+*Model path prefix: `Assets/Asset Packs/Models/Japan/`*
+
+| Name | CP | HP | ATK | ARM | PEN | SPD | MOV | RNG | Notes |
+|---|---|---|---|---|---|---|---|---|---|
+| **M24 Chaffee** | 3 | 600 | 220 | 38 | 100 | 0.8 | 2.1 | 5 | Light recon tank |
+| **M36 GMC** | 5 | 780 | 390 | 50 | 170 | 0.7 | 1.5 | 7 | Tank destroyer |
+| **Ho-Ri Production** | 6 | 950 | 430 | 120 | 175 | 0.6 | 1.2 | 7 | Casemate TD; LimitedTraverse |
+| **ST-A3** | 5 | 820 | 350 | 70 | 160 | 0.8 | 2.0 | 7 | Post-war medium |
+
+### Italy 🇮🇹
+*Model path prefix: `Assets/Asset Packs/Models/Italy/`*
+
+| Name | CP | HP | ATK | ARM | PEN | SPD | MOV | RNG | Notes |
+|---|---|---|---|---|---|---|---|---|---|
+| **Leopard 40/70** | 3 | 580 | 170 | 28 | — | 1.8 | 2.5 | 6 | SPAA; HE damage vs aircraft |
+| **M109G** | 5 | 680 | 550 | 18 | — | 0.3 | 1.2 | 9 | HE artillery; RocketArtillery kw |
+| **Sherman Firefly** | 5 | 880 | 360 | 75 | 190 | 0.7 | 1.5 | 7 | 17-pdr; high PEN |
+| **R3 T20 FA-HS** | 2 | 280 | 140 | 8 | — | 2.2 | 3.5 | 4 | Ultra-light recon; HE spray |
+
+*Leopard 40/70, M109G, R3 use HE damage formula (§5.4). PEN column left blank.*
+
+---
+
+## Armor — Neutral (Sweden 🇸🇪 — available to BOTH factions)
+*Model path prefix: `Assets/Asset Packs/Models/Sweden/`*
+
+| Name | CP | HP | ATK | ARM | PEN | SPD | MOV | RNG | Notes |
+|---|---|---|---|---|---|---|---|---|---|
+| **Strv m/40L** | 2 | 480 | 170 | 40 | 55 | 0.8 | 1.8 | 4 | Early light tank |
+| **Strv 74** | 3 | 680 | 270 | 55 | 130 | 0.7 | 1.5 | 6 | Modernised HVSS |
+| **ZSU-57-2** | 3 | 520 | 140 | 14 | 80 | 2.0 | 2.6 | 5 | AA twin 57 mm |
 
 ---
 
@@ -572,7 +662,9 @@ Each FOB and Command HQ displays a world-space health bar directly above the str
 
 ## 9. Art & Audio Direction
 
-- **Visual Style:** Stylized top-down 3D. Tank models come from the Unity Tanks asset pack (13 distinct meshes). Infantry uses Kenney asset packs. Aircraft uses the Generic Aircraft Models Free pack. Units are team-colored (red vs blue) to ensure readability.
+- **Visual Style:** Stylized top-down 3D. Tank models are historically-inspired .obj models (35 across 8 nations) located in `Assets/Asset Packs/Models/[Nation]/`. Units are tinted to their faction colour (blue = Allies, red = Axis) to ensure readability.
+- **National Flags:** PNG/SVG flags in `Assets/Asset Packs/flags/` — one per nation. Displayed on every card and in the faction selection screen.
+- **Card Mini-Models:** Each card shows a live-rendered RenderTexture of the tank's 3D model, captured by a dedicated off-screen `CardModelRenderer` camera system. The model is rendered from a slightly elevated front-quarter angle to show hull and turret.
 - **Camera:** Orthographic, fixed top-down with a slight 80° pitch for depth cue. `orthographicSize = 19` covers the full 56-unit map width at 16:9 with margin. Far clip plane = 200. No perspective distortion — standard for this genre.
 - **Audio:**
   - Distinct audio per unit type: tank engine growl on deployment, aircraft engine roar on attack run, infantry boot crunch and shouting.
@@ -581,41 +673,37 @@ Each FOB and Command HQ displays a world-space health bar directly above the str
 
 ---
 
-## 10. Implementation State (as of session 2)
+## 10. Implementation State (current)
 
 ### Implemented and working
-- Full damage formula (§5.0–5.1): directional ARM reduction + ATK multiplier applied per shot
+- Full damage formula (§5.0–5.1): directional ARM reduction + ATK multiplier per shot
 - Four-state AI loop (§2) with two-phase flanking (§2.1)
-- Per-tank turn speed (§2.1 detection table) enforcing heavy-vs-light skill dynamics
-- NavMesh pathfinding with LOS raycasts and detection cone enforcement
-- World-space objective health bars (`ObjectiveHealthBar`) on all 6 structures
-- Orthographic camera (§9)
-- Landscape battlefield: P1 left, P2 right, river at X=0, two bridges at Z=±12
-- All 13 tank prefabs in `Assets/Prefabs/` — drag into scene, set **Team** (0=blue/P1, 1=red/P2)
+- Per-tank turn speed + detection cone enforcement
+- NavMesh pathfinding with LOS raycasts
+- World-space objective health bars on all 6 structures
+- Orthographic camera; landscape battlefield; river + two bridges at Z=±12
+- Card system: 8-card deck, 4-card hand, drag-to-deploy + hotkeys 1–4
+- CP regeneration (startingCp=5, max=10, surge phase at 60s)
+- FrontlineService: deployment zone expands as allies push forward
+- EnemyAISummoner: NavMesh-validated spawns; reacts to player's first deploy
+- WinConditionManager: HQ destruction / timer expiry / sudden death
+- GameOverPanel: pauses game on result; click-to-continue back to menu
+- GameStartController: game frozen until player deploys first unit
+- SceneTransitionService: slide-wipe between MenuScene ↔ MainScene
+- Ghost drag preview: actual tank model; red/green tint; affordability label
+- Menu: faction-filtered deck builder (Allies / Axis)
+- HUD: TopStrip (timer), BottomTray (CP bar + 4 card slots with glow/dim)
+- Win/Loss/Draw tracking via MatchStatsService (PlayerPrefs)
 
-### Prefabs (`Assets/Prefabs/`)
-| Prefab | Tank Type | Key Keyword |
-|---|---|---|
-| `Tank_Original.prefab` | Original | — |
-| `Tank_Alternative.prefab` | Alternative | — |
-| `Tank_Light.prefab` | Light | FastFlanker |
-| `Tank_Heavy.prefab` | Heavy | — |
-| `Tank_Crawler.prefab` | Crawler | Fortress |
-| `Tank_Monster.prefab` | Monster | Devastating |
-| `Tank_Spike.prefab` | Spike | ArmorPiercer |
-| `Tank_Shark.prefab` | Shark | Aggressive |
-| `Tank_Droid.prefab` | Droid | SelfRepair |
-| `Tank_UTV.prefab` | UTV | Scout |
-| `Tank_MegaBall.prefab` | MegaBall | Rollout |
-| `Tank_RocketShip.prefab` | RocketShip | RocketArtillery |
-| `Tank_UFO.prefab` | UFO | Hover |
+### In progress / next
+- **35 historical tank UnitDataSO assets** replacing old 13 generic assets
+- **35 historical tank prefabs** built from .obj models in `Assets/Asset Packs/Models/`
+- **Faction selection screen** in MenuScene
+- **Card mini-model** via RenderTexture (`CardModelRenderer` system)
+- **Updated CardEntry + HUD card slot** layouts with flag, name, model view
 
 ### Not yet implemented
-- Card system (hand, deck rotation, CP cost, deployment zones)
-- CP regeneration and Surge Phase
 - FOB/HQ auto-fire defensive weapons
 - Infantry and Aviation card types
 - Support cards (artillery strikes, emplacements)
-- Win condition evaluation (timer, FOB count)
 - Audio
-- Match flow / game state machine

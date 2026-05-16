@@ -13,11 +13,11 @@ using UnityEditor;
 [RequireComponent(typeof(HealthComponent))]
 [RequireComponent(typeof(UnitMovement))]
 [RequireComponent(typeof(TankAI))]
-[RequireComponent(typeof(FloatingHealthBar))]
+[RequireComponent(typeof(WorldHealthBarTracker))]
 public class TankCombatant : MonoBehaviour, ICombatant
 {
     [Header("Tank Configuration")]
-    [SerializeField] private TankType       _tankType = TankType.Original;
+    [SerializeField] private TankType       _tankType = TankType.M4A2_Sherman;
     [SerializeField] private int            _team;
     [SerializeField] private UnitRegistrySO _registry;
     [SerializeField] private KillEventSO    _killEvent;
@@ -29,6 +29,10 @@ public class TankCombatant : MonoBehaviour, ICombatant
     UnitMovement    _movement;
     TankAI          _ai;
 
+    string    _lastKillerName = "Unknown";
+    int       _lastKillerTeam = -1;
+    Coroutine _selfRepairRoutine;
+
     // ── ICombatant ──────────────────────────────────────────────────────────────
 
     public int             Team      => _team;
@@ -38,14 +42,10 @@ public class TankCombatant : MonoBehaviour, ICombatant
     public bool            IsDead    => _health == null || _health.IsDead;
     public Transform       Transform => transform;
 
-    // Directional armour: front = full ARM, sides = 65%, rear = 40%.
-    // Crawler Fortress keyword adds stationaryArmBonus when not moving.
+    // Directional armour: front = full ARM, sides = 40%, rear = 15% (GDD §5.0).
     public float EffectiveArm(Vector3 attackerWorldPos)
     {
         float arm = _data.arm;
-
-        if (HasKw(UnitKeyword.Fortress) && _movement.IsStationary)
-            arm += _data.stationaryArmBonus;
 
         Vector3 toAttacker = attackerWorldPos - transform.position;
         toAttacker.y = 0f;
@@ -83,13 +83,8 @@ public class TankCombatant : MonoBehaviour, ICombatant
         _movement = GetComponent<UnitMovement>();
         _ai       = GetComponent<TankAI>();
 
-        // Ensure a Collider exists so FindObjectsByType + Physics queries can find this unit.
         if (GetComponentInChildren<Collider>() == null)
-        {
-            var col    = gameObject.AddComponent<CapsuleCollider>();
-            col.radius = 0.6f;
-            col.height = 1.6f;
-        }
+            Debug.LogWarning($"[TankCombatant] {name} has no Collider — add a CapsuleCollider to the prefab.", this);
     }
 
     void OnEnable()
@@ -110,6 +105,7 @@ public class TankCombatant : MonoBehaviour, ICombatant
             _registry.Unregister((ICombatant)this);
             if (_ai != null) _registry.Unregister(_ai);
         }
+        if (_selfRepairRoutine != null) { StopCoroutine(_selfRepairRoutine); _selfRepairRoutine = null; }
     }
 
     void Start()
@@ -125,14 +121,14 @@ public class TankCombatant : MonoBehaviour, ICombatant
         _movement.Initialize(_data.mov);
         _ai.Initialize(_data, _team, _movement, this, _registry);
 
-        GetComponent<FloatingHealthBar>().SetBorderColor(_team == 0
+        GetComponent<WorldHealthBarTracker>().SetBorderColor(_team == 0
             ? new Color(0.20f, 0.45f, 0.95f)
             : new Color(0.95f, 0.20f, 0.20f));
 
-        ApplyTeamColor();
+        SetupNameTag();
 
         if (HasKw(UnitKeyword.SelfRepair))
-            StartCoroutine(SelfRepairRoutine());
+            _selfRepairRoutine = StartCoroutine(SelfRepairRoutine());
     }
 
     // ── Keyword Behaviours ───────────────────────────────────────────────────────
@@ -154,26 +150,43 @@ public class TankCombatant : MonoBehaviour, ICombatant
         if (_killEvent != null)
             _killEvent.Raise(new KillInfo
             {
-                unitName = _data != null ? _data.tankType.ToString() : name,
-                team     = _team
+                unitName   = _data != null && !string.IsNullOrEmpty(_data.tankName)
+                                 ? _data.tankName : name,
+                team       = _team,
+                killerName = _lastKillerName,
+                killerTeam = _lastKillerTeam
             });
         Destroy(gameObject);
     }
 
+    public void RecordLastAttacker(string killerName, int killerTeam)
+    {
+        _lastKillerName = killerName;
+        _lastKillerTeam = killerTeam;
+    }
+
+    // Called by DeckManager.SpawnUnit immediately after Instantiate, before Start().
+    // Overrides _team so the spawned unit fights for the correct side.
+    // _registry and _killEvent stay as the prefab's pre-wired values — they are
+    // shared assets already set in the prefab Inspector.
+    public void InitializeSpawned(int team) => _team = team;
+
     // ── Visuals ──────────────────────────────────────────────────────────────────
 
-    void ApplyTeamColor()
+    void SetupNameTag()
     {
+        var tracker = GetComponent<WorldHealthBarTracker>();
+        if (tracker == null) return;
+
+        string displayName = _data != null && !string.IsNullOrEmpty(_data.tankName)
+            ? _data.tankName
+            : gameObject.name.Replace("(Clone)", "").Replace('_', ' ').Trim();
+
         Color teamColor = _team == 0
             ? new Color(0.20f, 0.45f, 0.95f)
             : new Color(0.95f, 0.20f, 0.20f);
 
-        foreach (var r in GetComponentsInChildren<Renderer>())
-        {
-            var mat = r.material;
-            if      (mat.HasProperty("_BaseColor")) mat.SetColor("_BaseColor", teamColor);
-            else if (mat.HasProperty("_Color"))     mat.SetColor("_Color",     teamColor);
-        }
+        tracker.SetNameTag(displayName, teamColor);
     }
 
     // ── Helpers ──────────────────────────────────────────────────────────────────

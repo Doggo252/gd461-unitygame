@@ -1,0 +1,102 @@
+newmtl 0238efc1-f125-47e2-aecb-ecf44ce7e2b0
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/oto_r3_t20_fa_body_c_it_camo_green_postwar.jpg
+map_Ks textures/oto_r3_t20_fa_body_n_s.jpg
+map_normal textures/oto_r3_t20_fa_body_n_n.jpg
+map_ao textures/oto_r3_t20_fa_body_ao_ao.jpg
+
+newmtl 46ffa984-23bd-4194-9523-759bd6cbdbe4
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/headlight_glass_c.jpg
+map_Ks textures/headlight_glass_n_s.jpg
+map_normal textures/headlight_glass_n_n.jpg
+map_ao textures/headlight_glass_n_ao.jpg
+
+newmtl 83f1bb55-1f67-4e75-b604-c33ba5b4111c
+Kd 0.000 0.000 0.000
+Ks 1.000 1.000 1.000
+Ns 255
+Ke 0.000 0.000 0.000
+d 0.15
+map_Kd textures/headlight_glass_c.jpg
+map_Ks textures/headlight_glass_n_s.jpg
+map_normal textures/headlight_glass_n_n.jpg
+map_d textures/headlight_glass_c_a.png
+
+newmtl 55d365b3-e504-4047-9178-06ddcc2b827c
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/oto_r3_t20_fa_turret_c_it_camo_green_postwar.jpg
+map_Ks textures/oto_r3_t20_fa_turret_n_s.jpg
+map_normal textures/oto_r3_t20_fa_turret_n_n.jpg
+map_ao textures/oto_r3_t20_fa_turret_ao_ao.jpg
+
+newmtl 3a871c9b-78a3-4b80-98ed-17977f0956a8
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/oto_r3_t20_fa_gun_c_it_camo_green_postwar.jpg
+map_Ks textures/oto_r3_t20_fa_gun_n_s.jpg
+map_normal textures/oto_r3_t20_fa_gun_n_n.jpg
+map_ao textures/oto_r3_t20_fa_gun_ao_ao.jpg
+
+newmtl 5432751e-32a1-4e55-8563-e1c818da9291
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/rifled_barrel_c_c.jpg
+map_Ks textures/rifled_barrel_c_n_s.jpg
+map_normal textures/rifled_barrel_c_n_n.jpg
+map_ao textures/rifled_barrel_c_n_ao.jpg
+
+newmtl fd381780-f727-475e-9eb1-26513569b194
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/oto_r3_t20_fa_body_c_it_camo_green_postwar.jpg
+map_Ks textures/oto_r3_t20_fa_body_n_s.jpg
+map_normal textures/oto_r3_t20_fa_body_n_n.jpg
+map_ao textures/oto_r3_t20_fa_body_ao_ao.jpg
+
+newmtl a325fd95-9acc-4268-b8c0-3f816a32f4dc
+Kd 0.000 0.000 0.000
+Ks 1.000 1.000 1.000
+Ns 255
+Ke 0.000 0.000 0.000
+d 0.15
+map_Kd textures/us_turret_glass_c.jpg
+map_d textures/us_turret_glass_c_a.png
+
+newmtl 452217f6-322a-4625-8a4a-c9968fe6a9fb
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/lw25_ribbon_c.jpg
+map_Ks textures/lw25_ribbon_n_s.jpg
+map_normal textures/lw25_ribbon_n_n.jpg
+map_ao textures/lw25_ribbon_ao_ao.jpg
+map_d textures/lw25_ribbon_c_a.png
+
+newmtl f714a8c9-1956-4a0e-8619-ff24a5123479
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/lw25_ammo_c.jpg
+map_Ks textures/lw25_ammo_n_s.jpg
+map_normal textures/lw25_ammo_n_n.jpg
+map_ao textures/lw25_ammo_ao_ao.jpg
+map_d textures/lw25_ammo_c_a.png
+

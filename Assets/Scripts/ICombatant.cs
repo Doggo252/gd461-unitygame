@@ -15,4 +15,7 @@ public interface ICombatant
     // Returns a damage multiplier based on which arc the attacker is in.
     // Front = 1.0x, Side = 1.5x, Rear = 2.5x.
     float DirectionalDamageMult(Vector3 attackerWorldPos);
+
+    // Records the last attacker so the kill feed can report "Killer → Victim".
+    void RecordLastAttacker(string killerName, int killerTeam);
 }

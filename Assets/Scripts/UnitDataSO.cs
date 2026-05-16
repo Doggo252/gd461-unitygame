@@ -1,11 +1,76 @@
 using UnityEngine;
 
-// ── Enums ──────────────────────────────────────────────────────────────────────
+// ── Nation & Faction ───────────────────────────────────────────────────────────
+
+public enum Nation
+{
+    USA, Germany, USSR, GreatBritain, Japan, Italy, France, Sweden
+}
+
+/// <summary>
+/// Allies = USA, USSR, GreatBritain, France.
+/// Axis   = Germany, Japan, Italy.
+/// Both   = Sweden (neutral — available to either faction).
+/// </summary>
+public enum Faction { Allies, Axis, Both }
+
+// ── Tank roster (one value per historical vehicle) ────────────────────────────
 
 public enum TankType
 {
-    Original, Alternative, Light, Heavy, Crawler,
-    Monster, Spike, Shark, Droid, UTV, MegaBall, RocketShip, UFO
+    // ── USA ────────────────────────────────────────────────────────────────────
+    M4A2_Sherman,
+    M4A3E2_Jumbo,
+    M4A1_76_Sherman,
+    M26_Pershing,
+    M18_Hellcat,
+    T34_Heavy,
+
+    // ── Germany ────────────────────────────────────────────────────────────────
+    Tiger_H1,
+    Panther_A,
+    Tiger_II_H,
+    Tiger_II_Nr1_50,
+    Pz_IV_G,
+    SdKfz_234_2,
+    Hetzer,
+    Maus,
+
+    // ── USSR ───────────────────────────────────────────────────────────────────
+    PT_76B,
+    KV_1,
+    IS_2,
+    T34_85,
+    T34_57,
+
+    // ── Great Britain ──────────────────────────────────────────────────────────
+    Churchill_VII,
+    Concept_3,
+    FV4005,
+    Comet_I,
+
+    // ── Japan ──────────────────────────────────────────────────────────────────
+    M24_Chaffee,
+    M36_GMC,
+    Ho_Ri_Production,
+    ST_A3,
+
+    // ── Italy ──────────────────────────────────────────────────────────────────
+    Leopard_40_70,
+    M109G,
+    Sherman_Firefly,
+    R3_T20_FA_HS,
+
+    // ── France ─────────────────────────────────────────────────────────────────
+    AMX_13,
+    ARL_44,
+    M4A4_SA50,
+    EBR_1951,
+
+    // ── Sweden (neutral) ───────────────────────────────────────────────────────
+    Strv_m40L,
+    Strv_74,
+    ZSU_57_2,
 }
 
 public enum DamageType { Kinetic, HE }
@@ -14,7 +79,6 @@ public enum DamageType { Kinetic, HE }
 public enum TankAIState { Search, Priority, Pathfind, Attack }
 
 // How this unit approaches a target it cannot yet fire on.
-// Rolled once per new target acquisition; weights are set per tank type in UnitDataSO.
 public enum ApproachStyle
 {
     Direct,       // straight charge to just inside attack range
@@ -25,17 +89,16 @@ public enum ApproachStyle
 [System.Flags]
 public enum UnitKeyword
 {
-    None            = 0,
-    FastFlanker     = 1 << 0,  // Light:      always seeks to attack from the flank
-    Fortress        = 1 << 1,  // Crawler:    +stationaryArmBonus ARM while stationary
-    Devastating     = 1 << 2,  // Monster:    devastatingMinFloor fraction min damage
-    ArmorPiercer    = 1 << 3,  // Spike:      ignores armorPierceIgnore ARM per shot
-    Aggressive      = 1 << 4,  // Shark:      +aggressiveAtkBonus ATK when ally shares target
-    SelfRepair      = 1 << 5,  // Droid:      heals selfRepairAmount every selfRepairInterval s
-    Scout           = 1 << 6,  // UTV:        (visual / UI — no combat mechanic yet)
-    Rollout         = 1 << 7,  // MegaBall:   (handled on deploy — future)
-    RocketArtillery = 1 << 8,  // RocketShip: uses HE formula §5.4; maintains max range
-    Hover           = 1 << 9,  // UFO:        ignores terrain slow (future NavMesh modifier)
+    None             = 0,
+    FastFlanker      = 1 << 0,  // always seeks to attack from the flank
+    HeavyArmor       = 1 << 1,  // high ARM; prefers head-on engagement
+    Devastating      = 1 << 2,  // single massive shot; min 30% damage floor
+    ArmorPiercer     = 1 << 3,  // ignores armorPierceIgnore ARM per shot
+    Aggressive       = 1 << 4,  // +aggressiveAtkBonus ATK when ally shares target
+    SelfRepair       = 1 << 5,  // heals selfRepairAmount every selfRepairInterval s
+    Scout            = 1 << 6,  // visual/UI role; fast recon
+    RocketArtillery  = 1 << 7,  // uses HE formula §5.4; maintains max range
+    LimitedTraverse  = 1 << 8,  // casemate TD — very slow turret/hull rotation
 }
 
 // ── ScriptableObject ───────────────────────────────────────────────────────────
@@ -45,6 +108,12 @@ public class UnitDataSO : ScriptableObject
 {
     [Header("Identity")]
     public TankType tankType;
+    [Tooltip("Human-readable display name shown on cards.")]
+    public string   tankName;
+    public Nation   nation;
+    public Faction  faction;
+    [Tooltip("Nation flag sprite. Loaded from Assets/Asset Packs/flags/.")]
+    public Sprite   flagSprite;
     public int      cpCost;
 
     [Header("Base Stats (GDD §7)")]
@@ -55,18 +124,20 @@ public class UnitDataSO : ScriptableObject
     public float spd;        // shots per second
     public float mov;        // world-units per second (1 unit = 1 tile)
     public float rng;        // attack range in world units
-    public float aggroRange; // detection radius (set = rng * 2 by default via asset creator)
+    public float aggroRange; // detection radius (default rng * 2)
+
+    [Header("Damage Type")]
+    public DamageType damageType = DamageType.Kinetic;
 
     [Header("Keywords")]
     public UnitKeyword keywords;
 
     [Header("Keyword Values")]
-    public float armorPierceIgnore;   // Spike:  ARM to strip per shot (30)
-    public float aggressiveAtkBonus;  // Shark:  fraction bonus (0.15 = +15%)
-    public float selfRepairAmount;    // Droid:  HP healed per tick (50)
-    public float selfRepairInterval;  // Droid:  seconds between ticks (5)
-    public float stationaryArmBonus;  // Crawler: ARM added while stationary (20)
-    public float devastatingMinFloor; // Monster: min damage as fraction of ATK (0.30)
+    public float armorPierceIgnore;   // ARM stripped per shot (ArmorPiercer)
+    public float aggressiveAtkBonus;  // fraction ATK bonus (Aggressive: 0.15)
+    public float selfRepairAmount;    // HP healed per tick (SelfRepair: 50)
+    public float selfRepairInterval;  // seconds between ticks (SelfRepair: 5)
+    public float devastatingMinFloor; // min damage fraction of ATK (Devastating: 0.30)
 
     [Header("Tactical Profile (GDD §2.1)")]
     [Tooltip("Relative probability of charging straight at the target.")]
@@ -75,9 +146,8 @@ public class UnitDataSO : ScriptableObject
     public float weightShallowFlank;
     [Tooltip("Relative probability of a wide flanking sweep around the target.")]
     public float weightWideFlank;
-    [Tooltip("Full detection cone angle in degrees. 360 = omnidirectional. Enemies outside the forward arc are not scanned or tracked.")]
+    [Tooltip("Full detection cone angle in degrees. 360 = omnidirectional.")]
     public float detectionAngle = 360f;
-    [Tooltip("Turret/hull rotation speed (slerp factor) while tracking a locked target. " +
-             "Lower = slower rotation. Heavy = ~1.0, Medium = 3.0, Light/fast = 5.0.")]
+    [Tooltip("Turret/hull rotation speed (slerp factor). Heavy ~0.9, Medium ~3.0, Light ~5.0.")]
     public float turnSpeed = 3f;
 }

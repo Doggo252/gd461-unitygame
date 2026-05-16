@@ -1,0 +1,227 @@
+newmtl 2166a50f-cdb9-4e5c-9e5f-f0dc7533a23a
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/sherman_5c_firefly_body_c_u.jpg
+map_Ks textures/sherman_5c_firefly_body_n_s.jpg
+map_normal textures/sherman_5c_firefly_body_n_n.jpg
+map_ao textures/sherman_5c_firefly_body_ao_ao.jpg
+
+newmtl 98d7ec48-a6a7-43c6-a21a-74bfcf597391
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/headlight_glass_c.jpg
+map_Ks textures/headlight_glass_n_s.jpg
+map_normal textures/headlight_glass_n_n.jpg
+map_ao textures/headlight_glass_n_ao.jpg
+
+newmtl 80dcca12-ebd2-45f9-8783-74282b4de144
+Kd 1.000 1.000 1.000
+Ks 0.753 0.753 0.753
+Ns 100
+Ke 0.000 0.000 0.000
+map_Kd textures/sherman_5c_firefly_body_c.jpg
+map_Ks textures/sherman_5c_firefly_body_n_s.jpg
+map_normal textures/sherman_5c_firefly_body_n_n.jpg
+map_ao textures/sherman_5c_firefly_body_ao_ao.jpg
+map_Ke textures/sherman_5c_firefly_body_c.jpg
+
+newmtl 9736a9ad-c787-4573-a1cf-1b2e4f281275
+Kd 0.000 0.000 0.000
+Ks 1.000 1.000 1.000
+Ns 255
+Ke 0.000 0.000 0.000
+d 0.15
+map_Kd textures/headlight_glass_c.jpg
+map_Ks textures/headlight_glass_n_s.jpg
+map_normal textures/headlight_glass_n_n.jpg
+map_d textures/headlight_glass_c_a.png
+
+newmtl 75fa879a-160f-44df-8a46-b26006b8dbbc
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/sherman_5c_firefly_turret_c_u.jpg
+map_Ks textures/sherman_5c_firefly_turret_n_s.jpg
+map_normal textures/sherman_5c_firefly_turret_n_n.jpg
+map_ao textures/sherman_5c_firefly_turret_ao_ao.jpg
+
+newmtl 38edf36a-42ef-4beb-9b05-1b2cf0f5223f
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/sherman_5c_firefly_turret_c_u.jpg
+map_Ks textures/sherman_5c_firefly_turret_n_s.jpg
+map_normal textures/sherman_5c_firefly_turret_n_n.jpg
+map_ao textures/sherman_5c_firefly_turret_ao_ao.jpg
+
+newmtl 2e123a04-aefb-4eec-aa5a-22dd5af79c9c
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/sherman_1c_firefly_gun_c_u.jpg
+map_Ks textures/sherman_1c_firefly_gun_n_s.jpg
+map_normal textures/sherman_1c_firefly_gun_n_n.jpg
+map_ao textures/sherman_1c_firefly_gun_ao_ao.jpg
+
+newmtl 72906414-bb36-4a8a-b06a-fc861154db04
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/camo_net_britan_01_a_c.jpg
+map_Ks textures/camo_net_britan_01_a_n_s.jpg
+map_normal textures/camo_net_britan_01_a_n_n.jpg
+map_ao textures/_white_ao_ao.jpg
+map_d textures/camo_net_britan_01_a_c_a.png
+
+newmtl db2217d9-1936-43fc-9af0-67689be37f59
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/camo_net_britan_01_c_c.jpg
+map_Ks textures/camo_net_britan_01_c_n_s.jpg
+map_normal textures/camo_net_britan_01_c_n_n.jpg
+map_ao textures/_white_ao_ao.jpg
+map_d textures/camo_net_britan_01_c_c_a.png
+
+newmtl 90c8a179-dc30-434e-bb7a-0a69bbefe2f9
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/rifled_barrel_b_c.jpg
+map_Ks textures/rifled_barrel_b_n_s.jpg
+map_normal textures/rifled_barrel_b_n_n.jpg
+map_ao textures/rifled_barrel_b_n_ao.jpg
+
+newmtl 1733d9dd-2af9-43b1-92eb-a7e5f5fd83af
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/mg_browning_m2hb_c.jpg
+map_Ks textures/mg_browning_m2hb_n_s.jpg
+map_normal textures/mg_browning_m2hb_n_n.jpg
+map_ao textures/mg_browning_m2hb_ao_ao.jpg
+map_d textures/mg_browning_m2hb_c_a.png
+
+newmtl fa4ce80d-536f-49b1-af67-cf2b1cd17414
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/mg_browning_m2hb_mount_c_ger_camo_bronzegruen.jpg
+map_Ks textures/mg_browning_m2hb_mount_n_s.jpg
+map_normal textures/mg_browning_m2hb_mount_n_n.jpg
+map_ao textures/mg_browning_m2hb_mount_ao_ao.jpg
+
+newmtl 93f8f55f-ed87-4966-a548-b42a525d40e5
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/mg_browning_m2hb_ammo_c.jpg
+map_Ks textures/mg_browning_m2hb_ammo_n_s.jpg
+map_normal textures/mg_browning_m2hb_ammo_n_n.jpg
+map_ao textures/mg_browning_m2hb_ammo_ao_ao.jpg
+map_d textures/mg_browning_m2hb_ammo_c_a.png
+
+newmtl 48e307ea-ffc9-420e-b290-15bd99ac32fe
+Kd 0.000 0.000 0.000
+Ks 1.000 1.000 1.000
+Ns 255
+Ke 0.000 0.000 0.000
+d 0.15
+map_Kd textures/us_turret_glass_c.jpg
+map_d textures/us_turret_glass_c_a.png
+
+newmtl fc7243a0-48cb-4ada-b762-7c21ada35e2d
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/ger_kgs64_660_150_phys_track_c.jpg
+map_Ks textures/ger_kgs64_660_150_phys_track_n_s.jpg
+map_normal textures/ger_kgs64_660_150_phys_track_n_n.jpg
+map_ao textures/ger_kgs64_660_150_phys_track_ao_ao.jpg
+
+newmtl 359a6a8a-a24d-4e10-8716-34fea687d93d
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/us_m4a3e2_sherman_jumbo_track_c.jpg
+map_Ks textures/us_m4a3e2_sherman_jumbo_track_n_s.jpg
+map_normal textures/us_m4a3e2_sherman_jumbo_track_n_n.jpg
+map_ao textures/us_m4a3e2_sherman_jumbo_track_ao_ao.jpg
+map_d textures/us_m4a3e2_sherman_jumbo_track_c_a.png
+
+newmtl ac440380-5b3d-4263-823f-dc229e40100e
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/us_m4a3e2_sherman_jumbo_track_c.jpg
+map_Ks textures/us_m4a3e2_sherman_jumbo_track_n_s.jpg
+map_normal textures/us_m4a3e2_sherman_jumbo_track_n_n.jpg
+map_ao textures/us_m4a3e2_sherman_jumbo_track_ao_ao.jpg
+map_d textures/us_m4a3e2_sherman_jumbo_track_c_a.png
+
+newmtl e83b2d9c-55af-4ef4-a777-f9bcbc4a3c16
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/sherman_vc_firefly_kit_3rank_c_uk_camo_very_dark_drab.jpg
+map_Ks textures/sherman_vc_firefly_kit_3rank_n_s.jpg
+map_normal textures/sherman_vc_firefly_kit_3rank_n_n.jpg
+map_ao textures/sherman_vc_firefly_kit_3rank_ao_ao.jpg
+
+newmtl 380291a5-527f-41cc-9f68-920648cb886e
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/us_sherman_vvss_t_74_phys_track_c.jpg
+map_Ks textures/us_sherman_vvss_t_74_phys_track_n_s.jpg
+map_normal textures/us_sherman_vvss_t_74_phys_track_n_n.jpg
+map_ao textures/us_sherman_vvss_t_74_phys_track_ao_ao.jpg
+
+newmtl 9a3651dd-08d5-4d07-a667-9d097be6ce33
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/us_sherman_vvss_end_connector_type_3_phys_track_c.jpg
+map_Ks textures/us_sherman_vvss_end_connector_type_3_phys_track_n_s.jpg
+map_normal textures/us_sherman_vvss_end_connector_type_3_phys_track_n_n.jpg
+map_ao textures/us_sherman_vvss_end_connector_type_3_phys_track_ao_ao.jpg
+
+newmtl 67d2c2c0-255d-41e9-9648-d2226a2a27fe
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/sherman_5c_firefly_body_c_u.jpg
+map_Ks textures/sherman_5c_firefly_body_n_s.jpg
+map_normal textures/sherman_5c_firefly_body_n_n.jpg
+map_ao textures/sherman_5c_firefly_body_ao_ao.jpg
+
+newmtl a0f2e50e-413d-46a1-a7c4-dbdb63cc514b
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/sherman_5c_firefly_turret_c_u.jpg
+map_Ks textures/sherman_5c_firefly_turret_n_s.jpg
+map_normal textures/sherman_5c_firefly_turret_n_n.jpg
+map_ao textures/sherman_5c_firefly_turret_ao_ao.jpg
+

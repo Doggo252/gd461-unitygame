@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b56c56c5ec684d4994b5993f5635fbe, type: 3}
+  m_Name: Comet_I
+  m_EditorClassIdentifier: Assembly-CSharp::UnitDataSO
+  tankType: 22
+  tankName: Comet I
+  nation: 3
+  faction: 0
+  flagSprite: {fileID: 21300000, guid: 6f7202e4de09a498ba2614927a4bee52, type: 3}
+  cpCost: 5
+  maxHp: 1100
+  atk: 310
+  arm: 100
+  pen: 140
+  spd: 0.7
+  mov: 1.7
+  rng: 6
+  aggroRange: 12
+  damageType: 0
+  keywords: 0
+  armorPierceIgnore: 0
+  aggressiveAtkBonus: 0
+  selfRepairAmount: 0
+  selfRepairInterval: 0
+  devastatingMinFloor: 0
+  weightDirect: 0.5
+  weightShallowFlank: 0.35
+  weightWideFlank: 0.15
+  detectionAngle: 360
+  turnSpeed: 3
