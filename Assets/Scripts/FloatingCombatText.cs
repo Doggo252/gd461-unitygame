@@ -15,6 +15,7 @@ public class FloatingCombatText : MonoBehaviour
     Color         _color;
     Vector3       _worldPos;
     float         _life, _maxLife, _riseSpeed;
+    float         _screenOffsetX;   // lane offset so rapid hits on one target don't overlap
     int           _baseFontSize;
     bool          _active;
     System.Action<FloatingCombatText> _onDone;
@@ -39,16 +40,18 @@ public class FloatingCombatText : MonoBehaviour
     }
 
     public void Play(string text, Color color, float scale, int baseFontSize, Vector3 worldPos,
-                     float life, float rise, Camera cam, System.Action<FloatingCombatText> onDone)
+                     float life, float rise, Camera cam, System.Action<FloatingCombatText> onDone,
+                     float screenOffsetX = 0f)
     {
-        _cam          = cam != null ? cam : Camera.main;
-        _onDone       = onDone;
-        _color        = color;
-        _maxLife      = Mathf.Max(0.1f, life);
-        _life         = _maxLife;
-        _riseSpeed    = rise;
-        _worldPos     = worldPos;
-        _baseFontSize = baseFontSize;
+        _cam           = cam != null ? cam : Camera.main;
+        _onDone        = onDone;
+        _color         = color;
+        _maxLife       = Mathf.Max(0.1f, life);
+        _life          = _maxLife;
+        _riseSpeed     = rise;
+        _worldPos      = worldPos;
+        _screenOffsetX = screenOffsetX;
+        _baseFontSize  = baseFontSize;
 
         _text.text     = text;
         _text.fontSize = Mathf.RoundToInt(baseFontSize * scale);
@@ -70,7 +73,9 @@ public class FloatingCombatText : MonoBehaviour
         Vector3 sp = _cam.WorldToScreenPoint(_worldPos);
         if (sp.z < 0f) { _text.enabled = false; return; }
         _text.enabled = true;
-        _rt.position  = new Vector3(sp.x, sp.y, 0f);
+        // lane offset scales with resolution so it matches the scaled canvas
+        float ox = _screenOffsetX * (Screen.height / 1080f);
+        _rt.position  = new Vector3(sp.x + ox, sp.y, 0f);
     }
 
     void LateUpdate()

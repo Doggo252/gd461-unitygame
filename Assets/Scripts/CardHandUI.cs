@@ -29,7 +29,7 @@ public class CardHandUI : MonoBehaviour
     [SerializeField] CpChangedEventSO     _cpChangedEvent;
 
     [Header("Slot Colours")]
-    [SerializeField] Color _selectedColor     = new Color(0.25f, 0.55f, 0.95f, 1.0f);   // steel-blue highlight
+    [SerializeField] Color _selectedColor     = new Color(0.22f, 0.45f, 0.18f, 1.0f);   // green highlight (never blue)
     [SerializeField] Color _normalColor       = new Color(0.15f, 0.15f, 0.15f, 0.85f);
     [SerializeField] Color _unaffordableColor = new Color(0.07f, 0.08f, 0.10f, 0.92f);  // darkened (cards also dim)
 
@@ -63,7 +63,6 @@ public class CardHandUI : MonoBehaviour
     {
         if (_deckManager == null) return;
         var hand = _deckManager.Hand;
-        int sel  = _deckManager.SelectedHandIndex;
 
         for (int i = 0; i < 4; i++)
         {
@@ -88,11 +87,11 @@ public class CardHandUI : MonoBehaviour
             if (s.flagIcon     != null) s.flagIcon.sprite   = c.flagSprite;
             if (s.previewSlot  != null) s.previewSlot.SetCard(c);
 
+            // No selection highlight — a selected card looks identical to any
+            // other; only affordability changes the slot tint.
             bool canAfford = _cpManager != null && _cpManager.CurrentCp >= c.cpCost;
             if (s.background != null)
-                s.background.color = i == sel    ? _selectedColor
-                                   : canAfford   ? _normalColor
-                                                 : _unaffordableColor;
+                s.background.color = canAfford ? _normalColor : _unaffordableColor;
         }
     }
 }

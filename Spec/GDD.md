@@ -704,10 +704,25 @@ Each FOB and Command HQ displays a world-space health bar directly above the str
   - **Structure alerts:** low-HP ally tower → blinking warning that "genies" down to the tower; any tower destroyed → big centre announcement + double-layered (louder) destruction SFX
   - Structures named **Ally/Enemy** (not P1/P2); river shader freezes on the victory screen
   - Deploy overlay: translucent green fill + thick dark boundary outline, **rebuilds live** as the frontline pushes
-  - In-game hand cards: larger bold text, affordability shown by **dimming unaffordable cards** (no yellow glow); selected card = steel-blue highlight
+  - In-game hand cards: larger bold text, affordability shown by **dimming unaffordable cards** (no yellow glow); **no selection highlight** — a selected card looks identical to any other, only affordability tints the slot
   - Deck builder: right-click to add/remove, anchored DECK FULL warning at the clicked card, CLEAR sort button, RESET DECK button, **per-faction deck memory** (PlayerPrefs, survives restarts)
   - Menu polish: panel transitions (fade/slide/pop via `PanelTransition`), game-wide font theme (Big Shoulders Stencil headings + Product Sans body)
   - Ho-Ri Production materials rebuilt (olive camo body/gun/track) — was rendering untextured
+- **Game-loop / production pass (June 2026):** the five-state loop (MainMenu → Playing ⇄ Paused → Victory/Defeated) is complete:
+  - **Pause menu** (ESC / gamepad Start via `Tank_Actions Player/Pause`): freezes `timeScale`, pauses all game audio (`AudioListener.pause`; UI clicks exempt via `ignoreListenerPause`), shows a gold-framed PAUSED box (Pop transition) with RESUME / RESTART / CHANGE DECK / QUIT TO MENU on a dedicated top canvas (order 500, above all HUD). Pausing is blocked while `timeScale` is already 0 (pre-battle hold and game-over own that state)
+  - **Cinematic main menu:** a stripped visual copy of the battlefield (`MenuDiorama.prefab` — no scripts/colliders, river still flows) renders behind the menu with a slow drifting camera (`MenuCameraDrift`, unscaled time)
+  - **EXIT button** on the main menu quits the application (stops play mode in-editor)
+  - **Canvas hygiene:** every screen-space canvas (HUD, kill feed, world bars, combat text, alerts, pause, drag label) uses `CanvasScaler` ScaleWithScreenSize 1920×1080 match 0.5; panel layouts are anchor-driven
+- **Juice pass 2 (June 2026):**
+  - **Screen shake** via Cinemachine (Brain + static `CinemachineCamera` + 6D-Shake Perlin noise, driven by `ScreenShakeService`): tower destroyed = heavy thud, any kill = short kick, unit deploy = tiny bump; runs on unscaled time so the HQ-kill thud lands through the game-over freeze
+  - **Damage numbers** last 1.6 s (slower rise) and rapid hits near one target fan out into side lanes instead of overlapping (`CombatTextService` lane assignment)
+  - **Card previews** (HUD hand + deck builder share `CardModelRenderer`): 512×512 renders with a brighter 4-light rig (hot key + near-white fill + gold rim + low front bounce) so camouflage and panel detail read clearly
+  - **Hardware cursor states** (`CursorController` in both scenes): pointing-hand over anything clickable, grabbing-hand while dragging a card, system arrow otherwise (small authored cursor textures — Unity has no native hand-cursor API)
+  - Kill reward confirmed: +0.5 CP progress per enemy kill (`CommandPointsSO.killBonusProgress` → `CommandPointsManager.OnKill`)
+- **Battle history & log build-fix (June 2026):**
+  - **Per-match battle log build fix:** the victory-screen BATTLE LOG scrolled fine in the editor but rendered empty in compiled builds. Cause: the scroll Viewport used a stencil `Mask` + a null-sprite `Image`, which IL2CPP builds drop. Replaced with `RectMask2D` (rectangular clip, build-safe) — rows now render in both editor and build.
+  - **Persistent battle records:** new `BattleHistoryService` (static, PlayerPrefs/JSON-backed, newest-first, capped at 60) records every finished match — outcome, win reason, faction, ally/enemy kill counts, UTC timestamp. `BattleHistoryRecorder` (in MainScene) tallies kills per side over the match and writes one record on `MatchEndEventSO`.
+  - **BATTLE RECORDS menu panel:** a polished RECORDS button on the main menu opens a Pop-transition overlay (`BattleHistoryPanel`) listing all past battles with color-coded outcomes (Victory green / Defeat red / Draw gray), faction, reason, `allyKills/enemyKills`, and local-time stamp, plus a `xW yL zD · N battles` summary header. CLEAR wipes history, CLOSE dismisses. Themed fonts (Big Shoulders Stencil heading + Product Sans rows); scroll Viewport uses `RectMask2D` (build-safe). Rows are the §5 data-driven-entry exception.
 
 ### Not yet implemented
 - Infantry card type (squads, AT weapons §5.10)

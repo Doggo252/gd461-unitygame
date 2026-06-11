@@ -38,6 +38,8 @@ public class PanelTransition : MonoBehaviour
     {
         EnsureInit();
         gameObject.SetActive(true);
+        _cg.blocksRaycasts = true;
+        _cg.interactable   = true;
         if (_routine != null) StopCoroutine(_routine);
         _routine = StartCoroutine(Animate(show: true));
     }
@@ -46,6 +48,9 @@ public class PanelTransition : MonoBehaviour
     {
         if (!gameObject.activeSelf) return;
         EnsureInit();
+        // A dying panel must not eat clicks aimed at the panel replacing it
+        // (panels are siblings — the one fading out may draw on top).
+        _cg.blocksRaycasts = false;
         if (_routine != null) StopCoroutine(_routine);
         _routine = StartCoroutine(Animate(show: false));
     }
@@ -77,6 +82,8 @@ public class PanelTransition : MonoBehaviour
 
         // settle exact final state
         _cg.alpha            = show ? 1f : 0f;
+        _cg.blocksRaycasts   = show;
+        _cg.interactable     = show;
         _rt.anchoredPosition = _homePos;
         _rt.localScale       = Vector3.one;
         if (!show) gameObject.SetActive(false);

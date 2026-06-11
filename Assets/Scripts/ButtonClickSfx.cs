@@ -2,18 +2,20 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-// Plays the shared UI-click sound when this element is clicked. Attach next to
+// Plays the shared UI-click sound when this element is pressed. Attach next to
 // any clickable UI (Button or IPointerClickHandler target) and assign the
 // AudioProfileSO.
 //
-// Listens at the EventSystem level (IPointerClickHandler) instead of
-// Button.onClick on purpose:
+// Listens for pointer DOWN at the EventSystem level — not Button.onClick and
+// not pointer CLICK — on purpose:
 //   • several scripts call onClick.RemoveAllListeners() when rebinding slots,
 //     which silently wiped an onClick-based hook;
-//   • right-clicks and custom IPointerClickHandler UIs (card grid, deck slots)
-//     never fire onClick at all.
+//   • right-clicks and custom IPointerClickHandler UIs never fire onClick;
+//   • a click is CANCELLED when the gesture turns into a drag (tiny mouse
+//     movement over a ScrollRect, or grabbing a card) — pointer-down always
+//     fires, so every press is audible and card grabs get pickup feedback.
 // All instances share one lazily-created 2D AudioSource.
-public class ButtonClickSfx : MonoBehaviour, IPointerClickHandler
+public class ButtonClickSfx : MonoBehaviour, IPointerDownHandler
 {
     [SerializeField] AudioProfileSO _profile;
 
@@ -23,7 +25,7 @@ public class ButtonClickSfx : MonoBehaviour, IPointerClickHandler
 
     void Awake() => _button = GetComponent<Button>();
 
-    public void OnPointerClick(PointerEventData eventData)
+    public void OnPointerDown(PointerEventData eventData)
     {
         if (_button != null && !_button.interactable) return;
         Play();
@@ -40,8 +42,9 @@ public class ButtonClickSfx : MonoBehaviour, IPointerClickHandler
             var go = new GameObject("[UIClickAudio]");
             DontDestroyOnLoad(go);
             _shared = go.AddComponent<AudioSource>();
-            _shared.playOnAwake  = false;
-            _shared.spatialBlend = 0f;
+            _shared.playOnAwake        = false;
+            _shared.spatialBlend       = 0f;
+            _shared.ignoreListenerPause = true;   // UI clicks stay audible on the pause screen
         }
         _shared.pitch = 1f + Random.Range(-_profile.uiClick.pitchJitter, _profile.uiClick.pitchJitter);
         _shared.PlayOneShot(clip, _profile.uiClick.volume * _profile.masterVolume * GameSettings.Sfx);

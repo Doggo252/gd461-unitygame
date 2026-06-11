@@ -15,6 +15,7 @@ public class MainMenuController : MonoBehaviour
     [SerializeField] Button _playButton;
     [SerializeField] Button _settingsButton;
     [SerializeField] Button _creditsButton;
+    [SerializeField] Button _exitButton;
 
     [Header("Back Buttons (wire in Inspector)")]
     [SerializeField] Button _factionBackButton;      // FactionSelectPanel → MainMenu
@@ -44,6 +45,7 @@ public class MainMenuController : MonoBehaviour
         if (_playButton            != null) _playButton.onClick.AddListener(OnPlay);
         if (_settingsButton        != null) _settingsButton.onClick.AddListener(OnSettings);
         if (_creditsButton         != null) _creditsButton.onClick.AddListener(OnCredits);
+        if (_exitButton            != null) _exitButton.onClick.AddListener(OnExit);
         if (_factionBackButton     != null) _factionBackButton.onClick.AddListener(GoToMainMenu);
         if (_deckBuilderBackButton != null) _deckBuilderBackButton.onClick.AddListener(GoToFactionSelect);
     }
@@ -53,6 +55,7 @@ public class MainMenuController : MonoBehaviour
         if (_playButton            != null) _playButton.onClick.RemoveListener(OnPlay);
         if (_settingsButton        != null) _settingsButton.onClick.RemoveListener(OnSettings);
         if (_creditsButton         != null) _creditsButton.onClick.RemoveListener(OnCredits);
+        if (_exitButton            != null) _exitButton.onClick.RemoveListener(OnExit);
         if (_factionBackButton     != null) _factionBackButton.onClick.RemoveListener(GoToMainMenu);
         if (_deckBuilderBackButton != null) _deckBuilderBackButton.onClick.RemoveListener(GoToFactionSelect);
     }
@@ -69,6 +72,15 @@ public class MainMenuController : MonoBehaviour
     void OnPlay()     => ShowPanel(_factionSelectPanel);
     void OnSettings() => ToggleOverlay(_settingsOverlay);
     void OnCredits()  => ToggleOverlay(_creditsOverlay);
+
+    void OnExit()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+    }
 
     public void GoToDeckBuilder()   => ShowPanel(_deckBuilderPanel);
     public void GoToMainMenu()      => ShowPanel(_mainMenuPanel);

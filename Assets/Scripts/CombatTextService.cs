@@ -18,10 +18,14 @@ public class CombatTextService : MonoBehaviour
     [Header("Tuning")]
     [SerializeField] int   _poolSize     = 28;
     [SerializeField] int   _baseFontSize = 34;
-    [SerializeField] float _lifetime     = 0.95f;
-    [SerializeField] float _riseSpeed    = 2.6f;
+    [SerializeField] float _lifetime     = 1.6f;   // long enough to actually read
+    [SerializeField] float _riseSpeed    = 1.6f;
     [SerializeField] float _yOffset      = 1.6f;
     [SerializeField] Font  _numberFont;          // theme font (fallback: built-in)
+
+    [Header("Stacked-hit lanes — repeat hits on one target fan out sideways")]
+    [SerializeField] float _laneClusterRadius = 2.2f;   // world units: hits this close share lanes
+    [SerializeField] float _laneOffsetPx      = 52f;    // px at 1080p between lanes
 
     static readonly Color White  = new Color(1.00f, 1.00f, 1.00f);
     static readonly Color Orange = new Color(1.00f, 0.60f, 0.15f); // flank
@@ -31,6 +35,12 @@ public class CombatTextService : MonoBehaviour
     readonly List<FloatingCombatText> _pool = new();
     Camera _cam;
     Font   _font;
+
+    // recent hits → lane assignment (0, +1, −1, +2, −2 …) so overlapping
+    // numbers fan out instead of stacking on the same pixel
+    struct RecentHit { public Vector3 pos; public float time; public int lane; }
+    readonly List<RecentHit> _recent = new();
+    static readonly float[] LanePattern = { 0f, 1f, -1f, 2f, -2f, 3f, -3f };
 
     void Awake()
     {
@@ -97,6 +107,26 @@ public class CombatTextService : MonoBehaviour
         if (_cam == null) _cam = Camera.main;
         var item = GetFree();
         item.Play(text, color, scale, _baseFontSize, hit.position + Vector3.up * _yOffset,
-                  _lifetime, _riseSpeed, _cam, null);
+                  _lifetime, _riseSpeed, _cam, null, AssignLane(hit.position));
+    }
+
+    // Hits landing near a recent hit get pushed into the next free side lane so
+    // rapid fire on one target reads as a tidy fan instead of an overlap.
+    float AssignLane(Vector3 pos)
+    {
+        float now = Time.unscaledTime;
+        _recent.RemoveAll(r => now - r.time > _lifetime * 0.8f);
+
+        var used = new HashSet<int>();
+        foreach (var r in _recent)
+            if ((r.pos - pos).sqrMagnitude < _laneClusterRadius * _laneClusterRadius)
+                used.Add(r.lane);
+
+        int lane = 0;
+        for (int i = 0; i < LanePattern.Length; i++)
+            if (!used.Contains(i)) { lane = i; break; }
+
+        _recent.Add(new RecentHit { pos = pos, time = now, lane = lane });
+        return LanePattern[lane] * _laneOffsetPx;
     }
 }

@@ -92,23 +92,26 @@ public class CardModelRenderer : MonoBehaviour
         _pedestal = stageGO.transform;
         DontDestroyOnLoad(stageGO);
 
-        // Key light — upper-right-front, warm white
+        // Key light — upper-right-front, warm white. Intensities run hot on
+        // purpose: the showcase must read camo patterns and panel detail on a
+        // small card thumbnail, so it is lit brighter than the battlefield.
         var kl = new GameObject("[CRL_Key]"); kl.transform.SetParent(stageGO.transform, false);
         kl.transform.localPosition = new Vector3(3f, 5f, -3f);
         var key       = kl.AddComponent<Light>();
         key.type      = LightType.Point;
-        key.intensity = 22f;
+        key.intensity = 34f;
         key.range     = 25f;
         key.shadows   = LightShadows.None;
 
-        // Fill light — left side, cool tint
+        // Fill light — left side, near-white with a cool hint (a strong blue
+        // tint muddied the camo colours)
         var fl = new GameObject("[CRL_Fill]"); fl.transform.SetParent(stageGO.transform, false);
         fl.transform.localPosition = new Vector3(-4f, 2f, 1f);
         var fill       = fl.AddComponent<Light>();
         fill.type      = LightType.Point;
-        fill.intensity = 9f;
+        fill.intensity = 16f;
         fill.range     = 25f;
-        fill.color     = new Color(0.65f, 0.75f, 1f);
+        fill.color     = new Color(0.85f, 0.90f, 1f);
         fill.shadows   = LightShadows.None;
 
         // Rim light — behind model, gold tint for silhouette separation
@@ -116,10 +119,20 @@ public class CardModelRenderer : MonoBehaviour
         rl.transform.localPosition = new Vector3(0f, 3f, 5f);
         var rim       = rl.AddComponent<Light>();
         rim.type      = LightType.Point;
-        rim.intensity = 12f;
+        rim.intensity = 17f;
         rim.range     = 20f;
         rim.color     = new Color(1.0f, 0.88f, 0.55f);
         rim.shadows   = LightShadows.None;
+
+        // Low front bounce — lifts the lower hull / running gear out of shadow
+        var bl = new GameObject("[CRL_Bounce]"); bl.transform.SetParent(stageGO.transform, false);
+        bl.transform.localPosition = new Vector3(0f, 0.4f, -4f);
+        var bounce       = bl.AddComponent<Light>();
+        bounce.type      = LightType.Point;
+        bounce.intensity = 8f;
+        bounce.range     = 18f;
+        bounce.color     = new Color(1f, 0.97f, 0.92f);
+        bounce.shadows   = LightShadows.None;
 
         // Camera — position is updated per-render in PrepareForRender()
         var camGO = new GameObject("[CRL_Camera]"); camGO.transform.SetParent(stageGO.transform, false);

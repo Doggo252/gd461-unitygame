@@ -2,10 +2,17 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-// Handles ESC/Pause input: freezes time, shows a pause overlay, and routes
+// Handles ESC/Pause input: freezes time, shows the pause overlay, and routes
 // Resume / Restart / Change Deck / Quit actions.
 // Add this to a [PauseManager] GameObject in MainScene; wire the panel and
 // buttons in the Inspector.
+//
+// Pausing is only allowed while the battle is actually running: the pre-battle
+// "deploy a unit to begin" hold and the game-over screen both freeze
+// Time.timeScale themselves, and un-pausing into those states would corrupt
+// them. The rule "pause only when timeScale > 0" covers both for free.
+// While paused, all game audio is paused too (AudioListener.pause); UI click
+// sounds opt out via AudioSource.ignoreListenerPause so menus stay audible.
 public class PauseManager : MonoBehaviour
 {
     [Header("Input")]
@@ -26,6 +33,8 @@ public class PauseManager : MonoBehaviour
     InputAction _pauseAction;
     bool        _paused;
 
+    public bool IsPaused => _paused;
+
     // ── Lifecycle ─────────────────────────────────────────────────────────────
 
     void Awake()
@@ -37,7 +46,7 @@ public class PauseManager : MonoBehaviour
         // Editor while authoring, but at runtime it must always start hidden so
         // the player isn't greeted by a pause overlay on match start.
         if (_pausePanel != null) _pausePanel.SetActive(false);
-        Time.timeScale = 1f;
+        AudioListener.pause = false;   // defensive: never carry pause across scene loads
     }
 
     void OnEnable()
@@ -60,6 +69,8 @@ public class PauseManager : MonoBehaviour
         if (_restartBtn    != null) _restartBtn.onClick.RemoveListener(Restart);
         if (_changeDeckBtn != null) _changeDeckBtn.onClick.RemoveListener(ChangeDeck);
         if (_quitBtn       != null) _quitBtn.onClick.RemoveListener(Quit);
+
+        AudioListener.pause = false;
     }
 
     // ── Input ─────────────────────────────────────────────────────────────────
@@ -74,34 +85,55 @@ public class PauseManager : MonoBehaviour
 
     void Pause()
     {
+        // Only pausable while the battle clock is actually running — the
+        // pre-battle hold and the game-over screen own timeScale 0 themselves.
+        if (Time.timeScale <= 0f) return;
+
         _paused = true;
-        Time.timeScale = 0f;
-        if (_pausePanel != null) _pausePanel.SetActive(true);
+        Time.timeScale      = 0f;
+        AudioListener.pause = true;
+        ShowPanel(true);
     }
 
     void Resume()
     {
+        if (!_paused) return;
         _paused = false;
-        Time.timeScale = 1f;
-        if (_pausePanel != null) _pausePanel.SetActive(false);
+        Time.timeScale      = 1f;
+        AudioListener.pause = false;
+        ShowPanel(false);
+    }
+
+    void ShowPanel(bool on)
+    {
+        if (_pausePanel == null) return;
+        var tr = _pausePanel.GetComponent<PanelTransition>();
+        if (tr != null) { if (on) tr.Show(); else tr.Hide(); }
+        else _pausePanel.SetActive(on);
     }
 
     void Restart()
     {
-        Time.timeScale = 1f;
+        _paused = false;
+        Time.timeScale      = 1f;
+        AudioListener.pause = false;
         SceneTransitionService.Goto("MainScene");
     }
 
     void ChangeDeck()
     {
-        Time.timeScale = 1f;
+        _paused = false;
+        Time.timeScale      = 1f;
+        AudioListener.pause = false;
         SceneTransitionService.Goto("MenuScene");
     }
 
     void Quit()
     {
         if (_deckConfig != null) _deckConfig.playerDeck.Clear();
-        Time.timeScale = 1f;
+        _paused = false;
+        Time.timeScale      = 1f;
+        AudioListener.pause = false;
         SceneTransitionService.Goto("MenuScene");
     }
 }

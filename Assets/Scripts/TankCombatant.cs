@@ -169,11 +169,18 @@ public class TankCombatant : MonoBehaviour, ICombatant
         _lastKillerTeam = killerTeam;
     }
 
+    // Raised whenever any unit enters the field (drives spawn screen-shake etc.).
+    public static event System.Action<Vector3> AnySpawned;
+
     // Called by DeckManager.SpawnUnit immediately after Instantiate, before Start().
     // Overrides _team so the spawned unit fights for the correct side.
     // _registry and _killEvent stay as the prefab's pre-wired values — they are
     // shared assets already set in the prefab Inspector.
-    public void InitializeSpawned(int team) => _team = team;
+    public void InitializeSpawned(int team)
+    {
+        _team = team;
+        AnySpawned?.Invoke(transform.position);
+    }
 
     // ── Visuals ──────────────────────────────────────────────────────────────────
 

@@ -73,6 +73,7 @@ public class CardDragController : MonoBehaviour
         _deckManager.SelectCard(slotIndex);
         SpawnGhost(card);
         if (_deployOverlay != null) _deployOverlay.Show();
+        CursorController.BeginDrag();
         UpdateGhostFromScreen(ev.position);
     }
 
@@ -237,6 +238,7 @@ public class CardDragController : MonoBehaviour
         _dragCard  = null;
         DestroyGhost();
         if (_deployOverlay != null) _deployOverlay.Hide();
+        CursorController.EndDrag();
     }
 
     // ── Floating drag label (screen-space) ───────────────────────────────────
@@ -261,6 +263,10 @@ public class CardDragController : MonoBehaviour
         var canvas = _labelCanvasGO.AddComponent<Canvas>();
         canvas.renderMode   = RenderMode.ScreenSpaceOverlay;
         canvas.sortingOrder = 200;
+        var scaler = _labelCanvasGO.AddComponent<CanvasScaler>();
+        scaler.uiScaleMode         = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+        scaler.referenceResolution = new Vector2(1920f, 1080f);
+        scaler.matchWidthOrHeight  = 0.5f;
 
         var rootGO = new GameObject("LabelRoot");
         rootGO.transform.SetParent(_labelCanvasGO.transform, false);
