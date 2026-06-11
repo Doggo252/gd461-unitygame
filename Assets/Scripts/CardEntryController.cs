@@ -1,11 +1,12 @@
 using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 // Attached to each CardEntry prefab instantiated by DeckBuilderUI.
 // Shows a compact card view (name, flag, 3D preview thumbnail, key stats).
 // Clicking the card opens CardDetailPanel for the full orbit view + stats.
-public class CardEntryController : MonoBehaviour
+public class CardEntryController : MonoBehaviour, IPointerClickHandler
 {
     [Header("Identity")]
     [SerializeField] Text  _nameText;
@@ -38,6 +39,7 @@ public class CardEntryController : MonoBehaviour
     UnitDataSO               _card;
     Action<UnitDataSO, bool> _onToggle;
     bool                     _selected;
+
 
     public UnitDataSO Card     => _card;
     public bool       Selected => _selected;
@@ -81,17 +83,7 @@ public class CardEntryController : MonoBehaviour
             });
         }
 
-        if (_button != null)
-        {
-            _button.onClick.RemoveListener(OnClick);
-            _button.onClick.AddListener(OnClick);
-        }
         SetSelected(false);
-    }
-
-    void OnDestroy()
-    {
-        if (_button != null) _button.onClick.RemoveListener(OnClick);
     }
 
     // ── Selection ─────────────────────────────────────────────────────────────────
@@ -99,20 +91,34 @@ public class CardEntryController : MonoBehaviour
     public void SetSelected(bool value)
     {
         _selected = value;
+        // The SelectionBorder GameObject is toggled wholesale — when an Outline
+        // component is attached, leaving it active with a transparent graphic
+        // still draws the outline (it has its own alpha). Toggling the
+        // GameObject is the only way to guarantee no overlay when unselected.
         if (_selectionBorder != null)
-            _selectionBorder.color = _selected ? _selectedColor : Color.clear;
+        {
+            _selectionBorder.gameObject.SetActive(_selected);
+            _selectionBorder.color = _selectedColor;
+        }
         if (_baseBackground != null)
             _baseBackground.color = _selected
-                ? new Color(0.16f, 0.20f, 0.28f, 1f)
-                : new Color(0.08f, 0.10f, 0.14f, 1f);
+                ? new Color(0.22f, 0.18f, 0.08f, 1f)   // selected: warm amber wash
+                : new Color(0.07f, 0.09f, 0.13f, 1f);  // unselected: dark navy
     }
 
-    // ── Click → open detail panel ────────────────────────────────────────────────
+    // ── Click handling ───────────────────────────────────────────────────────────
 
-    void OnClick()
+    // Left-click → open detail panel.  RIGHT-click → toggle in/out of the deck.
+    public void OnPointerClick(PointerEventData eventData)
     {
-        // Open the full detail panel with orbit view; deck toggle is handled there
-        CardDetailPanel.Instance?.Show(_card, OnDetailToggle, _selected);
+        if (eventData.button == PointerEventData.InputButton.Right)
+        {
+            _onToggle?.Invoke(_card, !_selected);
+        }
+        else if (eventData.button == PointerEventData.InputButton.Left)
+        {
+            CardDetailPanel.Instance?.Show(_card, OnDetailToggle, _selected);
+        }
     }
 
     // Callback from CardDetailPanel when the user clicks Add/Remove

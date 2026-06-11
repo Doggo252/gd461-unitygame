@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e23035f0757a4760b4fd50308b219ff, type: 3}
+  m_Name: AudioProfile
+  m_EditorClassIdentifier: Assembly-CSharp::AudioProfileSO
+  unitSpawn:
+    clips:
+    - {fileID: 8300000, guid: 09ac6e3c33d1f4edd83be031103dc41c, type: 3}
+    volume: 1
+    pitchJitter: 0.08
+  engineIdle:
+    clips:
+    - {fileID: 8300000, guid: ed35d8a4e8053459eb33c6854d0996db, type: 3}
+    - {fileID: 8300000, guid: a3d187ed23d6b4ae09b4388b21e0371d, type: 3}
+    volume: 0.05
+    pitchJitter: 0.08
+  engineMoving:
+    clips:
+    - {fileID: 8300000, guid: 56a077ac2d4ed453d86dd7c663f624d2, type: 3}
+    volume: 0.1
+    pitchJitter: 0.08
+  fire:
+    clips:
+    - {fileID: 8300000, guid: a52d07361923b4e5da31316aa617f6f7, type: 3}
+    - {fileID: 8300000, guid: ebf3b94fb7d184a3dbcc74f707e7c5cc, type: 3}
+    - {fileID: 8300000, guid: 3f2a12da70fee40b6a81739cee441dad, type: 3}
+    volume: 0.7
+    pitchJitter: 0.1
+  hit:
+    clips:
+    - {fileID: 8300000, guid: 28f71c7b365294d7b971dddffca41d17, type: 3}
+    volume: 0.7
+    pitchJitter: 0.08
+  tankDestroyed:
+    clips:
+    - {fileID: 8300000, guid: 86073fa63e08342b6ad6355a7071697a, type: 3}
+    volume: 0.9
+    pitchJitter: 0.08
+  structureDestroyed:
+    clips:
+    - {fileID: 8300000, guid: 747cb590ed76943af926fdde20d78be5, type: 3}
+    volume: 1
+    pitchJitter: 0.08
+  lowHpSiren:
+    clips:
+    - {fileID: 8300000, guid: 6386487fd034443ffb42e3c74567d5e6, type: 3}
+    volume: 0.6
+    pitchJitter: 0.08
+  cpGain:
+    clips:
+    - {fileID: 8300000, guid: 47e6503693b304ca98d47182f8b077bd, type: 3}
+    volume: 0.396
+    pitchJitter: 0.08
+  uiClick:
+    clips:
+    - {fileID: 8300000, guid: 03cf9cf5e62e9448fbcd588d690571fb, type: 3}
+    volume: 1
+    pitchJitter: 0.08
+  masterVolume: 1

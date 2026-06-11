@@ -17,12 +17,20 @@ public class ObjectiveTarget : MonoBehaviour
     [SerializeField] float _defenseInterval  = 5f;
     [SerializeField] float _defenseDamagePct = 0.35f; // fraction of attacker's max HP per tick
 
+    [Header("Deployment")]
+    [Tooltip("Extra margin added to the structure footprint for the no-deploy radius.")]
+    [SerializeField] float _keepOutMargin = 1.0f;
+    // World-space radius inside which units may not be deployed (DeployRules).
+    // Computed from the structure's renderer footprint at Start.
+    public float KeepOutRadius { get; private set; }
+
     HealthComponent _health;
     public HealthComponent Health  => _health;
     public bool            IsAlive => _health != null && !_health.IsDead;
 
     // Tanks currently in attack range; tracked by TankAI via Register/Unregister.
     readonly List<ICombatant> _attackers = new();
+    public IReadOnlyList<ICombatant> RegisteredAttackers => _attackers;
     float _defenseTimer;
 
     void Awake() => _health = GetComponent<HealthComponent>();
@@ -31,6 +39,20 @@ public class ObjectiveTarget : MonoBehaviour
     {
         _health.Initialize(MaxHp);
         _defenseTimer = _defenseInterval;
+        ComputeKeepOutRadius();
+    }
+
+    void ComputeKeepOutRadius()
+    {
+        var rends = GetComponentsInChildren<Renderer>(true);
+        float half = 0f;
+        if (rends.Length > 0)
+        {
+            var b = rends[0].bounds;
+            for (int i = 1; i < rends.Length; i++) b.Encapsulate(rends[i].bounds);
+            half = Mathf.Max(b.extents.x, b.extents.z);
+        }
+        KeepOutRadius = half + _keepOutMargin;
     }
 
     void OnEnable()  { if (_registry != null) _registry.Register(this); }
@@ -58,19 +80,32 @@ public class ObjectiveTarget : MonoBehaviour
 
         _defenseTimer = _defenseInterval;
 
+        // GDD §5.6: defense fire engages the NEAREST attacker only — never the
+        // whole siege at once (batch deaths read as a phantom multi-kill).
+        ICombatant nearest  = null;
+        float      bestDist = float.MaxValue;
         for (int i = _attackers.Count - 1; i >= 0; i--)
         {
             var c = _attackers[i];
-            if (c == null || c.IsDead)
-            {
-                _attackers.RemoveAt(i);
-                continue;
-            }
-            // Record this structure as the killer so the kill feed shows correctly.
-            c.RecordLastAttacker(name, Team);
-            float dmg = c.Health.Max * _defenseDamagePct;
-            c.Health.TakeDamage(dmg);
-            Debug.Log($"[DEF] {name} → {c.Transform.name}: {dmg:F0} defense damage ({_defenseDamagePct * 100f:F0}% of {c.Health.Max:F0})");
+            if (c == null || c.IsDead) { _attackers.RemoveAt(i); continue; }
+            float d = (c.Transform.position - transform.position).sqrMagnitude;
+            if (d < bestDist) { bestDist = d; nearest = c; }
         }
+        if (nearest == null) return;
+
+        // Record this structure as the killer so the kill feed shows correctly.
+        nearest.RecordLastAttacker(name, Team);
+        float dmg = nearest.Health.Max * _defenseDamagePct;
+        nearest.Health.TakeDamage(dmg);
+
+        // Surface the hit as a floating damage number, same as tank fire.
+        CombatFeedback.Raise(new CombatFeedback.Hit
+        {
+            position = nearest.Transform.position,
+            damage   = dmg,
+            arc      = CombatFeedback.Arc.Front,
+            ricochet = false,
+            lethal   = nearest.Health.Current <= 0f,
+        });
     }
 }

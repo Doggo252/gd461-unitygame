@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c2b0f7e0377b4a30b08571d27a884db, type: 3}
   m_Name: P1_CommandPoints
   m_EditorClassIdentifier: Assembly-CSharp::CommandPointsSO
+  startingCp: 8
   regenRate: 0.357143
   surgeMultiplier: 2
   maxCp: 10

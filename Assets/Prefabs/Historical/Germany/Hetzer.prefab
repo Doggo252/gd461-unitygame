@@ -3623,6 +3623,8 @@ GameObject:
   - component: {fileID: 5425769205636333053}
   - component: {fileID: 5036158592100689075}
   - component: {fileID: 2338897942699488687}
+  - component: {fileID: 4328434820807254898}
+  - component: {fileID: 8321341706722526207}
   m_Layer: 0
   m_Name: Hetzer
   m_TagString: Untagged
@@ -3763,6 +3765,31 @@ MonoBehaviour:
   _registry: {fileID: 11400000, guid: fb41e26f464b4437298aea84b85cb1ab, type: 2}
   _killEvent: {fileID: 11400000, guid: 67a41e9dc2d3d448cb02c57ff165b0ad, type: 2}
   _data: {fileID: 11400000, guid: f10357a6069824d57ad7b06493a45c86, type: 2}
+--- !u!114 &4328434820807254898
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5804773417296287394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 883fc0fbcf0ee4ce5b9fdecda5f496c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TankDeathFader
+  _fadeDuration: 1
+--- !u!114 &8321341706722526207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5804773417296287394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b677e8e3156146adba80e4a94953088, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UnitAudio
 --- !u!1 &5868340445525244637
 GameObject:
   m_ObjectHideFlags: 0

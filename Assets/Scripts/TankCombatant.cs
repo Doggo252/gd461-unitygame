@@ -35,6 +35,10 @@ public class TankCombatant : MonoBehaviour, ICombatant
 
     // ── ICombatant ──────────────────────────────────────────────────────────────
 
+    // Raised each time this unit fires a shot (drives the fire SFX in UnitAudio).
+    public event System.Action Fired;
+    public void NotifyFired() => Fired?.Invoke();
+
     public int             Team      => _team;
     public HealthComponent Health    => _health;
     public UnitDataSO      Data      => _data;

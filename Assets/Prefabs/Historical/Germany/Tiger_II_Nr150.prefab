@@ -3346,6 +3346,8 @@ GameObject:
   - component: {fileID: 6820804990153085188}
   - component: {fileID: 5736125762013359042}
   - component: {fileID: 2522554985574714993}
+  - component: {fileID: 3680892743268401002}
+  - component: {fileID: 1486487810374540339}
   m_Layer: 0
   m_Name: Tiger_II_Nr150
   m_TagString: Untagged
@@ -3486,6 +3488,31 @@ MonoBehaviour:
   _registry: {fileID: 11400000, guid: fb41e26f464b4437298aea84b85cb1ab, type: 2}
   _killEvent: {fileID: 11400000, guid: 67a41e9dc2d3d448cb02c57ff165b0ad, type: 2}
   _data: {fileID: 11400000, guid: ed5f105bc91c34c44afd70958afa12e2, type: 2}
+--- !u!114 &3680892743268401002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2831562956872440804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 883fc0fbcf0ee4ce5b9fdecda5f496c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TankDeathFader
+  _fadeDuration: 1
+--- !u!114 &1486487810374540339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2831562956872440804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b677e8e3156146adba80e4a94953088, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UnitAudio
 --- !u!1 &2933448303342347200
 GameObject:
   m_ObjectHideFlags: 0

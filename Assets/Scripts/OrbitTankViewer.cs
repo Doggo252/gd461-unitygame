@@ -122,26 +122,37 @@ public class OrbitTankViewer : MonoBehaviour
         _pivot = stageGO.transform;
         DontDestroyOnLoad(stageGO);
 
-        // Key light
+        // Key light — upper-right-front, warm white
         var kl = new GameObject("[OrbitLight_Key]");
         kl.transform.SetParent(stageGO.transform, false);
-        kl.transform.localPosition = new Vector3(3f, 4f, -2f);
+        kl.transform.localPosition = new Vector3(3f, 5f, -3f);
         var key       = kl.AddComponent<Light>();
         key.type      = LightType.Point;
-        key.intensity = 6f;
-        key.range     = 16f;
+        key.intensity = 22f;
+        key.range     = 25f;
         key.shadows   = LightShadows.None;
 
-        // Fill light
+        // Fill light — left side, cool tint
         var fl = new GameObject("[OrbitLight_Fill]");
         fl.transform.SetParent(stageGO.transform, false);
-        fl.transform.localPosition = new Vector3(-3f, 2f, 1f);
+        fl.transform.localPosition = new Vector3(-4f, 2f, 1f);
         var fill       = fl.AddComponent<Light>();
         fill.type      = LightType.Point;
-        fill.intensity = 3f;
-        fill.range     = 16f;
-        fill.color     = new Color(0.6f, 0.7f, 1f);
+        fill.intensity = 9f;
+        fill.range     = 25f;
+        fill.color     = new Color(0.65f, 0.75f, 1f);
         fill.shadows   = LightShadows.None;
+
+        // Rim light — behind model, gold tint for silhouette separation
+        var rl = new GameObject("[OrbitLight_Rim]");
+        rl.transform.SetParent(stageGO.transform, false);
+        rl.transform.localPosition = new Vector3(0f, 3f, 5f);
+        var rim       = rl.AddComponent<Light>();
+        rim.type      = LightType.Point;
+        rim.intensity = 12f;
+        rim.range     = 20f;
+        rim.color     = new Color(1.0f, 0.88f, 0.55f);
+        rim.shadows   = LightShadows.None;
 
         // Camera
         var camGO = new GameObject("[OrbitCamera]");

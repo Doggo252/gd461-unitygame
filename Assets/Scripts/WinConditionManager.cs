@@ -12,6 +12,11 @@ public class WinConditionManager : MonoBehaviour
     [SerializeField] UnitRegistrySO     _registry;
     [SerializeField] MatchEndEventSO    _matchEndEvent;
     [SerializeField] MatchTimerManager  _timer;
+    [SerializeField] KillEventSO        _killEvent;   // for the casualty tiebreaker
+
+    // Units destroyed, indexed by the destroyed unit's team. Enemy casualties
+    // inflicted by team T = _casualtiesByTeam[1 - T].
+    readonly int[] _casualtiesByTeam = new int[2];
 
     [Header("UI — wired in scene")]
     [SerializeField] GameObject _suddenDeathBanner; // small overlay shown during overtime
@@ -41,6 +46,7 @@ public class WinConditionManager : MonoBehaviour
 
     void SubscribeAll()
     {
+        if (_killEvent != null) { _killEvent.OnRaised -= OnUnitKilled; _killEvent.OnRaised += OnUnitKilled; }
         if (_registry == null) return;
         foreach (var o in _registry.Objectives)
         {
@@ -52,12 +58,18 @@ public class WinConditionManager : MonoBehaviour
 
     void UnsubscribeAll()
     {
+        if (_killEvent != null) _killEvent.OnRaised -= OnUnitKilled;
         if (_registry == null) return;
         foreach (var o in _registry.Objectives)
         {
             if (o == null || o.Health == null) continue;
             o.Health.OnDeath -= OnObjectiveDestroyed_Generic;
         }
+    }
+
+    void OnUnitKilled(KillInfo info)
+    {
+        if (info.team == 0 || info.team == 1) _casualtiesByTeam[info.team]++;
     }
 
     void OnObjectiveDestroyed_Generic()
@@ -127,7 +139,13 @@ public class WinConditionManager : MonoBehaviour
         if (p2FobsLost > p1FobsLost) { EndMatch(0, "Timer"); return; }
         if (p1FobsLost > p2FobsLost) { EndMatch(1, "Timer"); return; }
 
-        // Tied → enter sudden death (no time cap)
+        // Tiebreaker (GDD §2): more enemy unit casualties inflicted wins.
+        int p1Inflicted = _casualtiesByTeam[1]; // enemy (team 1) units team 0 destroyed
+        int p2Inflicted = _casualtiesByTeam[0];
+        if (p1Inflicted > p2Inflicted) { EndMatch(0, "Casualties"); return; }
+        if (p2Inflicted > p1Inflicted) { EndMatch(1, "Casualties"); return; }
+
+        // Still tied → enter sudden death (no time cap)
         if (!_inSuddenDeath)
         {
             _inSuddenDeath = true;

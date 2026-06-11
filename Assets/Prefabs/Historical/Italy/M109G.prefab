@@ -2446,6 +2446,8 @@ GameObject:
   - component: {fileID: 7526425010615357026}
   - component: {fileID: 8874961972340464275}
   - component: {fileID: 2138043058625899548}
+  - component: {fileID: 4459352452618106981}
+  - component: {fileID: 6879730517323590609}
   m_Layer: 0
   m_Name: M109G
   m_TagString: Untagged
@@ -2586,6 +2588,31 @@ MonoBehaviour:
   _registry: {fileID: 11400000, guid: fb41e26f464b4437298aea84b85cb1ab, type: 2}
   _killEvent: {fileID: 11400000, guid: 67a41e9dc2d3d448cb02c57ff165b0ad, type: 2}
   _data: {fileID: 11400000, guid: 7794f9fc8a342452fae0d94c15d40790, type: 2}
+--- !u!114 &4459352452618106981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2558736048458578707}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 883fc0fbcf0ee4ce5b9fdecda5f496c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TankDeathFader
+  _fadeDuration: 1
+--- !u!114 &6879730517323590609
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2558736048458578707}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b677e8e3156146adba80e4a94953088, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UnitAudio
 --- !u!1 &2573597259311161602
 GameObject:
   m_ObjectHideFlags: 0

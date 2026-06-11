@@ -20,6 +20,9 @@ public class FactionSelectUI : MonoBehaviour
     [Header("Data")]
     [SerializeField] DeckConfigSO _deckConfig;
 
+    [Header("Deck Builder (on a sibling GameObject, not the panel)")]
+    [SerializeField] DeckBuilderUI _deckBuilderUI;
+
     // ── Lifecycle ────────────────────────────────────────────────────────────────
 
     void OnEnable()
@@ -49,7 +52,23 @@ public class FactionSelectUI : MonoBehaviour
     {
         if (_deckConfig != null) _deckConfig.chosenFaction = faction;
 
-        if (_factionSelectPanel != null) _factionSelectPanel.SetActive(false);
-        if (_deckBuilderPanel   != null) _deckBuilderPanel.SetActive(true);
+        Toggle(_factionSelectPanel, false);
+        Toggle(_deckBuilderPanel,   true);
+
+        // DeckBuilderUI lives on its own controller GameObject (not on the
+        // panel), so SetActive(true) on the panel doesn't fire its OnEnable.
+        // We must explicitly invoke Rebuild after writing chosenFaction.
+        var dbUI = _deckBuilderUI != null ? _deckBuilderUI : FindObjectOfType<DeckBuilderUI>(true);
+        if (dbUI != null) dbUI.RebuildPublic();
+        else Debug.LogWarning("[FactionSelectUI] No DeckBuilderUI found — cards will not rebuild for new faction");
+    }
+
+    // Animate via PanelTransition when present; hard toggle otherwise.
+    static void Toggle(GameObject panel, bool on)
+    {
+        if (panel == null || panel.activeSelf == on) return;
+        var tr = panel.GetComponent<PanelTransition>();
+        if (tr != null) { if (on) tr.Show(); else tr.Hide(); }
+        else panel.SetActive(on);
     }
 }

@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff49b3a109da54d3ab998cf4cde50151, type: 3}
+  m_Name: SelectedDifficulty
+  m_EditorClassIdentifier: Assembly-CSharp::SelectedDifficultySO
+  _easy: {fileID: 11400000, guid: e3296aabf86e343b1a7cd7ebfacb2546, type: 2}
+  _normal: {fileID: 11400000, guid: 1a1e772f2a38a40798c324619df5db92, type: 2}
+  _hard: {fileID: 11400000, guid: 346dc99ab3af84c44a5a21d86fa09f0f, type: 2}

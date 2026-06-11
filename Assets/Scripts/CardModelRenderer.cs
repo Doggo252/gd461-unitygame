@@ -25,7 +25,23 @@ public class CardModelRenderer : MonoBehaviour
     [SerializeField] float _pitchDeg     = 8f;      // low pitch = more frontal, less top-down
     [SerializeField] float _fov          = 40f;
     [SerializeField] float _padding      = 0.85f;   // zoom in — tank fills ~85% of frame
-    [SerializeField] Color _bgColor      = new Color(0.06f, 0.07f, 0.10f, 1f);
+    // Alpha 0 → transparent renders, so the tank silhouette can sit on top
+    // of any UI background (deck-builder cards, sidebar slots, etc.) without
+    // a coloured rectangle around it.
+    [SerializeField] Color _bgColor      = new Color(0f, 0f, 0f, 0f);
+
+    [Header("Viewport framing")]
+    [Tooltip("Global Y shift applied to every tank. Positive = raises tank in frame.")]
+    [SerializeField] float _globalRaise = 0.45f;
+    [Tooltip("Per-tank fine-tune. Positive = raises tank in frame, negative = lowers.")]
+    [SerializeField] List<TankViewportEntry> _yBiasOverrides = new();
+
+    [System.Serializable]
+    public struct TankViewportEntry
+    {
+        public TankType type;
+        public float    yBias;   // positive = raise model in frame, negative = lower
+    }
 
     readonly Dictionary<TankType, RenderTexture> _cache = new();
     readonly Queue<RenderRequest>                _queue = new();
@@ -76,24 +92,34 @@ public class CardModelRenderer : MonoBehaviour
         _pedestal = stageGO.transform;
         DontDestroyOnLoad(stageGO);
 
-        // Key light — positioned relative to stage
+        // Key light — upper-right-front, warm white
         var kl = new GameObject("[CRL_Key]"); kl.transform.SetParent(stageGO.transform, false);
-        kl.transform.localPosition = new Vector3(2f, 4f, -2f);
+        kl.transform.localPosition = new Vector3(3f, 5f, -3f);
         var key       = kl.AddComponent<Light>();
         key.type      = LightType.Point;
-        key.intensity = 6f;
-        key.range     = 18f;
+        key.intensity = 22f;
+        key.range     = 25f;
         key.shadows   = LightShadows.None;
 
-        // Fill light (left side, cool tint)
+        // Fill light — left side, cool tint
         var fl = new GameObject("[CRL_Fill]"); fl.transform.SetParent(stageGO.transform, false);
-        fl.transform.localPosition = new Vector3(-3f, 2f, 1f);
+        fl.transform.localPosition = new Vector3(-4f, 2f, 1f);
         var fill       = fl.AddComponent<Light>();
         fill.type      = LightType.Point;
-        fill.intensity = 3f;
-        fill.range     = 18f;
+        fill.intensity = 9f;
+        fill.range     = 25f;
         fill.color     = new Color(0.65f, 0.75f, 1f);
         fill.shadows   = LightShadows.None;
+
+        // Rim light — behind model, gold tint for silhouette separation
+        var rl = new GameObject("[CRL_Rim]"); rl.transform.SetParent(stageGO.transform, false);
+        rl.transform.localPosition = new Vector3(0f, 3f, 5f);
+        var rim       = rl.AddComponent<Light>();
+        rim.type      = LightType.Point;
+        rim.intensity = 12f;
+        rim.range     = 20f;
+        rim.color     = new Color(1.0f, 0.88f, 0.55f);
+        rim.shadows   = LightShadows.None;
 
         // Camera — position is updated per-render in PrepareForRender()
         var camGO = new GameObject("[CRL_Camera]"); camGO.transform.SetParent(stageGO.transform, false);
@@ -129,6 +155,10 @@ public class CardModelRenderer : MonoBehaviour
                 rt = PrepareForRender(req.tankType);
                 if (rt != null)
                 {
+                    // Wait extra frames so the GPU can upload textures before capture
+                    // (critical for high-poly models like AMX-13 with many PBR textures)
+                    yield return null;
+                    yield return null;
                     _cam.targetTexture = rt;
                     _cam.enabled       = true;
                     yield return null;              // URP renders this frame
@@ -171,21 +201,33 @@ public class CardModelRenderer : MonoBehaviour
         foreach (var nav in _activeModel.GetComponentsInChildren<NavMeshAgent>(true))  nav.enabled = false;
 
         // Adaptive camera: zoom out for big tanks, in for small
-        var    bounds  = CombinedBounds(_activeModel);
-        float  dist    = FitDistance(bounds, _fov, _padding);
-        float  centerY = bounds.center.y - _pedestal.position.y;   // local Y of model centre
+        var   bounds      = CombinedBounds(_activeModel);
+        float dist        = FitDistance(bounds, _fov, _padding);
+        float baseCenterY = bounds.center.y - _pedestal.position.y;   // local Y of model centre
 
-        // Camera at -Z (local) looks at model's front face (model rotated ~180° faces -Z)
+        // Camera sits relative to tank centre; lookAt is shifted DOWNWARD to raise
+        // the tank in the rendered frame. Positive raise → look at a lower point →
+        // tank appears higher.
+        float lookAtY = baseCenterY - (_globalRaise + GetYBias(tankType));
+
         _cam.transform.localPosition =
             new Vector3(0f,
-                        centerY + Mathf.Tan(_pitchDeg * Mathf.Deg2Rad) * dist,
+                        baseCenterY + Mathf.Tan(_pitchDeg * Mathf.Deg2Rad) * dist,
                         -dist);
-        _cam.transform.LookAt(_pedestal.position + new Vector3(0f, centerY, 0f));
+        _cam.transform.LookAt(_pedestal.position + new Vector3(0f, lookAtY, 0f));
 
         return rt;
     }
 
     // ── Helpers ──────────────────────────────────────────────────────────────────
+
+    /// Per-tank Y-axis viewport bias — positive raises the model in frame, negative lowers it.
+    float GetYBias(TankType type)
+    {
+        foreach (var e in _yBiasOverrides)
+            if (e.type == type) return e.yBias;
+        return 0f;
+    }
 
     /// Deterministic yaw between 170° and 190° (front-on ±10°), unique per TankType.
     public static float FrontalYaw(TankType type)

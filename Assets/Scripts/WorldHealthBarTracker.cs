@@ -83,7 +83,7 @@ public class WorldHealthBarTracker : MonoBehaviour
             if (h > topLocal) topLocal = h;
         }
         _barWorldOffset   = new Vector3(0f, topLocal + 0.30f, 0f);
-        _labelWorldOffset = new Vector3(0f, topLocal + 0.85f, 0f);
+        _labelWorldOffset = new Vector3(0f, topLocal + 2.10f, 0f); // clear of health bar (~42px needed, 2.10 WU ≈ 58px at 60° pitch)
     }
 
     // ── Spawn ─────────────────────────────────────────────────────────────────────

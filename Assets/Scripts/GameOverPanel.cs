@@ -80,7 +80,8 @@ public class GameOverPanel : MonoBehaviour
     {
         "HQDestroyed" => "by Headquarters Destruction",
         "SuddenDeath" => "in Sudden Death",
-        "Timer"       => "by Tower Count at Time Expiry",
+        "Timer"       => "by FOB Count at Time Expiry",
+        "Casualties"  => "by Enemy Casualties",
         "Draw"        => "Match Drawn",
         _             => r ?? ""
     };

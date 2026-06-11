@@ -13,7 +13,8 @@ public class EnemyAISummoner : MonoBehaviour
 
     [Header("AI map bounds (X is dynamic via FrontlineService when set)")]
     [SerializeField] float _fallbackXMin  =  3f;
-    [SerializeField] float _fallbackXMax  = 26f;
+    [SerializeField] float _fallbackXMax  = 18f;   // was 26 — kept away from enemy HQ (~25)
+    [SerializeField] float _maxDeployX    = 18f;   // hard cap regardless of frontline
     [SerializeField] float _deployZMin    = -13f;
     [SerializeField] float _deployZMax    =  13f;
     [SerializeField] int   _enemyTeam     =  1;
@@ -22,6 +23,7 @@ public class EnemyAISummoner : MonoBehaviour
     [SerializeField] CommandPointsManager _cpManager;
     [SerializeField] DeckManager          _deckManager;
     [SerializeField] FrontlineService     _frontlineService;
+    [SerializeField] UnitRegistrySO       _registry;   // structure keep-out (DeployRules)
 
     [Header("Reaction — fire first unit when player deploys")]
     [Tooltip("Subscribe to the player's CP event. When their CP decreases for the " +
@@ -34,6 +36,9 @@ public class EnemyAISummoner : MonoBehaviour
     [Header("Faction — set to read player faction from DeckConfigSO")]
     [SerializeField] DeckConfigSO _deckConfig;
 
+    [Header("Difficulty")]
+    [SerializeField] SelectedDifficultySO _difficulty;
+
     float _timer;
     bool  _reactedToPlayer;
     int   _lastKnownPlayerCp = -1;
@@ -45,6 +50,14 @@ public class EnemyAISummoner : MonoBehaviour
 
     void Start()
     {
+        // Apply difficulty settings if a config is selected
+        if (_difficulty?.Active != null)
+        {
+            _thinkInterval = _difficulty.Active.thinkInterval;
+            _deployChance  = _difficulty.Active.deployChance;
+            Debug.Log($"[EnemyAISummoner] Difficulty applied: interval={_thinkInterval}s, chance={_deployChance:P0}");
+        }
+
         _timer = _thinkInterval;
 
         // Filter to the faction opposing the player's chosen faction.
@@ -55,6 +68,12 @@ public class EnemyAISummoner : MonoBehaviour
             _aiDeck = _aiDeck
                 .Where(c => c != null && (c.faction == opposing || c.faction == Faction.Both))
                 .ToList();
+
+            // On Easy, restrict to cheap units
+            int maxCp = _difficulty?.Active?.maxUnitCpCost ?? 0;
+            if (maxCp > 0)
+                _aiDeck = _aiDeck.Where(c => c.cpCost <= maxCp).ToList();
+
             Debug.Log($"[EnemyAISummoner] AI deck filtered to {opposing}: {_aiDeck.Count} cards available.");
         }
     }
@@ -141,6 +160,8 @@ public class EnemyAISummoner : MonoBehaviour
             xMin = _fallbackXMin;
             xMax = _fallbackXMax;
         }
+        // Never spawn within the enemy HQ bounds
+        xMax = Mathf.Min(xMax, _maxDeployX);
 
         for (int attempt = 0; attempt < MAX_PLACEMENT_RETRIES; attempt++)
         {
@@ -148,12 +169,13 @@ public class EnemyAISummoner : MonoBehaviour
             float z         = Random.Range(_deployZMin, _deployZMax);
             var   candidate = new Vector3(x, 0f, z);
 
-            if (NavMesh.SamplePosition(candidate, out NavMeshHit hit, NAVMESH_SAMPLE_RADIUS, 1))
-            {
-                if (_frontlineService != null
-                    && !_frontlineService.IsValidDeployX(_enemyTeam, hit.position.x))
-                    continue;
+            // Same validity rules as the player (rejects trees, structures, river).
+            if (!DeployRules.IsSpawnable(candidate, _frontlineService, _enemyTeam,
+                                         _deployZMin, _deployZMax, _registry))
+                continue;
 
+            if (NavMesh.SamplePosition(candidate, out NavMeshHit hit, DeployRules.NavTolerance, 1 << 0))
+            {
                 spawn = hit.position;
                 return true;
             }

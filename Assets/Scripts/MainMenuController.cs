@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 // Controls the main menu flow: MainMenu → FactionSelect → DeckBuilder.
+// Difficulty is set via the Settings overlay (not a flow step).
 // AGENTS §5: all panels pre-built in the Editor; this script only shows/hides them.
 public class MainMenuController : MonoBehaviour
 {
@@ -16,8 +17,8 @@ public class MainMenuController : MonoBehaviour
     [SerializeField] Button _creditsButton;
 
     [Header("Back Buttons (wire in Inspector)")]
-    [SerializeField] Button _factionBackButton;    // FactionSelectPanel → MainMenu
-    [SerializeField] Button _deckBuilderBackButton; // DeckBuilderPanel → FactionSelect
+    [SerializeField] Button _factionBackButton;      // FactionSelectPanel → MainMenu
+    [SerializeField] Button _deckBuilderBackButton;  // DeckBuilderPanel → FactionSelect
 
     [Header("Credits / Settings overlays (optional)")]
     [SerializeField] GameObject _creditsOverlay;
@@ -25,21 +26,34 @@ public class MainMenuController : MonoBehaviour
 
     // ── Lifecycle ────────────────────────────────────────────────────────────────
 
+    void Awake()
+    {
+        // Defensive: CardDetailPanel and OrbitTankViewer use Awake-singletons.
+        // If they're left inactive in the Editor while authoring, Awake never
+        // fires and their Instance stays null — making single-click on a card
+        // silently no-op. Force them active here BEFORE Start() so their
+        // Awake/Start run normally.
+        foreach (var cdp in FindObjectsOfType<CardDetailPanel>(true))
+            if (!cdp.gameObject.activeSelf) cdp.gameObject.SetActive(true);
+        foreach (var otv in FindObjectsOfType<OrbitTankViewer>(true))
+            if (!otv.gameObject.activeSelf) otv.gameObject.SetActive(true);
+    }
+
     void OnEnable()
     {
-        if (_playButton           != null) _playButton.onClick.AddListener(OnPlay);
-        if (_settingsButton       != null) _settingsButton.onClick.AddListener(OnSettings);
-        if (_creditsButton        != null) _creditsButton.onClick.AddListener(OnCredits);
-        if (_factionBackButton    != null) _factionBackButton.onClick.AddListener(GoToMainMenu);
+        if (_playButton            != null) _playButton.onClick.AddListener(OnPlay);
+        if (_settingsButton        != null) _settingsButton.onClick.AddListener(OnSettings);
+        if (_creditsButton         != null) _creditsButton.onClick.AddListener(OnCredits);
+        if (_factionBackButton     != null) _factionBackButton.onClick.AddListener(GoToMainMenu);
         if (_deckBuilderBackButton != null) _deckBuilderBackButton.onClick.AddListener(GoToFactionSelect);
     }
 
     void OnDisable()
     {
-        if (_playButton           != null) _playButton.onClick.RemoveListener(OnPlay);
-        if (_settingsButton       != null) _settingsButton.onClick.RemoveListener(OnSettings);
-        if (_creditsButton        != null) _creditsButton.onClick.RemoveListener(OnCredits);
-        if (_factionBackButton    != null) _factionBackButton.onClick.RemoveListener(GoToMainMenu);
+        if (_playButton            != null) _playButton.onClick.RemoveListener(OnPlay);
+        if (_settingsButton        != null) _settingsButton.onClick.RemoveListener(OnSettings);
+        if (_creditsButton         != null) _creditsButton.onClick.RemoveListener(OnCredits);
+        if (_factionBackButton     != null) _factionBackButton.onClick.RemoveListener(GoToMainMenu);
         if (_deckBuilderBackButton != null) _deckBuilderBackButton.onClick.RemoveListener(GoToFactionSelect);
     }
 
@@ -59,17 +73,28 @@ public class MainMenuController : MonoBehaviour
     public void GoToDeckBuilder()   => ShowPanel(_deckBuilderPanel);
     public void GoToMainMenu()      => ShowPanel(_mainMenuPanel);
     public void GoToFactionSelect() => ShowPanel(_factionSelectPanel);
+    public void CloseSettings()     => SetPanel(_settingsOverlay, false);
 
     void ShowPanel(GameObject target)
     {
-        if (_mainMenuPanel       != null) _mainMenuPanel.SetActive(_mainMenuPanel == target);
-        if (_factionSelectPanel  != null) _factionSelectPanel.SetActive(_factionSelectPanel == target);
-        if (_deckBuilderPanel    != null) _deckBuilderPanel.SetActive(_deckBuilderPanel == target);
+        SetPanel(_mainMenuPanel,      _mainMenuPanel == target);
+        SetPanel(_factionSelectPanel, _factionSelectPanel == target);
+        SetPanel(_deckBuilderPanel,   _deckBuilderPanel == target);
+    }
+
+    // Animate via PanelTransition when one is attached; hard toggle otherwise.
+    static void SetPanel(GameObject panel, bool on)
+    {
+        if (panel == null) return;
+        if (panel.activeSelf == on) return;
+        var tr = panel.GetComponent<PanelTransition>();
+        if (tr != null) { if (on) tr.Show(); else tr.Hide(); }
+        else panel.SetActive(on);
     }
 
     void ToggleOverlay(GameObject overlay)
     {
         if (overlay == null) return;
-        overlay.SetActive(!overlay.activeSelf);
+        SetPanel(overlay, !overlay.activeSelf);
     }
 }

@@ -74,9 +74,10 @@ Verification checklist (use whichever apply):
 - **Script changes**: call `Unity.ReadConsole { "Types": "Error" }` to confirm zero compile errors, then call `Unity.ValidateScript` on the changed file.
 - **Prefab/Inspector wiring**: run a `Unity.RunCommand` that reads the serialized fields back and logs them — confirm the expected values appear in the output.
 - **Scene changes**: call `Unity.ManageScene { "Action": "GetHierarchy" }` or a targeted `Unity.ManageGameObject` query to confirm the object/component state is correct.
+- **UI / visual changes** — **mandatory** for anything the player sees on screen (prefab edits, fonts, button skins, colors, layout tweaks, selection state, overlays, outlines, etc.): enter play mode, drive the UI into the affected state (open the relevant panel, hover/click the affected element, select a card, etc.), capture a screenshot with `Unity.Camera_Capture` or `Unity.SceneView_Capture2DScene`, and **look at it before declaring success**. A passing compile is not visual proof, and reading serialized fields is not visual proof.
 - **Behaviour changes**: if the change affects runtime behaviour, enter play mode (`Unity.ManageEditor { "Action": "Play", "WaitForCompletion": true }`), inspect the result via console logs or a screenshot, then stop play mode.
 
-If the verification reveals the result does **not** match the user's request, fix it before summarising the work as complete. Never declare a task done without confirming through the MCP that it actually worked.
+If the verification reveals the result does **not** match the user's request, fix it before summarising the work as complete. Never declare a task done without confirming through the MCP that it actually worked. "I edited the prefab and it compiled" is **not** verification of a UI change — only a screenshot from play mode is.
 
 ---
 
@@ -86,3 +87,38 @@ If the verification reveals the result does **not** match the user's request, fi
 - All unit stats, card definitions, era configurations, damage formulas, and win conditions are defined there. Do not invent values — always source them from the GDD.
 - If a gameplay decision is not covered by the GDD, ask before proceeding. Do not make assumptions about game design intent.
 - The GDD is the authoritative source of truth for what the game is and how it works.
+- **Keep §10 (Implementation State) honest.** It goes stale fast — when you finish a feature, move it to "Implemented" and update the affected design section. Don't trust §10 blindly; verify against the actual code/assets before claiming something is or isn't done.
+
+---
+
+## 9. URP Shader Rules (learned the hard way)
+
+Stylized shaders (e.g. `RiverFlow`) run under URP + the SRP Batcher. These bit us repeatedly — follow them:
+
+- **Guard `normalize()` against zero-length vectors.** `normalize(float2(0,0))` is **NaN**, and one NaN poisons the entire fragment → the surface renders flat and ignores every other parameter. Default to a sane fallback when the input length is ~0. (The river rendered flat for an entire session because of exactly this.)
+- **Watch swizzles.** A "direction" vector's meaningful component must sit in the channel the shader actually reads (`_FlowDirection.xz`). A value in the wrong channel reads as 0. A default of `(0,-1,0)` is wrong if the shader uses `.xz`; it must be `(0,0,-1)`.
+- **`_Time` is *scaled* game time** — it freezes when `Time.timeScale == 0` (the pre-battle hold, pause, game-over). Anything that must keep animating while the game is paused must be driven from `Time.unscaledTime`, written every frame by a small component (pattern: `ShaderTimeDriver`).
+- **Per-frame shader params go through a per-material `float4`.** With the SRP Batcher, loose globals (`Shader.SetGlobalFloat`) and runtime **scalar** `Material.SetFloat` proved unreliable; a **Vector** property set with `Material.SetVector` (or a Color via `SetColor`) binds reliably. Use `.x` of a vector for a single driven float. Group `float4`s at the top of the `UnityPerMaterial` CBUFFER, scalars after.
+- **Don't "verify" animation with a synchronous `cam.Render()` inside a RunCommand.** There is no frame-boundary flush, and a whole-frame pixel **sum** is phase-invariant (a scrolling pattern sums to ~the same value). Verify with real play-mode frames, **per-pixel** diffs, or by saving a PNG and looking at it.
+
+---
+
+## 10. Unity MCP Working Notes (learned the hard way)
+
+- **`result.Log(...)` wraps every argument in `[ ]`.** A GameObject named `SettingsPanel` prints as `[SettingsPanel]`. Do **not** then search for the literal string `"[SettingsPanel]"` — that match never succeeds and looks like "the object is missing / the editor is corrupted." Confirm exact names with the native `Unity_ManageGameObject { action: "find" }` tool, not by eyeballing bracketed log text.
+- **Scene/prefab/asset authoring must happen in Edit mode.** Changes made during Play are discarded on Stop, and `EditorSceneManager.MarkSceneDirty/SaveScene` *throw* in Play mode. Check `EditorApplication.isPlaying` and Stop first.
+- **Always confirm the active scene before editing.** Entering/exiting Play, or a match ending, can leave a *different* scene active (e.g. back on `MenuScene` when you expected `MainScene`). Query `Unity_ManageScene { Action: "GetActive" }`; switch with `OpenScene(..., Single)`.
+- **Never `SaveScene` blindly.** Guard every save behind "the target object was actually found," so a transiently empty/glitched in-memory scene can't overwrite a good file on disk.
+- **Right after Stop or a scene load the editor is briefly unsettled** — `FindObjectsOfType` / `GetRootGameObjects` can return empty or stale results for a command or two. Prefer the native `Unity_ManageGameObject` / `Unity_ManageScene` tools to confirm state, and retry.
+- **`Image` is ambiguous** in RunCommand scripts (a namespace vs `UnityEngine.UI.Image`). Alias it: `using UIImage = UnityEngine.UI.Image;`.
+- **Author UI controls via `UnityEngine.UI.DefaultControls`** (`CreateSlider`, etc.) for a correct hierarchy. `DefaultControls.Resources` has **no `sprite` field** — use `standard` / `background` / `knob`. (Editor-authoring pre-built structure is fine; runtime construction is still forbidden per §5.)
+- **Screenshots:** `ScreenCapture.CaptureScreenshot` captures ScreenSpaceOverlay UI; rendering a camera into a RenderTexture does **not** (overlay canvases aren't in the camera). Save a PNG and read it to confirm UI visually.
+- **Trigger zones need a Rigidbody.** `OnTriggerEnter/Exit` only fires if one of the two colliders has a Rigidbody; NavMeshAgent units have none, so trigger volumes (e.g. `TerrainModifierZone`) must carry a **kinematic** Rigidbody.
+- **Measuring across frames:** set `Application.runInBackground = true` (a backgrounded/unfocused editor throttles the play loop, so frames barely advance). For static measurements, disable a spawned test unit's `TankAI` so it doesn't wander off and die between commands — and clean up test objects afterward.
+- **`Renderer.material` / `sharedMaterial` edits during Play persist to the asset** in the editor. Restore them, or you'll dirty the material file.
+- **Names with brackets exist too** (`[River]`, `[HUDCanvas]`), but many do **not** — never assume. Match by substring or confirm via the native find tool rather than guessing the exact string.
+- **Never probe `MeshFilter.mesh` from a diagnostic command.** The getter CLONES the shared mesh and re-points the filter at the clone — the component keeps mutating the original while the renderer shows the stale copy. Probe `sharedMesh`; if code rebuilds a runtime mesh, re-assert `_mf.sharedMesh = _mesh` after rebuilds as a guard.
+- **`static` fields do not persist between RunCommands** — each command compiles into a fresh assembly. Pass state through the scene/assets, or re-derive it (e.g. re-request a cached render: the callback fires synchronously).
+- **Scene-wide find-by-name hits the FIRST match.** Names like `TitleText` exist on several panels; an unscoped find once renamed the wrong panel's title. Scope by parent (`panel.Find("TitleText")`) when editing.
+- **Components with `Show()`/`Hide()` APIs on initially-inactive panels need lazy init** — `Awake` hasn't run when `Show()` is first called from another script.
+- **Save overlay panels INACTIVE.** A panel accidentally saved active gets animation-hidden at startup (CanvasGroup alpha 0), and any later raw `SetActive(true)` then shows an invisible panel — reads as a black screen.

@@ -54,6 +54,7 @@ public class TankAI : MonoBehaviour
     const float CONE_DROP_MULT  = 1.5f;
     const float RANGE_BUFFER    = 1.2f;
     const float STAGING_RADIUS  = 1.8f;  // arrive within this distance of staging point
+    const float AIM_TIME        = 0.35f; // minimum settle time before the first shot at a new target
 
     // ── Public API ───────────────────────────────────────────────────────────────
 
@@ -74,6 +75,14 @@ public class TankAI : MonoBehaviour
     void Update()
     {
         if (_data == null) return;
+
+        // The gun reloads while driving/scanning too — TickAttack only counts
+        // down while in Attack, so tick it here for every other state. Without
+        // this (plus the per-target zeroing that used to happen on entering
+        // Attack) a tank dropped beside a cluster fired an instant free shot at
+        // EVERY new target and mowed the whole group down in a few frames.
+        if (_state != TankAIState.Attack)
+            _attackTimer = Mathf.Max(0f, _attackTimer - Time.deltaTime);
 
         switch (_state)
         {
@@ -115,6 +124,25 @@ public class TankAI : MonoBehaviour
 
     void TickPriority()
     {
+        // Tower defense: if an enemy is attacking a friendly objective uncontested, prioritize it
+        var structureThreat = FindUndefendedStructureAttacker();
+        if (structureThreat != null)
+        {
+            _unitTarget       = structureThreat;
+            _buildTarget      = null;
+            UnregisterDefense();
+            if (_unitTarget != _lastRolledTarget)
+            {
+                _lastRolledTarget = _unitTarget;
+                _stagingReached   = false;
+                _approach         = ApproachStyle.Direct;  // no flanking — intercept directly
+                _flankSide        = 1;
+            }
+            Debug.Log($"[AI] {name}: DEFENDING — intercepting {structureThreat.Transform.name} (Direct)");
+            _state = TankAIState.Pathfind;
+            return;
+        }
+
         var bestTank = FindBestUnitTarget();
         if (bestTank != null)
         {
@@ -213,7 +241,9 @@ public class TankAI : MonoBehaviour
             // Phase 2 (or Direct): move to just inside attack range of the target.
             if (dist <= _data.rng)
             {
-                _attackTimer = 0f;
+                // Respect the remaining reload AND a short aim settle — never an
+                // instant free shot per acquired target.
+                _attackTimer = Mathf.Max(_attackTimer, AIM_TIME);
                 _state = TankAIState.Attack;
                 return;
             }
@@ -231,12 +261,31 @@ public class TankAI : MonoBehaviour
                 return;
             }
 
+            // While advancing on a structure, periodically re-scan for enemy
+            // tanks. Without this, two tanks heading to opposite bases would
+            // walk straight past each other ignoring the threat.
+            _scanTimer -= Time.deltaTime;
+            if (_scanTimer <= 0f)
+            {
+                _scanTimer = SCAN_INTERVAL;
+                var threat = FindBestUnitTarget();
+                if (threat != null)
+                {
+                    _unitTarget       = threat;
+                    _buildTarget      = null;
+                    _lastRolledTarget = null;        // force fresh approach roll in Priority
+                    UnregisterDefense();
+                    _state = TankAIState.Priority;
+                    return;
+                }
+            }
+
             Vector3 objPos  = _buildTarget.transform.position;
             float   distToObj = Vector3.Distance(transform.position, objPos);
 
             if (distToObj <= _data.rng * RANGE_BUFFER)
             {
-                _attackTimer = 0f;
+                _attackTimer = Mathf.Max(_attackTimer, AIM_TIME);
                 _state = TankAIState.Attack;
                 return;
             }
@@ -303,6 +352,13 @@ public class TankAI : MonoBehaviour
                 string arc  = HitArc(_unitTarget.Transform);
                 Debug.Log($"[DMG] {name} → {_unitTarget.Transform.name}: {dmg:F0} [{arc}] | " +
                           $"HP {_unitTarget.Health.Current:F0}/{_unitTarget.Health.Max:F0}");
+                CombatFeedback.Raise(new CombatFeedback.Hit {
+                    position = _unitTarget.Transform.position,
+                    damage   = dmg,
+                    arc      = HitArcEnum(_unitTarget.Transform),
+                    ricochet = _lastShotRicochet,
+                    lethal   = _unitTarget.IsDead });
+                (_self as TankCombatant)?.NotifyFired();
                 _attackTimer = 1f / Mathf.Max(0.01f, _data.spd);
             }
         }
@@ -317,6 +373,25 @@ public class TankAI : MonoBehaviour
                 return;
             }
 
+            // While shelling a structure, periodically check for enemy tanks
+            // entering our detection cone. Per GDD §2 tanks should engage other
+            // tanks BEFORE structures, so a fresh threat must interrupt this.
+            _scanTimer -= Time.deltaTime;
+            if (_scanTimer <= 0f)
+            {
+                _scanTimer = SCAN_INTERVAL;
+                var threat = FindBestUnitTarget();
+                if (threat != null)
+                {
+                    _unitTarget       = threat;
+                    _buildTarget      = null;
+                    _lastRolledTarget = null;
+                    UnregisterDefense();
+                    _state = TankAIState.Priority;
+                    return;
+                }
+            }
+
             float dist = Vector3.Distance(transform.position, _buildTarget.transform.position);
             if (dist > _data.rng * RANGE_BUFFER * 4f) { _state = TankAIState.Pathfind; return; }
 
@@ -327,11 +402,23 @@ public class TankAI : MonoBehaviour
             _attackTimer -= Time.deltaTime;
             if (_attackTimer <= 0f)
             {
-                float pen = _data.pen / Mathf.Max(1f, _buildTarget.Arm);
-                float dmg = _data.atk * Mathf.Clamp(pen, 0.1f, 1.0f);
+                bool  isHe = HasKw(UnitKeyword.RocketArtillery) || _data.pen <= 0f;
+                float pen  = isHe
+                    ? _data.pen / Mathf.Max(1f, _buildTarget.Arm * 0.35f)
+                    : _data.pen / Mathf.Max(1f, _buildTarget.Arm);
+                float dmg  = isHe
+                    ? _data.atk * Mathf.Clamp(pen, 0.3f, 1.0f)
+                    : _data.atk * Mathf.Clamp(pen, 0.1f, 1.0f);
                 _buildTarget.Health.TakeDamage(dmg);
                 Debug.Log($"[DMG] {name} → {_buildTarget.name}: {dmg:F0} | " +
                           $"HP {_buildTarget.Health.Current:F0}/{_buildTarget.Health.Max:F0}");
+                CombatFeedback.Raise(new CombatFeedback.Hit {
+                    position = _buildTarget.transform.position,
+                    damage   = dmg,
+                    arc      = CombatFeedback.Arc.Front,  // structures don't have arcs
+                    ricochet = !isHe && pen < 1.0f,
+                    lethal   = !_buildTarget.IsAlive });
+                (_self as TankCombatant)?.NotifyFired();
                 _attackTimer = 1f / Mathf.Max(0.01f, _data.spd);
             }
         }
@@ -429,15 +516,21 @@ public class TankAI : MonoBehaviour
             atk *= 1f + _data.aggressiveAtkBonus;
 
         float damage;
-        if (HasKw(UnitKeyword.RocketArtillery))
+        // HE shells (GDD §5.4): RocketArtillery AND any gun with no PEN stat
+        // (Leopard 40/70, R3, M109G). HE damages through overpressure — it has a
+        // 30% floor against armour and conceptually cannot "ricochet", so the
+        // ricochet flag stays off (these tanks used to read RICOCHET every shot).
+        if (HasKw(UnitKeyword.RocketArtillery) || _data.pen <= 0f)
         {
             float heFactor = arm * 0.35f;
             float heRatio  = _data.pen / Mathf.Max(1f, heFactor);
+            _lastShotRicochet = false;
             damage = Mathf.Max(atk * 0.3f, atk * Mathf.Clamp(heRatio, 0.3f, 1.0f));
         }
         else
         {
             float penRatio = _data.pen / Mathf.Max(1f, arm);
+            _lastShotRicochet = penRatio < 1.0f;
             damage = Mathf.Max(atk * 0.1f, atk * Mathf.Clamp(penRatio, 0.1f, 1.0f));
             if (HasKw(UnitKeyword.Devastating))
                 damage = Mathf.Max(atk * _data.devastatingMinFloor, damage);
@@ -445,6 +538,17 @@ public class TankAI : MonoBehaviour
 
         damage *= target.DirectionalDamageMult(transform.position);
         return damage;
+    }
+
+    // Set by CalcUnitDamage: true when the shell only partially penetrated.
+    bool _lastShotRicochet;
+
+    CombatFeedback.Arc HitArcEnum(Transform target)
+    {
+        float angle = Vector3.Angle(target.forward, transform.position - target.position);
+        if      (angle < 45f)  return CombatFeedback.Arc.Front;
+        else if (angle < 135f) return CombatFeedback.Arc.Side;
+        else                   return CombatFeedback.Arc.Rear;
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -495,5 +599,31 @@ public class TankAI : MonoBehaviour
             if (ai._unitTarget == target) return true;
         }
         return false;
+    }
+
+    // Returns an enemy combatant that is currently attacking a friendly objective AND
+    // no other ally is already targeting it. The closest such attacker within extended
+    // aggro range is returned so we don't teleport across the map to defend.
+    ICombatant FindUndefendedStructureAttacker()
+    {
+        ICombatant best     = null;
+        float      bestDist = float.MaxValue;
+
+        foreach (var obj in _registry.Objectives)
+        {
+            if (obj.Team != _team || !obj.IsAlive) continue;
+
+            foreach (var attacker in obj.RegisteredAttackers)
+            {
+                if (attacker == null || attacker.IsDead) continue;
+                if (AllyAlsoTargeting(attacker)) continue;   // already defended
+
+                float d = Vector3.Distance(transform.position, attacker.Transform.position);
+                if (d > _data.aggroRange * 2.5f) continue;  // outside extended defense range
+
+                if (d < bestDist) { bestDist = d; best = attacker; }
+            }
+        }
+        return best;
     }
 }

@@ -1,11 +1,11 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-// Per-slot Clash-style affordability indicator.
+// Per-slot affordability indicator.
 // Subscribes to CpChangedEventSO and to DeckManager.HandChanged.
-// Drives:
-//   • When affordable → pulse a yellow glow on _glowBorder
-//   • When not affordable → dim the slot to alpha 0.55
+// Affordable cards read normal / full colour; unaffordable cards are dimmed
+// hard (and their glow overlay stays off). The old pulsing yellow full-card
+// glow washed the art out — affordability is now conveyed by dimming only.
 [RequireComponent(typeof(RectTransform))]
 public class CardSlotAffordabilityGlow : MonoBehaviour
 {
@@ -15,15 +15,11 @@ public class CardSlotAffordabilityGlow : MonoBehaviour
     [SerializeField] CpChangedEventSO  _cpChangedEvent;
 
     [Header("UI — wire to slot children")]
-    [SerializeField] Graphic _glowBorder;        // overlay image, animated alpha when affordable
+    [SerializeField] Graphic _glowBorder;        // legacy overlay — kept transparent
     [SerializeField] Graphic[] _dimmableGraphics; // entire slot contents — dimmed when unaffordable
 
     [Header("Tuning")]
-    [SerializeField] Color _glowColor       = new Color(1f, 0.92f, 0.25f, 1f);
-    [SerializeField] float _pulseSpeed      = 1.6f;   // calmer cadence
-    [SerializeField] float _glowMinAlpha    = 0.08f;  // gentler low
-    [SerializeField] float _glowMaxAlpha    = 0.32f;  // gentler high
-    [SerializeField] float _unaffordableAlpha = 0.55f;
+    [SerializeField] float _unaffordableAlpha = 0.35f;
     [SerializeField] float _affordableAlpha   = 1.00f;
 
     bool _affordable;
@@ -59,23 +55,15 @@ public class CardSlotAffordabilityGlow : MonoBehaviour
         if (_cpChangedEvent != null) _cpChangedEvent.OnRaised  -= _onCpChanged;
     }
 
-    void Start() => Refresh();
-
-    void Update()
+    void Start()
     {
-        if (_glowBorder == null) return;
-        if (_affordable)
+        // The legacy glow overlay stays permanently transparent.
+        if (_glowBorder != null)
         {
-            float k = (Mathf.Sin(Time.time * _pulseSpeed) + 1f) * 0.5f;
-            float a = Mathf.Lerp(_glowMinAlpha, _glowMaxAlpha, k);
-            var c = _glowColor; c.a = a;
+            var c = _glowBorder.color; c.a = 0f;
             _glowBorder.color = c;
         }
-        else
-        {
-            var c = _glowColor; c.a = 0f;
-            _glowBorder.color = c;
-        }
+        Refresh();
     }
 
     public void Refresh()

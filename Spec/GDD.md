@@ -26,7 +26,7 @@ Players choose their faction before deck-building and may only select tanks from
 
 - **Orientation:** Landscape. **Player 1 (blue)** deploys from the **left (−X) side**; **Player 2 / AI (red)** deploys from the **right (+X) side**. The two lanes run along the **Z axis** (north and south).
 - **Layout:** A symmetrical top-down war map split into two halves (Friendly Half / Enemy Half) separated by a contested no-man's-land at X = 0.
-- **Terrain:** Roads (faster movement), open ground (standard), rubble/craters (reduced speed). Terrain is fixed per map.
+- **Terrain:** Roads (faster movement), open ground (standard), rubble/craters and mud (reduced speed). Terrain is fixed per map. *Implemented* via `TerrainModifierZone` trigger volumes that scale unit `MOV` by a `TerrainTypeSO` multiplier (Road ×1.3, Open ×1.0, Rubble ×0.6, Mud ×0.4 — Mud also serves as the "Bogged Down" terrain of §5.7).
 - **River:** A river channel runs down the **centre line (X = 0)** from map edge to map edge. It is **impassable except at the two bridges** (one per lane at Z = ±12). The bridges are the only crossing points and create natural chokepoints.
 - **Bridges:** Two wooden bridges crossing the river, each 5 units wide — wide enough for one tank at a time. Tactically significant: a single heavy tank can hold a bridge against multiple light tanks.
 - **Fronts:** Two "fronts" (north lane Z ≈ +12, south lane Z ≈ −12) cross no-man's-land via the bridges, creating two distinct avenues of attack.
@@ -40,7 +40,8 @@ Players choose their faction before deck-building and may only select tanks from
 
 ### Resource System (Command Points)
 
-- **Generation:** Command Points (CP) regenerate passively at a rate of 1 CP per 2.8 seconds.
+- **Starting CP:** Matches begin with **8 CP**, guaranteeing at least one affordable opener with any legal deck (max card cost is 9).
+- **Generation:** Command Points (CP) regenerate passively at a rate of 1 CP per 2.8 seconds. Each CP gained plays a soft chime.
 - **Surge Phase:** In the final 60 seconds, CP generation doubles, forcing decisive action.
 - **Capacity:** CP bar caps at 10. When full, generation pauses — spend CP to keep the pressure on.
 - **Usage:** Deploying a card costs its listed CP value (ranging from 2 to 9).
@@ -96,7 +97,6 @@ While engaged, tanks slowly rotate their facing toward the locked target. A fast
 | Tank | Detection Angle | Turn Speed | Notes |
 |---|---|---|---|
 | **Heavy** | 110° | 0.9 | Tight cone + very slow rotation — light flankers can out-rotate it |
-| **Crawler** | 360° | 0.8 | Slowest rotation; Fortress bonus rewards stopping anyway |
 | **Monster** | 360° | 1.0 | Ponderous |
 | **MegaBall** | 360° | 1.2 | Heavy charger |
 | **Original** | 360° | 3.0 | Baseline |
@@ -121,7 +121,6 @@ Weights are relative probabilities; the engine normalizes them. A weight of 0 me
 | **Alternative** | 0.50 | 0.35 | 0.15 | Disciplined; high PEN rewards direct engagements |
 | **Light** | 0.10 | 0.45 | 0.45 | Erratic flanker; almost never charges straight due to low ARM |
 | **Heavy** | 0.75 | 0.20 | 0.05 | Front-line brawler; ARM and HP reward trading shots head-on |
-| **Crawler** | 0.90 | 0.10 | 0.00 | Ponderous advance then stops for Fortress bonus; never wide-flanks |
 | **Monster** | 0.80 | 0.15 | 0.05 | Devastating frontal assault; ATK too high to waste on side approaches |
 | **Spike** | 0.15 | 0.50 | 0.35 | Armor Piercer; prefers side/rear arcs where ArmorPierceIgnore stacks even further |
 | **Shark** | 0.70 | 0.25 | 0.05 | Aggressive; charges to join allies already engaging a target for the ATK bonus |
@@ -145,10 +144,9 @@ The game supports two control schemes for PC and Mobile parity.
 
 ### Keyboard and Mouse Controls (PC)
 
-- **Drag-and-Drop:** Left-click-hold a card, drag to the battlefield, release to deploy.
-- **Hotkeys:** Keys `1`, `2`, `3`, `4` select the corresponding card in hand.
-  - Selected card attaches a ghost preview to the cursor.
-  - Left-click deploys; Right-click cancels.
+- **Drag-and-Drop:** Left-click-hold a card, drag to the battlefield, release to deploy. A ghost preview follows the cursor (green = valid, red = invalid) and the green deploy-zone overlay shows while dragging.
+- *(Hotkeys 1–4 were removed — deployment is drag-only by design.)*
+- **Deck builder:** Left-click a card opens its detail panel; **Right-click** adds/removes it from the deck.
 
 ---
 
@@ -666,44 +664,54 @@ Each FOB and Command HQ displays a world-space health bar directly above the str
 - **National Flags:** PNG/SVG flags in `Assets/Asset Packs/flags/` — one per nation. Displayed on every card and in the faction selection screen.
 - **Card Mini-Models:** Each card shows a live-rendered RenderTexture of the tank's 3D model, captured by a dedicated off-screen `CardModelRenderer` camera system. The model is rendered from a slightly elevated front-quarter angle to show hull and turret.
 - **Camera:** Orthographic, fixed top-down with a slight 80° pitch for depth cue. `orthographicSize = 19` covers the full 56-unit map width at 16:9 with margin. Far clip plane = 200. No perspective distortion — standard for this genre.
-- **Audio:**
-  - Distinct audio per unit type: tank engine growl on deployment, aircraft engine roar on attack run, infantry boot crunch and shouting.
-  - Warning sirens when a FOB is below 25% HP.
-  - CP-full audio cue (radio burst: "Command Post at capacity").
+- **Audio:** *Implemented* as a data-driven system (AGENTS.md §4):
+  - **`AudioProfileSO`** (`Assets/Data/Audio/AudioProfile.asset`) holds every clip slot — drop one or more clips into each (multiple = random variation). Empty slots simply play nothing, so the game runs before audio is added.
+  - **`AudioService`** (scene singleton) pools `AudioSource`s for positional one-shots and a 2D source for global cues; subscribes to event channels for **structure-destroyed** (double-layered for loudness), **low-HP siren** (friendly FOB < 25%), and a **CP-gain** chime on every point earned.
+  - **`UnitAudio`** (on every tank prefab) plays **deploy**, a **crossfaded engine loop** (separate idle vs. moving clips — idle rumble when stationary, drive loop when moving), **fire**, **hit**, and **destroyed** SFX, reading clips from the shared profile.
+  - Covered events: unit spawn, engine idle, engine moving, shooting, taking damage, tank destroyed, FOB/HQ destroyed, low-HP siren, CP-gain chime, UI click. (Aircraft/infantry SFX land with those card types.)
+  - **Clips populated:** SFX live in `Assets/Audio/` and are assigned to every slot — engine idle (×2 random), engine moving, fire (×3 random), hit, tank-destroyed, structure-destroyed, low-HP siren, CP-gain (`CpGain`), UI click, spawn. UI click is now hooked to every button via `ButtonClickSfx`. Remaining audio work: a background-music track (the **Music** volume slider already exists).
 
 ---
 
 ## 10. Implementation State (current)
 
 ### Implemented and working
-- Full damage formula (§5.0–5.1): directional ARM reduction + ATK multiplier per shot
-- Four-state AI loop (§2) with two-phase flanking (§2.1)
-- Per-tank turn speed + detection cone enforcement
-- NavMesh pathfinding with LOS raycasts
-- World-space objective health bars on all 6 structures
-- Orthographic camera; landscape battlefield; river + two bridges at Z=±12
-- Card system: 8-card deck, 4-card hand, drag-to-deploy + hotkeys 1–4
-- CP regeneration (startingCp=5, max=10, surge phase at 60s)
-- FrontlineService: deployment zone expands as allies push forward
-- EnemyAISummoner: NavMesh-validated spawns; reacts to player's first deploy
-- WinConditionManager: HQ destruction / timer expiry / sudden death
-- GameOverPanel: pauses game on result; click-to-continue back to menu
-- GameStartController: game frozen until player deploys first unit
-- SceneTransitionService: slide-wipe between MenuScene ↔ MainScene
-- Ghost drag preview: actual tank model; red/green tint; affordability label
-- Menu: faction-filtered deck builder (Allies / Axis)
-- HUD: TopStrip (timer), BottomTray (CP bar + 4 card slots with glow/dim)
+- Full damage formula (§5.0–5.1): directional ARM reduction + ATK multiplier per shot; kinetic + HE (§5.4) paths
+- Tank keywords: ArmorPiercer, Aggressive, SelfRepair, Devastating, RocketArtillery
+- Four-state AI loop (§2) with two-phase flanking (§2.1); per-tank turn speed + detection cone; NavMesh + LOS raycasts
+- 38 historical tank UnitDataSO assets + prefabs across 8 nations
+- World-space objective health bars on all 6 structures; FOB/HQ defensive fire vs. attackers in range
+- **Terrain movement modifiers (§2):** `TerrainModifierZone` + `TerrainTypeSO` (Road ×1.3 / Open ×1.0 / Rubble ×0.6 / Mud ×0.4)
+- Orthographic camera; landscape battlefield; flowing river shader + two bridges at Z=±12; recessed river banks
+- Card system: 8-card deck, 4-card hand, drag-to-deploy (hotkeys removed); faction-filtered deck builder (right-click add, CLEAR sort, RESET DECK, per-faction deck memory); live card mini-models (`CardModelRenderer`); faction selection screen
+- CP regeneration (startingCp=8, max=10, surge phase at 60s, per-CP gain chime); FrontlineService; EnemyAISummoner (spawns validated by `DeployRules` — no tower/tree spawns); GameStartController; SceneTransitionService; ghost drag preview; hand draws are shuffled and never deal duplicate cards into the 4-card hand
+- **Deployment validity (`DeployRules`):** units can no longer be placed inside trees/rocks (baked NavMesh holes, tight sample) or inside FOB/HQ footprints (`ObjectiveTarget.KeepOutRadius`); a green tiled **deploy-zone overlay** (`DeployZoneOverlay`) shows while dragging — it traces the actual spawnable area, leaving gaps at obstacles instead of a fixed rectangle
+- WinConditionManager: HQ destruction / timer expiry by FOB count / **casualty tiebreaker (§2)** / sudden death
+- GameOverPanel: dimmed background + framed result box; pause + click-to-continue; AI difficulty selection
+- **Audio system (§9):** `AudioProfileSO` + `AudioService` + `UnitAudio` — spawn / idle+moving engine crossfade / fire / hit / tank-destroyed / structure-destroyed / low-HP siren / CP-gain / UI click; **all SFX clips imported & assigned** (`Assets/Audio/`)
+- **Combat feedback text:** `CombatTextService` + `CombatFeedback` show floating damage numbers that surface the armour/PEN system — white (clean hit), "FLANK x1.5" / "REAR x2.5" on arc hits, "RICOCHET" on a partial penetration
+- **Audio settings:** Master / SFX / Music sliders in the reorganised Settings panel (sectioned DIFFICULTY / AUDIO), persisted via `GameSettings` (PlayerPrefs); Master drives `AudioListener.volume`, SFX scales gameplay sound; **UI click SFX** wired to every button (`ButtonClickSfx`) in both scenes
 - Win/Loss/Draw tracking via MatchStatsService (PlayerPrefs)
-
-### In progress / next
-- **35 historical tank UnitDataSO assets** replacing old 13 generic assets
-- **35 historical tank prefabs** built from .obj models in `Assets/Asset Packs/Models/`
-- **Faction selection screen** in MenuScene
-- **Card mini-model** via RenderTexture (`CardModelRenderer` system)
-- **Updated CardEntry + HUD card slot** layouts with flag, name, model view
+- **Juice & UX pass (June 2026):**
+  - Defense fire targets the **nearest** attacker only (§5.6) and raises floating damage numbers
+  - Tanks have a 0.35 s aim-settle before the first shot at any new target, and the gun reloads on a per-tank clock that keeps ticking while driving — no more instant free shot per acquired target (the "spawned tank mows down a whole cluster in one blow" bug)
+  - Zero-PEN guns (Leopard 40/70, R3 T20, M109G) now use the HE formula (§5.4) vs units AND structures — proper 30% damage floor instead of perma-ricochet kinetic scraps; HE never displays RICOCHET
+  - River is sealed: carving NavMesh guards block the walkable ford around each river end (beyond the play area) and trim the outer half-metre of each bridge deck, so tanks cross centred on the bridges instead of overhanging the water
+  - Structure alerts live on their own canvas above the combat text, so warnings are never covered by damage numbers
+  - UI click SFX is pointer-based (`ButtonClickSfx`) — survives `onClick.RemoveAllListeners()` rebinding and fires for right-clicks and custom click handlers (card grid, deck slots)
+  - Floating combat text is screen-space on a top-most canvas (above health bars/kill feed), larger, stencil-font
+  - Kill feed rows slide up as they fade; live **corner status widgets** (ally left / enemy right): green/red L-FOB · R-FOB · HQ squares + live kill counters (no P1/P2 labels)
+  - **Structure alerts:** low-HP ally tower → blinking warning that "genies" down to the tower; any tower destroyed → big centre announcement + double-layered (louder) destruction SFX
+  - Structures named **Ally/Enemy** (not P1/P2); river shader freezes on the victory screen
+  - Deploy overlay: translucent green fill + thick dark boundary outline, **rebuilds live** as the frontline pushes
+  - In-game hand cards: larger bold text, affordability shown by **dimming unaffordable cards** (no yellow glow); selected card = steel-blue highlight
+  - Deck builder: right-click to add/remove, anchored DECK FULL warning at the clicked card, CLEAR sort button, RESET DECK button, **per-faction deck memory** (PlayerPrefs, survives restarts)
+  - Menu polish: panel transitions (fade/slide/pop via `PanelTransition`), game-wide font theme (Big Shoulders Stencil headings + Product Sans body)
+  - Ho-Ri Production materials rebuilt (olive camo body/gun/track) — was rendering untextured
 
 ### Not yet implemented
-- FOB/HQ auto-fire defensive weapons
-- Infantry and Aviation card types
-- Support cards (artillery strikes, emplacements)
-- Audio
+- Infantry card type (squads, AT weapons §5.10)
+- Aviation card type (attack runs §5.5, strafing §5.9, AA shoot-down)
+- Support cards (artillery strikes, emplacements; roster #70–80)
+- Status effects (Suppressed, Burning §5.8) and the Anti-Air (AACapable) system
+- Background-music track (the Music volume slider exists but no music plays yet); UI-click SFX hooked to each menu button (the clip is imported & wired, just not fired on `onClick` yet)

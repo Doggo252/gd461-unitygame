@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -18,14 +19,14 @@ public class CardDetailPanel : MonoBehaviour
     [SerializeField] GameObject _panel;
 
     [Header("Identity")]
-    [SerializeField] Text  _nameText;
-    [SerializeField] Text  _nationText;
+    [SerializeField] Text _nameText;
+    [SerializeField] Text _nationText;
     [SerializeField] Image _flagImage;
-    [SerializeField] Text  _cpText;
-    [SerializeField] Text  _factionText;
+    [SerializeField] Text _cpText;
+    [SerializeField] Text _factionText;
 
     [Header("3D Orbit View")]
-    [SerializeField] RawImage     _orbitView;     // shows OrbitTankViewer.PreviewRT
+    [SerializeField] RawImage _orbitView;     // shows OrbitTankViewer.PreviewRT
     [SerializeField] EventTrigger _dragTarget;    // EventTrigger on _orbitView
 
     [Header("Full Stats")]
@@ -40,20 +41,20 @@ public class CardDetailPanel : MonoBehaviour
 
     [Header("Deck Actions")]
     [SerializeField] Button _deckToggleButton;
-    [SerializeField] Text   _deckToggleLabel;     // shows "ADD TO DECK" or "REMOVE"
+    [SerializeField] Text _deckToggleLabel;     // shows "ADD TO DECK" or "REMOVE"
     [SerializeField] Button _closeButton;
 
     [Header("Keyboard Shortcuts")]
     [SerializeField] InputActionAsset _cardActionsAsset;
 
     [Header("Colours")]
-    [SerializeField] Color _addColor    = new Color(0.18f, 0.52f, 0.28f, 1f);   // muted green
+    [SerializeField] Color _addColor = new Color(0.18f, 0.52f, 0.28f, 1f);   // muted green
     [SerializeField] Color _removeColor = new Color(0.52f, 0.18f, 0.18f, 1f);   // muted red
 
-    UnitDataSO                _current;
-    Action<UnitDataSO, bool>  _onToggle;    // provided by CardEntryController
-    bool                      _isSelected;
-    Vector2                   _lastPointerPos;
+    UnitDataSO _current;
+    Action<UnitDataSO, bool> _onToggle;    // provided by CardEntryController
+    bool _isSelected;
+    Vector2 _lastPointerPos;
 
     InputAction _closeAction;
     InputAction _confirmAction;
@@ -62,60 +63,113 @@ public class CardDetailPanel : MonoBehaviour
 
     void Awake()
     {
-        if (Instance != null && Instance != this) { Destroy(gameObject); return; }
+        // Single instance per scene — we deliberately do NOT use DontDestroyOnLoad,
+        // so each scene gets a fresh CardDetailPanel. The previous duplicate-guard
+        // (`if Instance != null && Instance != this` → Destroy self) was buggy on
+        // scene reload: Unity destroys the old GameObject lazily, so the old
+        // Instance reference is still non-null when the new one's Awake runs,
+        // causing the new instance to destroy itself. Always claim Instance here
+        // and let OnDestroy null it out cleanly.
         Instance = this;
+
+        // Set up CanvasGroup-based hide/show during Awake so the panel is in a
+        // safe state even if Show() runs before Start() (e.g. when triggered
+        // from another script's Awake/early-frame logic). HideImmediate sets
+        // alpha=0 so the panel is invisible by default.
+        EnsurePanelGroup();
+        HideImmediate();
 
         if (_cardActionsAsset != null)
         {
             var map = _cardActionsAsset.FindActionMap("CardActions");
-            _closeAction   = map?.FindAction("CloseDetail");
+            _closeAction = map?.FindAction("CloseDetail");
             _confirmAction = map?.FindAction("ConfirmDetail");
         }
     }
 
+    void OnDestroy()
+    {
+        if (Instance == this) Instance = null;
+    }
+
     void OnEnable()
     {
-        if (_closeButton      != null) _closeButton.onClick.AddListener(Close);
+        if (_closeButton != null) _closeButton.onClick.AddListener(Close);
         if (_deckToggleButton != null) _deckToggleButton.onClick.AddListener(OnDeckToggle);
 
-        if (_closeAction   != null) { _closeAction.Enable();   _closeAction.performed   += OnClosePerformed; }
+        if (_closeAction != null) { _closeAction.Enable(); _closeAction.performed += OnClosePerformed; }
         if (_confirmAction != null) { _confirmAction.Enable(); _confirmAction.performed += OnConfirmPerformed; }
     }
 
     void OnDisable()
     {
-        if (_closeButton      != null) _closeButton.onClick.RemoveListener(Close);
+        if (_closeButton != null) _closeButton.onClick.RemoveListener(Close);
         if (_deckToggleButton != null) _deckToggleButton.onClick.RemoveListener(OnDeckToggle);
 
-        if (_closeAction   != null) { _closeAction.performed   -= OnClosePerformed;   _closeAction.Disable(); }
-        if (_confirmAction != null) { _confirmAction.performed -= OnConfirmPerformed;  _confirmAction.Disable(); }
+        if (_closeAction != null) { _closeAction.performed -= OnClosePerformed; _closeAction.Disable(); }
+        if (_confirmAction != null) { _confirmAction.performed -= OnConfirmPerformed; _confirmAction.Disable(); }
     }
+
+    // Cached CanvasGroup used to hide/show the panel without ever calling
+    // SetActive(false) on the singleton GameObject — that would prevent Awake
+    // from running on scene reload and leave Instance permanently null.
+    CanvasGroup _panelGroup;
+    bool        _isVisible;
 
     void Start()
     {
-        SetupDragEvents();   // wire once; EventTrigger entries persist on the component
-        if (_panel != null) _panel.SetActive(false);
+        SetupDragEvents();          // wire once; EventTrigger entries persist on the component
+        // CanvasGroup + HideImmediate already done in Awake; nothing else needed here
+    }
+
+    void EnsurePanelGroup()
+    {
+        if (_panel == null) return;
+        _panelGroup = _panel.GetComponent<CanvasGroup>() ?? _panel.AddComponent<CanvasGroup>();
+    }
+
+    void HideImmediate()
+    {
+        _isVisible = false;
+        if (_panelGroup == null) return;
+        _panelGroup.alpha = 0f;
+        _panelGroup.interactable   = false;
+        _panelGroup.blocksRaycasts = false;
+    }
+
+    void ShowImmediate()
+    {
+        _isVisible = true;
+        if (_panelGroup == null) return;
+        _panelGroup.alpha = 1f;
+        _panelGroup.interactable   = true;
+        _panelGroup.blocksRaycasts = true;
     }
 
     void OnClosePerformed(InputAction.CallbackContext _)
     {
-        if (_panel != null && _panel.activeSelf) Close();
+        if (_isVisible) Close();
     }
 
     void OnConfirmPerformed(InputAction.CallbackContext _)
     {
-        if (_panel != null && _panel.activeSelf) OnDeckToggle();
+        if (_isVisible) OnDeckToggle();
     }
 
     // ── Public API ───────────────────────────────────────────────────────────────
 
     public void Show(UnitDataSO card, Action<UnitDataSO, bool> onToggle, bool alreadySelected)
     {
-        _current    = card;
-        _onToggle   = onToggle;
+        _current = card;
+        _onToggle = onToggle;
         _isSelected = alreadySelected;
 
-        if (_panel != null) _panel.SetActive(true);
+        EnsurePanelGroup();
+        ShowImmediate();
+        // Allow rapid double-clicks on a card to land on the card behind: drop
+        // blocksRaycasts for one double-click window so a second click passes
+        // through to the originating card.
+        StartCoroutine(SuppressBackgroundRaycastBriefly());
 
         // Orbit view
         if (OrbitTankViewer.Instance != null)
@@ -132,20 +186,20 @@ public class CardDetailPanel : MonoBehaviour
         string name = !string.IsNullOrEmpty(card.tankName) ? card.tankName
                     : card.tankType.ToString().Replace('_', ' ');
 
-        if (_nameText    != null) _nameText.text    = name.ToUpper();
-        if (_nationText  != null) _nationText.text  = card.nation.ToString().Replace("GreatBritain", "Great Britain");
-        if (_cpText      != null) _cpText.text      = $"CP  {card.cpCost}";
+        if (_nameText != null) _nameText.text = name.ToUpper();
+        if (_nationText != null) _nationText.text = card.nation.ToString().Replace("GreatBritain", "Great Britain");
+        if (_cpText != null) _cpText.text = $"CP  {card.cpCost}";
         if (_factionText != null) _factionText.text = card.faction == Faction.Both ? "Both Factions"
                                                     : card.faction.ToString();
 
         // Full stats
-        if (_hpText  != null) _hpText.text  = $"HIT POINTS      {card.maxHp:F0}";
-        if (_atkText != null) _atkText.text  = $"ATTACK          {card.atk:F0}";
-        if (_armText != null) _armText.text  = $"ARMOUR          {card.arm:F0}";
-        if (_penText != null) _penText.text  = $"PENETRATION     {card.pen:F0}";
-        if (_spdText != null) _spdText.text  = $"FIRE RATE       {card.spd:F2}/s";
-        if (_movText != null) _movText.text  = $"MOVE SPEED      {card.mov:F1} tiles/s";
-        if (_rngText != null) _rngText.text  = $"RANGE           {card.rng:F1} tiles";
+        if (_hpText != null) _hpText.text = $"HIT POINTS      {card.maxHp:F0}";
+        if (_atkText != null) _atkText.text = $"ATTACK          {card.atk:F0}";
+        if (_armText != null) _armText.text = $"ARMOUR          {card.arm:F0}";
+        if (_penText != null) _penText.text = $"PENETRATION     {card.pen:F0}";
+        if (_spdText != null) _spdText.text = $"FIRE RATE       {card.spd:F2}/s";
+        if (_movText != null) _movText.text = $"MOVE SPEED      {card.mov:F1} tiles/s";
+        if (_rngText != null) _rngText.text = $"RANGE           {card.rng:F1} tiles";
         if (_keywordsText != null)
             _keywordsText.text = card.keywords == 0 ? ""
                 : card.keywords.ToString().Replace(",", " · ");
@@ -156,9 +210,18 @@ public class CardDetailPanel : MonoBehaviour
     public void Close()
     {
         OrbitTankViewer.Instance?.HideTank();
-        if (_panel != null) _panel.SetActive(false);
+        HideImmediate();
         _current  = null;
         _onToggle = null;
+    }
+
+    IEnumerator SuppressBackgroundRaycastBriefly()
+    {
+        if (_panelGroup == null) yield break;
+        _panelGroup.blocksRaycasts = false;
+        yield return new WaitForSecondsRealtime(0.22f);
+        // Only re-enable if the panel is still meant to be visible.
+        if (_isVisible) _panelGroup.blocksRaycasts = true;
     }
 
     // Called externally when selection state changes (e.g. deck hit 8 and card was deselected)
@@ -179,7 +242,7 @@ public class CardDetailPanel : MonoBehaviour
 
     void UpdateDeckButton()
     {
-        if (_deckToggleLabel  != null)
+        if (_deckToggleLabel != null)
             _deckToggleLabel.text = _isSelected ? "REMOVE FROM DECK" : "ADD TO DECK";
         if (_deckToggleButton != null)
         {
@@ -199,7 +262,7 @@ public class CardDetailPanel : MonoBehaviour
 
         AddEntry(EventTriggerType.Drag, (d) =>
         {
-            var pos   = ((PointerEventData)d).position;
+            var pos = ((PointerEventData)d).position;
             var delta = pos - _lastPointerPos;
             _lastPointerPos = pos;
             OrbitTankViewer.Instance?.OnDrag(delta);

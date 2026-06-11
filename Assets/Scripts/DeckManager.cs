@@ -44,6 +44,8 @@ public class DeckManager : MonoBehaviour
             Debug.LogWarning("[DeckManager] DeckConfig not set — using first 8 UnitDataSOs as fallback.");
         }
 
+        Shuffle(_deck);
+
         _deckHead = 0;
         for (int i = 0; i < 4 && i < _deck.Count; i++)
             _hand[i] = DrawNext();
@@ -92,9 +94,25 @@ public class DeckManager : MonoBehaviour
 
     // ── Helpers ────────────────────────────────────────────────────────────────
 
+    // Draws the next card from the rotation, skipping any card already in the
+    // hand so the player never holds two copies of the same card at once.
     UnitDataSO DrawNext()
     {
         if (_deck.Count == 0) return null;
-        return _deck[_deckHead++ % _deck.Count];
+        for (int tries = 0; tries < _deck.Count; tries++)
+        {
+            var card = _deck[_deckHead++ % _deck.Count];
+            if (System.Array.IndexOf(_hand, card) < 0) return card;
+        }
+        return _deck[_deckHead++ % _deck.Count];   // deck smaller than hand — allow dupes
+    }
+
+    static void Shuffle(List<UnitDataSO> list)
+    {
+        for (int i = list.Count - 1; i > 0; i--)
+        {
+            int j = UnityEngine.Random.Range(0, i + 1);
+            (list[i], list[j]) = (list[j], list[i]);
+        }
     }
 }

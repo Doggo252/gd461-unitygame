@@ -17,6 +17,7 @@ public class KillFeedUI : MonoBehaviour
     [SerializeField] int   _maxEntries = 6;
     [SerializeField] float _holdTime   = 2.0f;
     [SerializeField] float _fadeTime   = 1.5f;
+    [SerializeField] Font  _entryFont;          // theme font for rows (fallback: built-in)
 
     static readonly Color BlueTeam = new Color(0.40f, 0.70f, 1.00f);
     static readonly Color RedTeam  = new Color(1.00f, 0.40f, 0.40f);
@@ -65,7 +66,7 @@ public class KillFeedUI : MonoBehaviour
         labelRt.offsetMax = new Vector2(-10f, -2f);
 
         var text          = labelGo.AddComponent<Text>();
-        text.font         = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        text.font         = _entryFont != null ? _entryFont : Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
         text.fontSize     = 18;
         text.fontStyle    = FontStyle.Bold;
         text.alignment    = TextAnchor.MiddleRight;
@@ -84,12 +85,20 @@ public class KillFeedUI : MonoBehaviour
         Color startText = text.color;
         float elapsed   = 0f;
 
+        // The row's box is owned by the layout group, so the slide animates the
+        // label INSIDE the row — the entry drifts upward as it fades.
+        var labelRt = text != null ? text.GetComponent<RectTransform>() : null;
+        Vector2 labelStart = labelRt != null ? labelRt.anchoredPosition : Vector2.zero;
+        const float slideUp = 26f;
+
         while (elapsed < _fadeTime)
         {
             elapsed  += Time.deltaTime;
-            float a   = 1f - Mathf.Clamp01(elapsed / _fadeTime);
-            if (bg   != null) bg.color   = new Color(startBg.r,   startBg.g,   startBg.b,   startBg.a * a);
-            if (text != null) text.color = new Color(startText.r, startText.g, startText.b, a);
+            float k   = Mathf.Clamp01(elapsed / _fadeTime);
+            float a   = 1f - k;
+            if (bg      != null) bg.color   = new Color(startBg.r,   startBg.g,   startBg.b,   startBg.a * a);
+            if (text    != null) text.color = new Color(startText.r, startText.g, startText.b, a);
+            if (labelRt != null) labelRt.anchoredPosition = labelStart + Vector2.up * (slideUp * Mathf.SmoothStep(0f, 1f, k));
             yield return null;
         }
 

@@ -4,8 +4,8 @@ using UnityEngine;
 public class CommandPointsSO : ScriptableObject
 {
     [Header("Starting value")]
-    [Tooltip("CP granted immediately at match start.")]
-    public int startingCp = 5;
+    [Tooltip("CP granted immediately at match start. 8 guarantees an affordable opener with any legal deck.")]
+    public int startingCp = 8;
 
     [Header("Regeneration (GDD §2)")]
     [Tooltip("CPs gained per second. Default 1/2.8 ≈ 0.357.")]

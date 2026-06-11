@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -14,8 +15,14 @@ public class UnitMovement : MonoBehaviour
     Vector3 _faceTarget;
     float   _faceSpeed;
 
-    float _stationaryTimer;
-    const float STATIONARY_SECONDS = 0.6f;
+    // Base movement speed (from UnitDataSO.mov) before terrain scaling.
+    float _baseSpeed = 1f;
+    // Active terrain zones the unit is standing in (keyed by the zone). The
+    // most-recently-entered zone's multiplier wins when zones overlap.
+    readonly List<KeyValuePair<object, float>> _terrainZones = new();
+
+    // True while the agent is actually moving — drives the engine-loop SFX.
+    public bool IsMoving { get; private set; }
 
     // Last destination we forwarded to the NavMeshAgent. Used to dedupe per-frame
     // SetDestination calls — NavMeshAgent.SetDestination unconditionally restarts
@@ -24,8 +31,6 @@ public class UnitMovement : MonoBehaviour
     // for partial / partially-unreachable destinations like a FOB origin).
     Vector3 _lastRequestedDest = new Vector3(float.NaN, float.NaN, float.NaN);
     const float DEST_DEDUPE_SQR = 0.04f; // 0.2 world-unit threshold on X/Z
-
-    public bool IsStationary { get; private set; }
 
     void Awake()
     {
@@ -41,7 +46,32 @@ public class UnitMovement : MonoBehaviour
 
     public void Initialize(float speed)
     {
+        _baseSpeed   = speed;
         _agent.speed = speed;
+    }
+
+    // ── Terrain speed modifiers (roads faster, rubble/mud slower) ───────────────
+    // Called by TerrainModifierZone trigger callbacks as the unit enters/leaves a
+    // terrain patch. Effective speed = base × the most-recently-entered zone's
+    // multiplier (overlapping zones: last one entered wins).
+
+    public void PushTerrain(object zone, float multiplier)
+    {
+        _terrainZones.RemoveAll(kv => ReferenceEquals(kv.Key, zone));
+        _terrainZones.Add(new KeyValuePair<object, float>(zone, multiplier));
+        ApplyTerrainSpeed();
+    }
+
+    public void PopTerrain(object zone)
+    {
+        _terrainZones.RemoveAll(kv => ReferenceEquals(kv.Key, zone));
+        ApplyTerrainSpeed();
+    }
+
+    void ApplyTerrainSpeed()
+    {
+        float mult = _terrainZones.Count > 0 ? _terrainZones[_terrainZones.Count - 1].Value : 1f;
+        if (_agent != null) _agent.speed = _baseSpeed * mult;
     }
 
     public void SetDestination(Vector3 worldPos)
@@ -88,17 +118,7 @@ public class UnitMovement : MonoBehaviour
             _pendingFace = false;
         }
 
-        // Track standstill for Crawler's Fortress keyword.
-        bool moving = _agent.isOnNavMesh && _agent.velocity.sqrMagnitude > 0.01f;
-        if (!moving)
-        {
-            _stationaryTimer += Time.deltaTime;
-            IsStationary      = _stationaryTimer >= STATIONARY_SECONDS;
-        }
-        else
-        {
-            _stationaryTimer = 0f;
-            IsStationary     = false;
-        }
+        // Track movement for the engine-loop SFX (UnitAudio reads this).
+        IsMoving = _agent.isOnNavMesh && !_agent.isStopped && _agent.velocity.sqrMagnitude > 0.04f;
     }
 }

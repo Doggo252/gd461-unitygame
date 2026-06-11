@@ -1,21 +1,16 @@
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 // Drives the player's card-deployment UX:
 //   • Drag-from-card via CardSlotDragHandler (UI EventSystem)
-//   • Hotkeys 1-4 via InputActionAsset
 //   • Ghost preview (actual tank model) that follows the cursor
 //   • Tints green (valid+affordable) or red (invalid position OR can't afford)
 //   • Floating label explains the reason when red
 //   • Frontline-aware deployment via FrontlineService
 public class CardDragController : MonoBehaviour
 {
-    [Header("Input")]
-    [SerializeField] InputActionAsset _cardActionsAsset;
-
     [Header("References")]
     [SerializeField] DeckManager          _deckManager;
     [SerializeField] CommandPointsManager _cpManager;
@@ -25,6 +20,8 @@ public class CardDragController : MonoBehaviour
     [SerializeField] GameObject           _ghostPrefab;       // fallback if prefab not found
     [SerializeField] Material             _ghostMaterial;     // transparent ghost material
     [SerializeField] int                  _playerTeam = 0;
+    [SerializeField] UnitRegistrySO       _registry;          // for structure keep-out (DeployRules)
+    [SerializeField] DeployZoneOverlay    _deployOverlay;     // green spawnable-area overlay
 
     [Header("Map Z bounds (X is dynamic via FrontlineService)")]
     [SerializeField] float _deployZMin = -14f;
@@ -36,10 +33,6 @@ public class CardDragController : MonoBehaviour
 
     [Header("Drag label — assign Assets/Prefabs/UI/GhostDragLabel.prefab")]
     [SerializeField] GameObject _dragLabelPrefab;
-
-    InputActionMap _map;
-    InputAction    _sel1, _sel2, _sel3, _sel4;
-    InputAction    _pointerPos;
 
     GameObject  _ghost;
     Renderer[]  _ghostRenderers;
@@ -56,58 +49,12 @@ public class CardDragController : MonoBehaviour
 
     void Awake()
     {
-        if (_cardActionsAsset != null)
-        {
-            _map        = _cardActionsAsset.FindActionMap("CardActions", throwIfNotFound: true);
-            _sel1       = _map.FindAction("SelectCard1");
-            _sel2       = _map.FindAction("SelectCard2");
-            _sel3       = _map.FindAction("SelectCard3");
-            _sel4       = _map.FindAction("SelectCard4");
-            _pointerPos = _map.FindAction("PointerPosition");
-        }
-
         InitLabelFromPrefab();
-    }
-
-    void OnEnable()
-    {
-        if (_map == null) return;
-        _map.Enable();
-        if (_sel1 != null) _sel1.performed += OnSel1;
-        if (_sel2 != null) _sel2.performed += OnSel2;
-        if (_sel3 != null) _sel3.performed += OnSel3;
-        if (_sel4 != null) _sel4.performed += OnSel4;
     }
 
     void OnDisable()
     {
-        if (_map == null) return;
-        if (_sel1 != null) _sel1.performed -= OnSel1;
-        if (_sel2 != null) _sel2.performed -= OnSel2;
-        if (_sel3 != null) _sel3.performed -= OnSel3;
-        if (_sel4 != null) _sel4.performed -= OnSel4;
-        _map.Disable();
         DestroyGhost();
-    }
-
-    // ── Hotkeys (1-4 deploy current pointer position) ────────────────────────
-
-    void OnSel1(InputAction.CallbackContext _) => HotkeyDeploy(0);
-    void OnSel2(InputAction.CallbackContext _) => HotkeyDeploy(1);
-    void OnSel3(InputAction.CallbackContext _) => HotkeyDeploy(2);
-    void OnSel4(InputAction.CallbackContext _) => HotkeyDeploy(3);
-
-    void HotkeyDeploy(int slot)
-    {
-        if (_deckManager == null) return;
-        var card = _deckManager.Hand != null && slot < _deckManager.Hand.Length
-            ? _deckManager.Hand[slot] : null;
-        if (card == null || _cpManager == null || _cpManager.CurrentCp < card.cpCost) return;
-
-        if (_pointerPos == null) return;
-        Vector2 sp = _pointerPos.ReadValue<Vector2>();
-        if (TryGetWorldPos(sp, out Vector3 wp))
-            DeployAt(slot, wp);
     }
 
     // ── Drag handlers (called by CardSlotDragHandler) ────────────────────────
@@ -125,6 +72,7 @@ public class CardDragController : MonoBehaviour
         _dragCard  = card;
         _deckManager.SelectCard(slotIndex);
         SpawnGhost(card);
+        if (_deployOverlay != null) _deployOverlay.Show();
         UpdateGhostFromScreen(ev.position);
     }
 
@@ -160,13 +108,10 @@ public class CardDragController : MonoBehaviour
 
         if (!IsValidWorldPos(worldPos)) return;
 
-        if (NavMesh.SamplePosition(worldPos, out NavMeshHit hit, 1.5f, 1))
-        {
-            if (_frontlineService != null
-                && !_frontlineService.IsValidDeployX(_playerTeam, hit.position.x))
-                return;
+        // Snap onto the mesh with a TIGHT tolerance — IsValidWorldPos already
+        // rejected obstacle interiors, so this only nudges to the nearest valid cell.
+        if (NavMesh.SamplePosition(worldPos, out NavMeshHit hit, DeployRules.NavTolerance, 1 << 0))
             worldPos = hit.position;
-        }
 
         if (!_cpManager.TrySpend(card.cpCost)) return;
         _deckManager.SpawnUnit(card, worldPos, _playerTeam);
@@ -185,22 +130,8 @@ public class CardDragController : MonoBehaviour
     }
 
     bool IsValidWorldPos(Vector3 worldPos)
-    {
-        if (worldPos.z < _deployZMin || worldPos.z > _deployZMax) return false;
-
-        if (_frontlineService != null)
-        {
-            if (!_frontlineService.IsValidDeployX(_playerTeam, worldPos.x)) return false;
-        }
-        else
-        {
-            if (_playerTeam == 0 && worldPos.x > 0f) return false;
-            if (_playerTeam == 1 && worldPos.x < 0f) return false;
-        }
-
-        if (!NavMesh.SamplePosition(worldPos, out _, 2f, 1)) return false;
-        return true;
-    }
+        => DeployRules.IsSpawnable(worldPos, _frontlineService, _playerTeam,
+                                   _deployZMin, _deployZMax, _registry);
 
     // ── Ghost preview ────────────────────────────────────────────────────────
 
@@ -305,6 +236,7 @@ public class CardDragController : MonoBehaviour
         _dragIndex = -1;
         _dragCard  = null;
         DestroyGhost();
+        if (_deployOverlay != null) _deployOverlay.Hide();
     }
 
     // ── Floating drag label (screen-space) ───────────────────────────────────

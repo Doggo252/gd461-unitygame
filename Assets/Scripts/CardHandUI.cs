@@ -29,9 +29,9 @@ public class CardHandUI : MonoBehaviour
     [SerializeField] CpChangedEventSO     _cpChangedEvent;
 
     [Header("Slot Colours")]
-    [SerializeField] Color _selectedColor     = new Color(0.9f, 0.8f, 0.1f, 1.0f);
+    [SerializeField] Color _selectedColor     = new Color(0.25f, 0.55f, 0.95f, 1.0f);   // steel-blue highlight
     [SerializeField] Color _normalColor       = new Color(0.15f, 0.15f, 0.15f, 0.85f);
-    [SerializeField] Color _unaffordableColor = new Color(0.50f, 0.20f, 0.20f, 0.85f);
+    [SerializeField] Color _unaffordableColor = new Color(0.07f, 0.08f, 0.10f, 0.92f);  // darkened (cards also dim)
 
     // Named delegates for correct OnDisable unsubscription.
     Action          _onHandChanged;

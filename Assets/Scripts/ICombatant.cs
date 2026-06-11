@@ -9,7 +9,7 @@ public interface ICombatant
     Transform      Transform { get; }
 
     // Returns effective ARM from the attacker's world position,
-    // accounting for directional armour and Fortress bonus.
+    // accounting for directional armour (front/side/rear arcs).
     float EffectiveArm(Vector3 attackerWorldPos);
 
     // Returns a damage multiplier based on which arc the attacker is in.

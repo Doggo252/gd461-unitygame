@@ -287,6 +287,7 @@ GameObject:
   - component: {fileID: 1117918442538879958}
   - component: {fileID: 3689511083755473006}
   - component: {fileID: 4849425662519323550}
+  - component: {fileID: 2433616410926717945}
   m_Layer: 0
   m_Name: Tank_RocketShip
   m_TagString: Untagged
@@ -437,9 +438,22 @@ MonoBehaviour:
   _nameLabelPrefab: {fileID: 7345866520868990877, guid: ccd758f8f275045039a4a97472e58f8c, type: 3}
   _anchor: {fileID: 0}
   _screenOffset: {x: 0, y: 12}
+  _displayName: 
   _fullColor: {r: 0.12, g: 0.85, b: 0.12, a: 1}
   _midColor: {r: 1, g: 0.75, b: 0, a: 1}
   _lowColor: {r: 0.9, g: 0.15, b: 0.05, a: 1}
+--- !u!114 &2433616410926717945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3471199002318613060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b677e8e3156146adba80e4a94953088, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UnitAudio
 --- !u!1 &3850976741243930399
 GameObject:
   m_ObjectHideFlags: 0
