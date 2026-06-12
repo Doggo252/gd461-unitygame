@@ -1,0 +1,1 @@
+I made this game as part of X-Camp's GD461 class. This is a game heavily inspired by Supercell's "Clash Royale" title. I incorporate tanks as units in my game. I built this game mainly to learn how to use AI/MCPs in game development, and as a result, the code is mostly AI-generated. 
