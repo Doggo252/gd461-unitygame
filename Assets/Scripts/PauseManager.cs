@@ -125,6 +125,8 @@ public class PauseManager : MonoBehaviour
         _paused = false;
         Time.timeScale      = 1f;
         AudioListener.pause = false;
+        // Ask the menu to open straight into the deck builder, not the main menu.
+        MainMenuController.OpenDeckBuilderOnLoad = true;
         SceneTransitionService.Goto("MenuScene");
     }
 

@@ -13,6 +13,17 @@ public static class BattleHistoryService
 
     public enum Outcome { Victory, Defeat, Draw }
 
+    // One line of the per-match battle log (a single kill), persisted so the
+    // records screen can replay any past battle's log — not just its summary.
+    [Serializable]
+    public struct KillEntry
+    {
+        public string killerName;
+        public int    killerTeam;   // 0 = ally (blue), 1 = enemy (red), -1 = unknown
+        public string victimName;
+        public int    victimTeam;
+    }
+
     [Serializable]
     public struct BattleRecord
     {
@@ -22,6 +33,7 @@ public static class BattleHistoryService
         public int    allyKills;
         public int    enemyKills;
         public long   utcTicks;     // DateTime.UtcNow.Ticks at match end
+        public List<KillEntry> kills;  // full battle log for this match (may be null on legacy records)
     }
 
     [Serializable]
@@ -30,7 +42,8 @@ public static class BattleHistoryService
     public static IReadOnlyList<BattleRecord> All => Load().records;
 
     public static void Record(Outcome outcome, string reason, string faction,
-                              int allyKills, int enemyKills, long utcTicks)
+                              int allyKills, int enemyKills, long utcTicks,
+                              List<KillEntry> kills = null)
     {
         var w = Load();
         w.records.Insert(0, new BattleRecord
@@ -41,11 +54,29 @@ public static class BattleHistoryService
             allyKills  = allyKills,
             enemyKills = enemyKills,
             utcTicks   = utcTicks,
+            kills      = kills ?? new List<KillEntry>(),
         });
         if (w.records.Count > MAX_KEPT) w.records.RemoveRange(MAX_KEPT, w.records.Count - MAX_KEPT);
         PlayerPrefs.SetString(KEY, JsonUtility.ToJson(w));
         PlayerPrefs.Save();
     }
+
+    // Shared rich-text formatter for one battle-log row, used by both the
+    // victory-screen log and the records detail view so they read identically.
+    public static string FormatKillRow(int number, KillEntry k)
+    {
+        string kc    = TeamHex(k.killerTeam);
+        string vc    = TeamHex(k.victimTeam);
+        string kName = string.IsNullOrEmpty(k.killerName) ? "Unknown" : k.killerName;
+        string vName = string.IsNullOrEmpty(k.victimName) ? "Unknown" : k.victimName;
+        return $"<color=#777777>{number,2}.</color>   <color={kc}>{kName}</color> " +
+               $"<color=#FFFFFF>▶</color> <color={vc}>{vName}</color>";
+    }
+
+    static string TeamHex(int team) =>
+        team == 0 ? "#66B2FF" :
+        team == 1 ? "#FF6666" :
+                    "#AAAAAA";
 
     public static void Clear()
     {

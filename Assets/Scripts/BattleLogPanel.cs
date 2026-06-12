@@ -1,16 +1,20 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-// Records every kill of the match (same KillEventSO the kill feed listens to) and,
-// on demand, lists the full history in a scrollable panel reachable from the
-// game-over screen. The panel structure (root, scroll view, close button) is
-// authored in the scene; this script only fills the scroll content with one
-// transient row per kill — the allowed data-driven-entry exception to §5.
+// The victory-screen "BATTLE LOG": lists every kill of the just-finished match.
+//
+// Build note: this used to subscribe to KillEventSO and accumulate its own list,
+// which silently recorded nothing in IL2CPP builds (the log showed "No kills
+// this match" even after a bloody match). It now reads the just-finished match's
+// log straight from BattleHistoryService (PlayerPrefs-backed, written by
+// BattleHistoryRecorder on match end) — PlayerPrefs behaves identically in the
+// editor and a player build, so the log is build-safe.
+//
+// The panel structure (root, scroll view, close button) is authored in the
+// scene; this script only fills the scroll content with one transient row per
+// kill — the allowed data-driven-entry exception to §5.
 public class BattleLogPanel : MonoBehaviour
 {
-    [SerializeField] KillEventSO   _killEvent;
-
     [Header("UI — wire in scene")]
     [SerializeField] GameObject    _root;       // whole panel, hidden by default
     [SerializeField] RectTransform _content;    // scroll content (VerticalLayoutGroup)
@@ -19,7 +23,6 @@ public class BattleLogPanel : MonoBehaviour
     [SerializeField] Button        _closeButton;
     [SerializeField] Font          _entryFont;  // theme font for rows (fallback: built-in)
 
-    readonly List<KillInfo> _log = new();
     Font _font;
 
     void Awake()
@@ -30,19 +33,15 @@ public class BattleLogPanel : MonoBehaviour
 
     void OnEnable()
     {
-        if (_killEvent   != null) _killEvent.OnRaised += Record;
         if (_openButton  != null) _openButton.onClick.AddListener(Show);
         if (_closeButton != null) _closeButton.onClick.AddListener(Hide);
     }
 
     void OnDisable()
     {
-        if (_killEvent   != null) _killEvent.OnRaised -= Record;
         if (_openButton  != null) _openButton.onClick.RemoveListener(Show);
         if (_closeButton != null) _closeButton.onClick.RemoveListener(Hide);
     }
-
-    void Record(KillInfo info) => _log.Add(info);
 
     public void Show()
     {
@@ -62,13 +61,17 @@ public class BattleLogPanel : MonoBehaviour
         for (int i = _content.childCount - 1; i >= 0; i--)
             Destroy(_content.GetChild(i).gameObject);
 
-        if (_emptyText != null) _emptyText.gameObject.SetActive(_log.Count == 0);
+        // Most-recent record is the match that just ended (the recorder wrote it
+        // on match end, before the player can click BATTLE LOG).
+        var all   = BattleHistoryService.All;
+        var kills = all.Count > 0 ? all[0].kills : null;
+        int count = kills != null ? kills.Count : 0;
 
-        int n = 1;
-        foreach (var info in _log) AddRow(n++, info);
+        if (_emptyText != null) _emptyText.gameObject.SetActive(count == 0);
+        for (int i = 0; i < count; i++) AddRow(i + 1, kills[i]);
     }
 
-    void AddRow(int n, KillInfo info)
+    void AddRow(int n, BattleHistoryService.KillEntry k)
     {
         var go = new GameObject("LogEntry");
         go.transform.SetParent(_content, false);
@@ -85,15 +88,6 @@ public class BattleLogPanel : MonoBehaviour
         t.verticalOverflow   = VerticalWrapMode.Truncate;
         t.color              = Color.white;
         t.supportRichText    = true;
-
-        string kc    = TeamHex(info.killerTeam);
-        string vc    = TeamHex(info.team);
-        string kName = string.IsNullOrEmpty(info.killerName) ? "Unknown" : info.killerName;
-        t.text = $"<color=#777777>{n,2}.</color>   <color={kc}>{kName}</color> <color=#FFFFFF>▶</color> <color={vc}>{info.unitName}</color>";
+        t.text               = BattleHistoryService.FormatKillRow(n, k);
     }
-
-    static string TeamHex(int team) =>
-        team == 0 ? "#66B2FF" :
-        team == 1 ? "#FF6666" :
-                    "#AAAAAA";
 }

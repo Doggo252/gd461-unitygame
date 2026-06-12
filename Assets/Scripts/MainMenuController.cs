@@ -6,6 +6,11 @@ using UnityEngine.UI;
 // AGENTS §5: all panels pre-built in the Editor; this script only shows/hides them.
 public class MainMenuController : MonoBehaviour
 {
+    // Set by other scenes (e.g. the in-match pause menu's "Change Deck") to ask
+    // the menu to open straight into the deck builder instead of the main menu.
+    // Consumed (and cleared) once in Start so it only applies to the next load.
+    public static bool OpenDeckBuilderOnLoad;
+
     [Header("Panels (mutually exclusive)")]
     [SerializeField] GameObject _mainMenuPanel;
     [SerializeField] GameObject _factionSelectPanel;
@@ -62,7 +67,17 @@ public class MainMenuController : MonoBehaviour
 
     void Start()
     {
-        ShowPanel(_mainMenuPanel);
+        // "Change Deck" from the pause menu lands directly on the deck builder
+        // (the player already has a chosen faction); otherwise start on the menu.
+        if (OpenDeckBuilderOnLoad && _deckBuilderPanel != null)
+        {
+            OpenDeckBuilderOnLoad = false;
+            ShowPanel(_deckBuilderPanel);
+        }
+        else
+        {
+            ShowPanel(_mainMenuPanel);
+        }
         if (_creditsOverlay  != null) _creditsOverlay.SetActive(false);
         if (_settingsOverlay != null) _settingsOverlay.SetActive(false);
     }

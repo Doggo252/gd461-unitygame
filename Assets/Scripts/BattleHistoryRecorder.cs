@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 // Writes one BattleHistoryService record when the match ends. Counts kills per
@@ -15,6 +16,7 @@ public class BattleHistoryRecorder : MonoBehaviour
     int  _allyKills;
     int  _enemyKills;
     bool _recorded;
+    readonly List<BattleHistoryService.KillEntry> _kills = new();
 
     void OnEnable()
     {
@@ -33,6 +35,16 @@ public class BattleHistoryRecorder : MonoBehaviour
         // A victim on the enemy team is a kill FOR the player, and vice-versa.
         if (info.team == 1 - _playerTeam) _allyKills++;
         else if (info.team == _playerTeam) _enemyKills++;
+
+        // Record the full log line so the records screen can replay this battle.
+        // Normalise teams to the player's POV: 0 = ally, 1 = enemy.
+        _kills.Add(new BattleHistoryService.KillEntry
+        {
+            killerName = info.killerName,
+            killerTeam = info.killerTeam < 0 ? -1 : (info.killerTeam == _playerTeam ? 0 : 1),
+            victimName = info.unitName,
+            victimTeam = info.team == _playerTeam ? 0 : 1,
+        });
     }
 
     void OnMatchEnd(MatchEndInfo info)
@@ -46,6 +58,7 @@ public class BattleHistoryRecorder : MonoBehaviour
         string faction = _deckConfig != null ? _deckConfig.chosenFaction.ToString() : "";
 
         BattleHistoryService.Record(outcome, info.reason, faction,
-                                    _allyKills, _enemyKills, DateTime.UtcNow.Ticks);
+                                    _allyKills, _enemyKills, DateTime.UtcNow.Ticks,
+                                    new List<BattleHistoryService.KillEntry>(_kills));
     }
 }

@@ -3752,6 +3752,7 @@ MonoBehaviour:
   _ruinEmission: 0.04
   _destroyedLabelPrefab: {fileID: 2273814432762733209, guid: 8a90a2da654544a138d45564fd0b2839, type: 3}
   _labelLocalOffset: {x: 0, y: 2.5, z: 0}
+  _matchEndEvent: {fileID: 11400000, guid: 4c295bd27ba0c4e01959aecb02d67241, type: 2}
 --- !u!1 &185023099
 GameObject:
   m_ObjectHideFlags: 0
@@ -5005,6 +5006,7 @@ MonoBehaviour:
   _ruinEmission: 0.04
   _destroyedLabelPrefab: {fileID: 2273814432762733209, guid: 8a90a2da654544a138d45564fd0b2839, type: 3}
   _labelLocalOffset: {x: 0, y: 2.5, z: 0}
+  _matchEndEvent: {fileID: 11400000, guid: 4c295bd27ba0c4e01959aecb02d67241, type: 2}
 --- !u!1001 &272336487
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6119,7 +6121,7 @@ Camera:
   far clip plane: 300
   field of view: 60
   orthographic: 1
-  orthographic size: 17
+  orthographic size: 24
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -7020,7 +7022,7 @@ MonoBehaviour:
     CustomLookAtTarget: 0
   Lens:
     FieldOfView: 60
-    OrthographicSize: 17
+    OrthographicSize: 24
     NearClipPlane: 0.1
     FarClipPlane: 300
     Dutch: 0
@@ -15757,6 +15759,7 @@ MonoBehaviour:
   _ruinEmission: 0.04
   _destroyedLabelPrefab: {fileID: 2273814432762733209, guid: 8a90a2da654544a138d45564fd0b2839, type: 3}
   _labelLocalOffset: {x: 0, y: 2.5, z: 0}
+  _matchEndEvent: {fileID: 11400000, guid: 4c295bd27ba0c4e01959aecb02d67241, type: 2}
 --- !u!1001 &861416417
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -23843,6 +23846,7 @@ MonoBehaviour:
   _zMax: 14
   _cellSize: 1.4
   _y: 0.06
+  _surfaceLift: 0.08
   _borderThickness: 0.5
   _refreshInterval: 0.25
 --- !u!23 &1433872021
@@ -25327,6 +25331,7 @@ MonoBehaviour:
   _ruinEmission: 0.04
   _destroyedLabelPrefab: {fileID: 2273814432762733209, guid: 8a90a2da654544a138d45564fd0b2839, type: 3}
   _labelLocalOffset: {x: 0, y: 2.5, z: 0}
+  _matchEndEvent: {fileID: 11400000, guid: 4c295bd27ba0c4e01959aecb02d67241, type: 2}
 --- !u!1001 &1536783709
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -26005,7 +26010,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fee109b6dac544cdb80b346297a87f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BattleLogPanel
-  _killEvent: {fileID: 11400000, guid: 67a41e9dc2d3d448cb02c57ff165b0ad, type: 2}
   _root: {fileID: 210026106}
   _content: {fileID: 2081928640}
   _emptyText: {fileID: 595952145}
@@ -27474,6 +27478,7 @@ MonoBehaviour:
   _ruinEmission: 0.04
   _destroyedLabelPrefab: {fileID: 2273814432762733209, guid: 8a90a2da654544a138d45564fd0b2839, type: 3}
   _labelLocalOffset: {x: 0, y: 2.5, z: 0}
+  _matchEndEvent: {fileID: 11400000, guid: 4c295bd27ba0c4e01959aecb02d67241, type: 2}
 --- !u!1001 &1654308792
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -31299,6 +31304,7 @@ MonoBehaviour:
   _ruinEmission: 0.04
   _destroyedLabelPrefab: {fileID: 2273814432762733209, guid: 8a90a2da654544a138d45564fd0b2839, type: 3}
   _labelLocalOffset: {x: 0, y: 2.5, z: 0}
+  _matchEndEvent: {fileID: 11400000, guid: 4c295bd27ba0c4e01959aecb02d67241, type: 2}
 --- !u!1001 &1905968838
 PrefabInstance:
   m_ObjectHideFlags: 0

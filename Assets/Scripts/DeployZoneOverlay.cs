@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 // Visualises the valid deployment zone while the player drags a card:
 //   • submesh 0 — translucent green FILL over every spawnable grid cell
@@ -22,7 +23,8 @@ public class DeployZoneOverlay : MonoBehaviour
     [SerializeField] float _zMin     = -14f;
     [SerializeField] float _zMax     =  14f;
     [SerializeField] float _cellSize = 1.4f;
-    [SerializeField] float _y        = 0.06f;   // sit just above the ground
+    [SerializeField] float _y        = 0.06f;   // fallback height if no NavMesh sample
+    [SerializeField] float _surfaceLift = 0.08f; // tiles ride this far above the sampled surface (so bridge decks don't occlude them)
     [SerializeField] float _borderThickness = 0.5f;
     [Tooltip("Seconds between live rebuilds while visible (frontline expansion).")]
     [SerializeField] float _refreshInterval = 0.25f;
@@ -84,12 +86,18 @@ public class DeployZoneOverlay : MonoBehaviour
         int nx = Mathf.Max(1, Mathf.CeilToInt((hi - lo) / _cellSize));
         int nz = Mathf.Max(1, Mathf.CeilToInt((_zMax - _zMin) / _cellSize));
         var ok = new bool[nx, nz];
+        var cellY = new float[nx, nz];  // per-tile surface height (rides over bridges)
         for (int ix = 0; ix < nx; ix++)
         for (int iz = 0; iz < nz; iz++)
         {
             var c = new Vector3(lo + (ix + 0.5f) * _cellSize, _y, _zMin + (iz + 0.5f) * _cellSize);
             if (c.x > hi) continue;
             ok[ix, iz] = DeployRules.IsSpawnable(c, _frontline, _team, _zMin, _zMax, _registry);
+            // Draw the tile on the actual walkable surface (bridge deck is raised,
+            // so a flat tile would be hidden under it). Spawnable ⇒ NavMesh present.
+            cellY[ix, iz] = NavMesh.SamplePosition(c, out var hit, DeployRules.NavTolerance, 1 << 0)
+                ? hit.position.y + _surfaceLift
+                : _y;
         }
 
         float t = Mathf.Min(_borderThickness, _cellSize * 0.5f);
@@ -99,18 +107,19 @@ public class DeployZoneOverlay : MonoBehaviour
             if (!ok[ix, iz]) continue;
             float x0 = lo + ix * _cellSize, x1 = Mathf.Min(x0 + _cellSize, hi);
             float z0 = _zMin + iz * _cellSize, z1 = Mathf.Min(z0 + _cellSize, _zMax);
+            float cy = cellY[ix, iz];
 
-            Quad(_fillTris, x0, z0, x1, z1);
+            Quad(_fillTris, x0, z0, x1, z1, cy);
 
             // boundary edges → inner border strips (darker, thicker)
             bool wOpen = ix == 0      || !ok[ix - 1, iz];
             bool eOpen = ix == nx - 1 || !ok[ix + 1, iz];
             bool sOpen = iz == 0      || !ok[ix, iz - 1];
             bool nOpen = iz == nz - 1 || !ok[ix, iz + 1];
-            if (wOpen) Quad(_borderTris, x0,     z0, x0 + t, z1);
-            if (eOpen) Quad(_borderTris, x1 - t, z0, x1,     z1);
-            if (sOpen) Quad(_borderTris, x0,     z0, x1,     z0 + t);
-            if (nOpen) Quad(_borderTris, x0, z1 - t, x1,     z1);
+            if (wOpen) Quad(_borderTris, x0,     z0, x0 + t, z1, cy);
+            if (eOpen) Quad(_borderTris, x1 - t, z0, x1,     z1, cy);
+            if (sOpen) Quad(_borderTris, x0,     z0, x1,     z0 + t, cy);
+            if (nOpen) Quad(_borderTris, x0, z1 - t, x1,     z1, cy);
         }
 
         _mesh.Clear();
@@ -123,13 +132,13 @@ public class DeployZoneOverlay : MonoBehaviour
         if (_mf.sharedMesh != _mesh) _mf.sharedMesh = _mesh;
     }
 
-    void Quad(List<int> tris, float x0, float z0, float x1, float z1)
+    void Quad(List<int> tris, float x0, float z0, float x1, float z1, float y)
     {
         int b = _verts.Count;
-        _verts.Add(new Vector3(x0, _y, z0));
-        _verts.Add(new Vector3(x0, _y, z1));
-        _verts.Add(new Vector3(x1, _y, z1));
-        _verts.Add(new Vector3(x1, _y, z0));
+        _verts.Add(new Vector3(x0, y, z0));
+        _verts.Add(new Vector3(x0, y, z1));
+        _verts.Add(new Vector3(x1, y, z1));
+        _verts.Add(new Vector3(x1, y, z0));
         tris.Add(b); tris.Add(b + 1); tris.Add(b + 2);
         tris.Add(b); tris.Add(b + 2); tris.Add(b + 3);
     }
