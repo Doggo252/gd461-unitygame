@@ -206,13 +206,14 @@ public class BattleHistoryPanel : MonoBehaviour
             _summaryText.text = $"<color=#73D966>{r.allyKills}</color> ally   ·   <color=#F26659>{r.enemyKills}</color> enemy kills";
 
         ClearContent();
-        int count = r.kills != null ? r.kills.Count : 0;
+        var kills = BattleHistoryService.KillsOf(r);
+        int count = kills.Count;
         if (_emptyText != null)
         {
             _emptyText.text = "No kills in this battle";
             _emptyText.gameObject.SetActive(count == 0);
         }
-        for (int i = 0; i < count; i++) AddKillRow(i + 1, r.kills[i]);
+        for (int i = 0; i < count; i++) AddKillRow(i + 1, kills[i]);
     }
 
     void AddKillRow(int n, BattleHistoryService.KillEntry k)

@@ -71,6 +71,10 @@ public enum TankType
     Strv_m40L,
     Strv_74,
     ZSU_57_2,
+
+    // ── Appended (keep LAST — enum ordinals are serialized as `tankType` on every
+    //    UnitDataSO/prefab, so inserting mid-list would shift them all). ──
+    L3_33_CC,   // Italy — anti-tank tankette (20mm Solothurn S18/1000)
 }
 
 public enum DamageType { Kinetic, HE }

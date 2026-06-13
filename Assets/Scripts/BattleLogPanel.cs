@@ -61,10 +61,11 @@ public class BattleLogPanel : MonoBehaviour
         for (int i = _content.childCount - 1; i >= 0; i--)
             Destroy(_content.GetChild(i).gameObject);
 
-        // Most-recent record is the match that just ended (the recorder wrote it
-        // on match end, before the player can click BATTLE LOG).
-        var all   = BattleHistoryService.All;
-        var kills = all.Count > 0 ? all[0].kills : null;
+        // Read the just-finished match's log from memory (set by the recorder on
+        // match end). This avoids any PlayerPrefs/JSON round-trip, which returned
+        // an empty log under IL2CPP (Android) builds — the editor uses Mono and
+        // hid the bug.
+        var kills = BattleHistoryService.LastMatchKills;
         int count = kills != null ? kills.Count : 0;
 
         if (_emptyText != null) _emptyText.gameObject.SetActive(count == 0);

@@ -12716,6 +12716,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 15a210158e8c74b099676c1649770495, type: 2}
   - {fileID: 11400000, guid: 5521b9ce979ca4768b49ed55d166daa5, type: 2}
   - {fileID: 11400000, guid: dd4522b93a24a44b592f3e704bb6ca0c, type: 2}
+  - {fileID: 11400000, guid: 73ac425a0bce5457091004ffebdd06a7, type: 2}
   _deckConfig: {fileID: 11400000, guid: 02e9f63926cb847f1af2eb5a8072aeb6, type: 2}
   _difficulty: {fileID: 11400000, guid: 5c3d655a398824ff69210be397ddc238, type: 2}
 --- !u!4 &685990385

@@ -89,3 +89,5 @@ MonoBehaviour:
     prefab: {fileID: 6472539225564391503, guid: dd3e8674a68fd4535951c93e5d61bf53, type: 3}
   - tankType: 37
     prefab: {fileID: 1237193705865472423, guid: 273e22a0a716943de92c6dd57eccd6d1, type: 3}
+  - tankType: 38
+    prefab: {fileID: 509935068505823776, guid: e056014a135364f5a91a23c447c33636, type: 3}

@@ -1,0 +1,73 @@
+newmtl 021ccc49-dafe-4e21-8c21-58cea58691bc
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/l3_cc_body_c_it_camo_desert_yellow.jpg
+map_Ks textures/l3_cc_body_n_s.jpg
+map_normal textures/l3_cc_body_n_n.jpg
+map_ao textures/l3_cc_body_ao_ao.jpg
+
+newmtl 6ba7c389-44cd-4a7b-af04-9e8582b92d3f
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/headlight_glass_c.jpg
+map_Ks textures/headlight_glass_n_s.jpg
+map_normal textures/headlight_glass_n_n.jpg
+map_ao textures/headlight_glass_n_ao.jpg
+
+newmtl 2096891f-b60c-4d29-9fdd-71e6eb19023a
+Kd 0.000 0.000 0.000
+Ks 1.000 1.000 1.000
+Ns 255
+Ke 0.000 0.000 0.000
+d 0.15
+map_Kd textures/headlight_glass_c.jpg
+map_Ks textures/headlight_glass_n_s.jpg
+map_normal textures/headlight_glass_n_n.jpg
+map_d textures/headlight_glass_c_a.png
+
+newmtl 4fdf3f4c-c63c-4667-813c-a22b0080834c
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/s18_1000_c_it_camo_desert_yellow.jpg
+map_Ks textures/s18_1000_n_s.jpg
+map_normal textures/s18_1000_n_n.jpg
+map_ao textures/s18_1000_ao_ao.jpg
+
+newmtl 2a125ed9-ebd4-42ec-a3b2-0644db849dc6
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/it_l3_cc_track_c.jpg
+map_Ks textures/it_l3_cc_track_n_s.jpg
+map_normal textures/it_l3_cc_track_n_n.jpg
+map_ao textures/it_l3_cc_track_ao_ao.jpg
+map_d textures/it_l3_cc_track_c_a.png
+
+newmtl 105ef342-86ed-4478-8172-b01afa4a451f
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/it_l3_cc_track_c.jpg
+map_Ks textures/it_l3_cc_track_n_s.jpg
+map_normal textures/it_l3_cc_track_n_n.jpg
+map_ao textures/it_l3_cc_track_ao_ao.jpg
+map_d textures/it_l3_cc_track_c_a.png
+
+newmtl 8187ed58-47ec-4d7b-97b6-2a6f887ccd50
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/l3_cc_body_c_it_camo_desert_yellow.jpg
+map_Ks textures/l3_cc_body_n_s.jpg
+map_normal textures/l3_cc_body_n_n.jpg
+map_ao textures/l3_cc_body_ao_ao.jpg
+
