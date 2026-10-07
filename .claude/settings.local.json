@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "mcp__unity-mcp__Unity_RunCommand"
+    ]
+  }
+}
